@@ -4,6 +4,8 @@ import { ref } from 'vue';
 import Navbar from '@/components/Navbar.vue';
 import Hero from '@/components/Hero.vue';
 import Tail from '@/components/Tail.vue';
+import WithStats from './components/WithStats.vue';
+import Testimonial from './components/Testimonial.vue';
 
 import About from './pages/About.vue';
 import Services from '@/pages/Services.vue';
@@ -69,7 +71,10 @@ function changePage(index) {
     v-on:update:current-page-index="changePage"
  />
  <component :is="pages[currentPageIndex].component"/>
- 
+ <div>
+
+
+ </div>
  
  <Tail/>
 </template>
