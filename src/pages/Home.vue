@@ -7,6 +7,8 @@ import WithStats from '@/components/WithStats.vue';
 import Testimonial from '@/components/Testimonial.vue';
 import Support from '@/components/Support.vue';
 import BgRemoval from '@/components/BgRemoval.vue';
+import Planning from '@/components/Planning.vue';
+import Investors from '@/components/Investors.vue';
 </script>
 
 <template>
@@ -79,9 +81,11 @@ import BgRemoval from '@/components/BgRemoval.vue';
 <section class="py-8 ">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               
-<BgRemoval/>
-<Support/>
-          
+            <Support/>
+            <BgRemoval/>
+<Planning/>
+<Investors/>
+
         </div>
       </section>
                                             
