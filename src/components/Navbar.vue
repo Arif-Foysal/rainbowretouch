@@ -1,7 +1,18 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import logo from '@/assets/logo.png'; // Update the path to your logo
- 
+
+const props = defineProps({
+    pages: Array,
+    currentPageIndex: Number
+});
+
+const emit = defineEmits(['update:currentPageIndex']);
+
+const changePage = (index) => {
+    emit('update:currentPageIndex', index);
+};
+
 document.addEventListener('DOMContentLoaded', function() {
         // Mobile menu toggle
         const menuButton = document.querySelector('[data-collapse-toggle="navbar-default"]');
@@ -68,7 +79,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <nav class="bg-gray-100 border-gray-200 sticky top-0 z-50">
     <!-- Previous green header div remains the same -->
-  
+    <!-- {{ pages }} -->
+    <!-- {{ pages[currentPageIndex].title }} -->
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-4">
         <a href="index.php" class="flex items-center space-x-3 rtl:space-x-reverse">
             <img :src="logo" class="h-16" alt="Momen Logo" />
@@ -82,13 +94,13 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="hidden w-full lg:block lg:w-auto" id="navbar-default">
             <ul class="font-medium flex flex-col p-4 lg:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 lg:flex-row lg:space-x-8 rtl:space-x-reverse lg:mt-0 lg:border-0 lg:bg-gray-100">
                 <li>
-                    <a href="index.php" class="block py-2 px-3 text-white bg-blue-700 rounded lg:bg-transparent lg:text-blue-700 lg:p-0" aria-current="page">Home</a>
+                    <a @click.prevent="changePage(0)" href="index.php" :class="['block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black', currentPageIndex === 0 ? ' border-b-4 border-indigo-600' : 'text-gray-700']" aria-current="page">Home</a>
                 </li>
                 <li>
-                    <a href="about.php" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 lg:hover:bg-transparent lg:border-0 lg:hover:text-blue-700 lg:p-0">About</a>
+                    <a @click.prevent="changePage(1)" href="about.php" :class="['block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black hover:border-indigo-400', currentPageIndex === 1 ? 'border-b-4 border-indigo-600' : 'text-gray-700']">About</a>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="text-gray-900 font-semibold text-md dropdown-trigger" aria-current="page">
+                    <a @click.prevent="changePage(2)" href="#" :class="['block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black hover:border-indigo-400', currentPageIndex === 2 ? 'border-b-4 border-indigo-600' : 'text-gray-700']" aria-current="page">
                         <div class="flex items-center">
                             <p>Services</p>
                             &nbsp;
@@ -158,23 +170,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 </li>
                 <!-- Rest of the menu items remain the same -->
                 <li>
-                    <a href="pricing.php" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 lg:hover:bg-transparent lg:border-0 lg:hover:text-blue-700 lg:p-0">Pricing</a>
+                    <a @click.prevent="changePage(3)" href="pricing.php" :class="['block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black', currentPageIndex === 3 ? 'border-b-4 border-indigo-600' : 'text-gray-700']">Pricing</a>
                 </li>
                 <li>
-                    <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 lg:hover:bg-transparent lg:border-0 lg:hover:text-blue-700 lg:p-0">Portfolio</a>
+                    <a @click.prevent="changePage(4)" href="#" :class="['block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black', currentPageIndex === 4 ? 'border-b-4 border-indigo-600' : 'text-gray-700']">Portfolio</a>
                 </li>
                 <li>
-                    <a href="blog.php" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 lg:hover:bg-transparent lg:border-0 lg:hover:text-blue-700 lg:p-0">Blog</a>
+                    <a @click.prevent="changePage(5)" href="blog.php" :class="['block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black', currentPageIndex === 5 ? 'border-b-4 border-indigo-600' : 'text-gray-700']">Blog</a>
                 </li>
                 <li>
-                    <a href="workflow.php" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 lg:hover:bg-transparent lg:border-0 lg:hover:text-blue-700 lg:p-0">Workflow</a>
+                    <a @click.prevent="changePage(6)" href="workflow.php" :class="['block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black', currentPageIndex === 6 ? 'border-b-4 border-indigo-600' : 'text-gray-700']">Workflow</a>
                 </li>
                 <li>
-                    <a href="contact.php" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 lg:hover:bg-transparent lg:border-0 lg:hover:text-blue-700 lg:p-0">Contact</a>
+                    <a @click.prevent="changePage(7)" href="contact.php" :class="['block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black', currentPageIndex === 7 ? 'border-b-4 border-indigo-600' : 'text-gray-700']">Contact</a>
                 </li>
                 
                 <li class="dropdown">
-                    <a href="#" class="text-gray-900 font-semibold text-md dropdown-trigger" aria-current="page">
+                    <a href="#" class="block py-2 px-3 lg:p-0 text-lg text-gray-700 font-semibold hover:text-black dropdown-trigger" aria-current="page">
                         <div class="flex items-center">
                             <p>Account</p>
                             &nbsp;

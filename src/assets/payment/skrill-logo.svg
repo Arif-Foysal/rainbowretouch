@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="256" height="256" viewBox="0 0 256 256" xml:space="preserve">
+
+<defs>
+</defs>
+<g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)" >
+	<linearGradient id="SVGID_1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1.7108 0 0 -0.5845 -0.7108 54.1931)"  x1="0.4155" y1="15.7271" x2="53.0224" y2="15.7271">
+<stop offset="0%" style="stop-color:rgb(135,33,102);stop-opacity: 1"/>
+<stop offset="100%" style="stop-color:rgb(79,36,85);stop-opacity: 1"/>
+</linearGradient>
+<path d="M 71.568 32.641 l 7.493 -1.334 v 28.751 h -7.493 V 32.641 z M 82.507 32.641 v 27.402 H 90 V 31.307 L 82.507 32.641 z M 60.916 60.042 h 7.493 v -21.02 h -7.493 V 60.042 z M 11.399 41.992 c -0.953 -0.064 -3.143 -0.206 -3.143 -2.175 c 0 -2.381 3.159 -2.381 4.334 -2.381 c 2.08 0 4.779 0.619 6.7 1.191 c 0 0 1.08 0.381 1.984 0.762 l 0.079 0.016 v -6.509 l -0.111 -0.032 c -2.27 -0.794 -4.906 -1.556 -9.811 -1.556 C 2.985 31.307 0 36.229 0 40.436 c 0 2.429 1.048 8.144 10.716 8.811 c 0.826 0.048 3.001 0.175 3.001 2.223 c 0 1.683 -1.778 2.683 -4.779 2.683 c -3.286 0 -6.461 -0.841 -8.398 -1.635 v 6.715 c 2.889 0.762 6.16 1.143 9.986 1.143 c 8.255 0 11.954 -4.652 11.954 -9.271 C 22.48 45.865 18.352 42.468 11.399 41.992 z M 56.693 38.721 c -6.922 0.222 -10.43 3.334 -10.43 9.51 v 11.827 h 7.557 v -9.652 c 0 -3.699 0.476 -5.287 4.874 -5.43 v -6.16 C 57.931 38.673 56.693 38.721 56.693 38.721 L 56.693 38.721 z M 36.371 39.007 c -0.159 0.413 -1.365 3.81 -4.271 7.319 V 31.307 l -7.732 1.524 v 27.211 h 7.732 v -8.414 c 2.238 3.366 3.35 8.414 3.35 8.414 h 9.256 c -0.921 -3.81 -4.922 -10.827 -4.922 -10.827 c 3.588 -4.556 5.176 -9.414 5.43 -10.224 h -8.843 L 36.371 39.007 z M 64.646 37.007 c 2.032 0 3.699 -1.651 3.699 -3.683 s -1.651 -3.699 -3.699 -3.699 c -2.032 0 -3.683 1.651 -3.683 3.699 C 60.963 35.355 62.614 37.007 64.646 37.007 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: url(#SVGID_1); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+</g>
+</svg>
