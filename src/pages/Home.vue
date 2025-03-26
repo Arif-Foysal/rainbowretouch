@@ -9,10 +9,11 @@ import Support from '@/components/Support.vue';
 import BgRemoval from '@/components/BgRemoval.vue';
 import Planning from '@/components/Planning.vue';
 import Investors from '@/components/Investors.vue';
+import CarouselCard from '@/components/CarouselCard.vue';
 </script>
 
 <template>
-<div class="px-4">
+<div class="">
 
 
 
@@ -38,7 +39,7 @@ import Investors from '@/components/Investors.vue';
         <div class="flex py-4 lg:py-0 lg:mt-0 lg:col-span-6 ">
             
             <ImageCarousel/>
-
+            
         </div>                
     </div>
 </section>
@@ -79,8 +80,8 @@ import Investors from '@/components/Investors.vue';
 
 
 <section class="py-8 ">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              
+        <div>
+            <CarouselCard/>
             <Support/>
             <BgRemoval/>
 <Planning/>
