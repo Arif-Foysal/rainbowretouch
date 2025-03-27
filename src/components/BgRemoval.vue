@@ -49,13 +49,6 @@
             </div>
         </div>
 
-        <button class="fixed bottom-8 right-8 w-12 h-12 rounded-full bg-white border border-gray-200 shadow-md flex justify-center items-center text-red-500 transition-all duration-200 ease-in-out hover:transform hover:-translate-y-1 hover:shadow-lg" @click="scrollToTop">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="16 12 12 8 8 12"></polyline>
-                <line x1="12" y1="16" x2="12" y2="8"></line>
-            </svg>
-        </button>
     </div>
 </template>
 
