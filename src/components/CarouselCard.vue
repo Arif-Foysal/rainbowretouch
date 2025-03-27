@@ -61,9 +61,7 @@ onBeforeUnmount(() => {
 <template>
   <div class=" py-8 bg-blue-50 rounded-md">
     <p class="text-red-500 p-4 text-xl font-semibold tracking-wide mb-2">STUNNING QUALITY</p>
-    <h1 class="text-5xl p-4 font-bold mb-4">Carousel with Overlay Text
-
-    </h1>
+    <h1 class="text-5xl p-4 font-bold mb-4">Image manipulation services</h1>
 
     <Carousel v-bind="carouselConfig">
       <Slide v-for="(slide, index) in slides" :key="index">
