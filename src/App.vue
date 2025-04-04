@@ -59,6 +59,7 @@ const currentPageIndex = ref(0);
 
 function changePage(index) {
     currentPageIndex.value = index;
+    window.scrollTo(0, 0); // Reset scroll position to top
 }
 
 
