@@ -11,6 +11,7 @@ import Planning from '@/components/Planning.vue';
 import Investors from '@/components/Investors.vue';
 import CarouselCard from '@/components/CarouselCard.vue';
 import Hero from '@/components/Hero.vue';
+import DiscountCards from '@/components/DiscountCards.vue';
 </script>
 
 <template>
@@ -38,5 +39,6 @@ import Hero from '@/components/Hero.vue';
 </div>
 
 <WithStats/>
+<DiscountCards/>
 <Testimonial/>
 </template>
