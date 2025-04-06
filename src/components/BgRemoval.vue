@@ -1,8 +1,8 @@
 <template>
     <div class="max-w-5xl mx-auto p-8 font-sans">
         <div class="text-center mb-8">
-            <p class="text-red-500 text-xl font-semibold tracking-wide mb-2">STUNNING QUALITY</p>
-            <h1 class="text-5xl font-bold text-gray-800 mb-8">We've Removed These Tricky Backgrounds</h1>
+            <h1 class="text-5xl font-bold text-gray-800 mb-8">Portfolio</h1>
+            <p class="text-red-500 text-xl font-semibold tracking-wide mb-2">Showcasing some of our latest works</p>
         </div>
 
         <div class="flex justify-center gap-4 mb-10 flex-wrap">
