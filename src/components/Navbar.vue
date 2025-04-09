@@ -12,7 +12,7 @@ const props = defineProps({
     currentPageIndex: Number
 });
 
-const emit = defineEmits(['update:currentPageIndex']);
+const emit = defineEmits(['update:currentPageIndex','open-contact-modal']);
 
 const changePage = (index) => {
     emit('update:currentPageIndex', index);
@@ -133,6 +133,11 @@ onBeforeUnmount(() => {
   // Clean up - reset body overflow when component is unmounted
   document.body.style.overflow = '';
 });
+
+
+// Define emits
+// defineEmits(['open-contact-modal']);
+
 </script>
 
 <template>
@@ -147,7 +152,7 @@ onBeforeUnmount(() => {
       </div>
       <div class="flex items-center gap-3">
         <p class="text-lg font-semibold">Get a free photo retouch — just upload your image!</p>
-        <button class="bg-gray-900 text-white font-semibold p-2 rounded-md hover:bg-gray-800">Upload Now</button>
+        <button  @click="$emit('open-contact-modal')"  class="bg-gray-900 text-white font-semibold p-2 rounded-md hover:bg-gray-800">Upload Now</button>
       </div>
       
       <button @click="viewFreeTrial=false;" class="text-white bg-red-500 font-bold p-1 rounded-md">

@@ -12,6 +12,11 @@ import Investors from '@/components/Investors.vue';
 import CarouselCard from '@/components/CarouselCard.vue';
 import Hero from '@/components/Hero.vue';
 import DiscountCards from '@/components/DiscountCards.vue';
+import Upload from '@/pages/Upload.vue';
+import Modal from '@/components/Modal.vue';
+import UploadForm from '@/components/UploadForm.vue';
+
+// import Timeline from '@/components/Timeline.vue';
 </script>
 
 <template>
@@ -41,4 +46,8 @@ import DiscountCards from '@/components/DiscountCards.vue';
 <WithStats/>
 <DiscountCards/>
 <Testimonial/>
+
+<Upload/>
+    <!-- Contact Modal -->
+
 </template>

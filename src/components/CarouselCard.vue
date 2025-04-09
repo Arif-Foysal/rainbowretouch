@@ -25,16 +25,16 @@ const carouselConfig = ref({
 })
 
 const slides = [
-  { image: image1, text: 'Overlay Text 1' },
-  { image: image2, text: 'Overlay Text 2' },
-  { image: image3, text: 'Overlay Text 3' },
-  { image: image4, text: 'Overlay Text 4' },
-  { image: image5, text: 'Overlay Text 5' },
-  { image: image6, text: 'Overlay Text 6' },
-  { image: image7, text: 'Overlay Text 7' },
-  { image: image8, text: 'Overlay Text 8' },
-  { image: image9, text: 'Overlay Text 9' },
-  { image: image10, text: 'Overlay Text 10' }
+  { image: image1, text: 'Clothing Photo Editing' },
+  { image: image2, text: 'Shoe Photo Editing' },
+  { image: image3, text: 'Hat and Bag Photo Editing' },
+  { image: image4, text: 'Eyeglass photo editing' },
+  { image: image5, text: 'Shoe product editing' },
+  { image: image6, text: 'Color Correction' },
+  { image: image7, text: 'Clipping Path Services' },
+  { image: image8, text: 'Reflection Shadow' },
+  { image: image9, text: 'Original Shadow' },
+  { image: image10, text: 'Color Correction' }
 ]
 
 const updateItemsToShow = () => {

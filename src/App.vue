@@ -16,7 +16,8 @@ import Blog from './pages/Blog.vue';
 import Portfolio from './pages/Portfolio.vue';
 import Workflow from './pages/Workflow.vue';
 
-
+import Modal from '@/components/Modal.vue';
+import UploadForm from '@/components/UploadForm.vue';
 
 const pages = [
     {
@@ -63,6 +64,12 @@ function changePage(index) {
 }
 
 
+const showContactModal = ref(false)
+
+const openContactModal = () => {
+  showContactModal.value = true
+}
+
 </script>
 
 <template>
@@ -70,13 +77,20 @@ function changePage(index) {
     :pages="pages"
     :currentPageIndex="currentPageIndex"
     v-on:update:current-page-index="changePage"
+    @open-contact-modal="openContactModal"
  />
  <component :is="pages[currentPageIndex].component"/>
  <div>
 
 
  </div>
- 
+ <Modal 
+      v-model="showContactModal" 
+      title="Free Trial" 
+      size="lg"
+    >
+      <UploadForm :showSubmitButton="true" />
+    </Modal>
  <Tail/>
 </template>
 

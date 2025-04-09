@@ -1,49 +1,53 @@
 <template>
-    <div class="max-w-5xl mx-auto p-8 font-sans">
+    <div class="max-w-8xl mx-auto p-8 font-sans">
         <div class="text-center mb-8">
             <h1 class="text-5xl font-bold text-gray-800 mb-8">Portfolio</h1>
             <p class="text-red-500 text-xl font-semibold tracking-wide mb-2">Showcasing some of our latest works</p>
         </div>
 
-        <div class="flex justify-center gap-4 mb-10 flex-wrap">
+        <div 
+            class="flex justify-center gap-4 mb-10 flex-wrap sticky top-32 bg-white z-50 shadow-md py-4"
+        >
             <button 
-                v-for="category in categories" 
-                :key="category.id"
-                class="flex items-center gap-2 px-4 py-2 text-xl rounded-full border-none bg-gray-200 font-medium cursor-pointer transition-all duration-200 ease-in-out"
-                :class="{ 'bg-indigo-600 text-white': activeCategory == category.id }"
-                @click="setActiveCategory(category.id)"
+            v-for="category in categories" 
+            :key="category.id"
+            class="flex items-center gap-2 px-4 py-2 text-xl rounded-full border-none bg-gray-200 font-medium cursor-pointer transition-all duration-200 ease-in-out"
+            :class="{ 'bg-indigo-600 text-white': activeCategory == category.id }"
+            @click="setActiveCategory(category.id)"
             >
-                <component :is="category.icon" class="w-6 h-6" />
-                {{ category.name }}
+            <component :is="category.icon" class="w-6 h-6" />
+            {{ category.name }}
             </button>
         </div>
 
-        <div class="relative max-w-3xl mx-auto overflow-hidden rounded-lg shadow-lg" ref="container">
-            <div class="relative w-full h-full">
-                <img 
-                    :src="currentImagePair.before" 
-                    alt="Before background removal" 
-                    class="block w-full h-auto object-cover relative z-10" 
-                />
-                <img 
-                    :src="currentImagePair.after" 
-                    alt="After background removal" 
-                    class="block w-full h-full object-cover absolute top-0 left-0 z-20"
-                    :style="{ clipPath: `inset(0 0 0 ${sliderPosition}%)` }"
-                />
-                <div 
-                    class="absolute top-0 bottom-0 w-0.5 bg-white transform -translate-x-1/2 cursor-ew-resize z-30"
-                    :style="{ left: `${sliderPosition}%` }"
-                    @mousedown="startDrag"
-                    @touchstart="startDrag"
-                >
-                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full flex justify-center items-center shadow-md z-40">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <polyline points="15 18 9 12 15 6"></polyline>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <div v-for="(imagePair, index) in currentImagePairs" :key="index" class="relative overflow-hidden rounded-lg shadow-lg" :ref="el => { if(el) containers[index] = el }">
+                <div class="relative w-full h-full">
+                    <img 
+                        :src="imagePair.before" 
+                        alt="Before background removal" 
+                        class="block w-full h-auto object-cover relative z-10" 
+                    />
+                    <img 
+                        :src="imagePair.after" 
+                        alt="After background removal" 
+                        class="block w-full h-full object-cover absolute top-0 left-0 z-20"
+                        :style="{ clipPath: `inset(0 0 0 ${sliderPositions[index]}%)` }"
+                    />
+                    <div 
+                        class="absolute top-0 bottom-0 w-0.5 bg-white transform -translate-x-1/2 cursor-ew-resize z-30"
+                        :style="{ left: `${sliderPositions[index]}%` }"
+                        @mousedown="(e) => startDrag(e, index)"
+                        @touchstart="(e) => startDrag(e, index)"
+                    >
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full flex justify-center items-center shadow-md z-40">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -138,72 +142,87 @@ const GraphicsIcon = () => h('svg', {
 ]);
 
 // Define categories with their respective image pairs
-import peopleBefore from '@/assets/images/image-4.jpg';
-import peopleAfter from '@/assets/images/image-5.jpg';
+import peopleBefore from '@/assets/images/beforeAfter/1-1.jpeg';
+import peopleAfter from '@/assets/images/beforeAfter/1-2.jpeg';
+
 import productsBefore from '@/assets/images/image-4.jpg';
 import productsAfter from '@/assets/images/image-4.jpg';
+
 import animalsBefore from '@/assets/images/image-4.jpg';
 import animalsAfter from '@/assets/images/image-4.jpg';
+
 import carsBefore from '@/assets/images/image-4.jpg';
 import carsAfter from '@/assets/images/image-4.jpg';
+
 import graphicsBefore from '@/assets/images/image-4.jpg';
 import graphicsAfter from '@/assets/images/image-4.jpg';
 
 const categories = [
     {
         id: 'people',
-        name: 'People',
+        name: 'E-Commerce Photo Editing',
         icon: PeopleIcon,
-        images: {
-            before: peopleBefore,
-            after: peopleAfter
-        }
+        images: [
+            { before: peopleBefore, after: peopleAfter },
+            { before: peopleBefore, after: peopleAfter },
+            { before: peopleBefore, after: peopleAfter },
+            { before: peopleBefore, after: peopleAfter }
+        ]
     },
     {
         id: 'products',
-        name: 'Products',
+        name: 'Background Removal',
         icon: ProductsIcon,
-        images: {
-            before: productsBefore,
-            after: productsAfter
-        }
+        images: [
+            { before: productsBefore, after: productsAfter },
+            { before: productsBefore, after: productsAfter },
+            { before: productsBefore, after: productsAfter },
+            { before: productsBefore, after: productsAfter }
+        ]
     },
     {
         id: 'animals',
-        name: 'Animals',
+        name: 'Photo Retouching',
         icon: AnimalsIcon,
-        images: {
-            before: animalsBefore,
-            after: animalsAfter
-        }
+        images: [
+            { before: animalsBefore, after: animalsAfter },
+            { before: animalsBefore, after: animalsAfter },
+            { before: animalsBefore, after: animalsAfter },
+            { before: animalsBefore, after: animalsAfter }
+        ]
     },
     {
         id: 'cars',
-        name: 'Cars',
+        name: 'Photo Manipulation',
         icon: CarsIcon,
-        images: {
-            before: carsBefore,
-            after: carsAfter
-        }
+        images: [
+            { before: carsBefore, after: carsAfter },
+            { before: carsBefore, after: carsAfter },
+            { before: carsBefore, after: carsAfter },
+            { before: carsBefore, after: carsAfter }
+        ]
     },
     {
         id: 'graphics',
         name: 'Graphics',
         icon: GraphicsIcon,
-        images: {
-            before: graphicsBefore,
-            after: graphicsAfter
-        }
+        images: [
+            { before: graphicsBefore, after: graphicsAfter },
+            { before: graphicsBefore, after: graphicsAfter },
+            { before: graphicsBefore, after: graphicsAfter },
+            { before: graphicsBefore, after: graphicsAfter }
+        ]
     }
 ];
 
-const container = ref(null);
-const sliderPosition = ref(50); // Start at 50%
+const containers = ref([]);
+const sliderPositions = ref([50, 50, 50, 50]); // Start all at 50%
 const isDragging = ref(false);
 const activeCategory = ref('people'); // Default to 'people' category
+const activeDragIndex = ref(null);
 
-// Get the current image pair based on the active category
-const currentImagePair = computed(() => {
+// Get the current image pairs based on the active category
+const currentImagePairs = computed(() => {
     const category = categories.find(cat => cat.id === activeCategory.value);
     return category ? category.images : categories[0].images;
 });
@@ -211,13 +230,14 @@ const currentImagePair = computed(() => {
 // Set the active category
 const setActiveCategory = (categoryId) => {
     activeCategory.value = categoryId;
-    // Reset slider position when changing categories
-    sliderPosition.value = 50;
+    // Reset all slider positions when changing categories
+    sliderPositions.value = sliderPositions.value.map(() => 50);
 };
 
-const startDrag = (event) => {
+const startDrag = (event, index) => {
     event.preventDefault();
     isDragging.value = true;
+    activeDragIndex.value = index;
     document.addEventListener('mousemove', onDrag);
     document.addEventListener('touchmove', onDrag);
     document.addEventListener('mouseup', stopDrag);
@@ -225,9 +245,9 @@ const startDrag = (event) => {
 };
 
 const onDrag = (event) => {
-    if (!isDragging.value || !container.value) return;
+    if (!isDragging.value || activeDragIndex.value === null || !containers.value[activeDragIndex.value]) return;
 
-    const containerRect = container.value.getBoundingClientRect();
+    const containerRect = containers.value[activeDragIndex.value].getBoundingClientRect();
     const containerWidth = containerRect.width;
 
     // Get the x position relative to the container
@@ -244,27 +264,25 @@ const onDrag = (event) => {
     let newPosition = (x / containerWidth) * 100;
     newPosition = Math.max(0, Math.min(100, newPosition));
 
-    sliderPosition.value = newPosition;
+    sliderPositions.value[activeDragIndex.value] = newPosition;
 };
 
 const stopDrag = () => {
     isDragging.value = false;
+    activeDragIndex.value = null;
     document.removeEventListener('mousemove', onDrag);
     document.removeEventListener('touchmove', onDrag);
     document.removeEventListener('mouseup', stopDrag);
     document.removeEventListener('touchend', stopDrag);
 };
 
-const scrollToTop = () => {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-};
-
 onMounted(() => {
     // Add event listeners for mobile touch events
-    container.value.addEventListener('touchstart', startDrag, { passive: false });
+    containers.value.forEach(container => {
+        if (container) {
+            container.addEventListener('touchstart', startDrag, { passive: false });
+        }
+    });
 });
 
 onUnmounted(() => {
@@ -273,9 +291,11 @@ onUnmounted(() => {
     document.removeEventListener('touchmove', onDrag);
     document.removeEventListener('mouseup', stopDrag);
     document.removeEventListener('touchend', stopDrag);
-    if (container.value) {
-        container.value.removeEventListener('touchstart', startDrag);
-    }
+    containers.value.forEach(container => {
+        if (container) {
+            container.removeEventListener('touchstart', startDrag);
+        }
+    });
 });
 </script>
 
