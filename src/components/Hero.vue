@@ -21,10 +21,10 @@
               Starting with only 1$ per image
             </p>
             <div class="flex flex-wrap gap-4">
-              <button class="bg-white text-gray-900 hover:bg-gray-100 px-6 py-3 rounded-md font-medium transition-colors">
+              <button class="bg-white text-gray-900 hover:bg-gray-100 px-6 py-3 rounded-md font-semibold transition-colors">
                 Free Trial
               </button>
-              <button class="bg-green-600 text-white hover:bg-green-700 px-6 py-3 rounded-md font-medium transition-colors">
+              <button class="bg-green-600 text-white hover:bg-green-700 px-6 py-3 rounded-md font-semibold transition-colors">
                 Order Now
               </button>
             </div>
