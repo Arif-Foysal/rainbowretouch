@@ -89,13 +89,13 @@ const serviceCategories = [
     ]
   },
   {
-    title: "Web Development",
+    title: "Digital Marketing",
     icon: "/icons/web-icon.svg",
     services: [
-      { name: "Custom Website Development", url: "#" },
-      { name: "Frontend Development", url: "#" },
-      { name: "Backend Development", url: "#" },
-      { name: "API Development & Integration", url: "#" },
+      { name: "Facebook Marketing", url: "#" },
+      { name: "Search Engine Optimization(SEO)", url: "#" },
+      { name: "Front-End Web Development", url: "#" },
+      { name: "Server Side Tracking", url: "#" },
       { name: "Database Design and Management", url: "#" }
     ]
   }

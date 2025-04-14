@@ -1,82 +1,46 @@
-<script setup>
-import { ref } from 'vue';
-
-</script>
-
-
 <template>
-
-    <section
-      class="pt-4 bg-[url('https://pagedone.io/asset/uploads/1691055810.png')] bg-center bg-cover"
-    >
-      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative text-center">
-        <div
-          class="border border-indigo-600 p-1 w-60 mx-auto rounded-full flex items-center justify-between mb-4"
-        >
-          <span class="font-inter text-xs font-medium text-gray-900 ml-3"
-            >Explore our exclusive offers</span
-          >
-          <a
-            href="javascript:;"
-            class="w-8 h-8 rounded-full flex justify-center items-center bg-indigo-600"
-          >
-            <svg
-              width="17"
-              height="16"
-              viewBox="0 0 17 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M2.83398 8.00019L12.9081 8.00019M9.75991 11.778L13.0925 8.44541C13.3023 8.23553 13.4073 8.13059 13.4073 8.00019C13.4073 7.86979 13.3023 7.76485 13.0925 7.55497L9.75991 4.22241"
-                stroke="white"
-                stroke-width="1.6"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </a>
-        </div>
-        <h1
-          class="max-w-2xl mx-auto text-center font-manrope font-bold text-4xl md:text-6xl text-gray-900 mb-5  leading-[50px]"
-        >
-          Where creativity meets
-          <span class="text-indigo-600">Perfection </span>
-        </h1>
-        <p
-          class="max-w-sm mx-auto text-center text-base font-normal leading-7 text-gray-500 mb-9"
-        >
-          Make your photos shine with our expert clipping path, retouching, and image editing services.
-        </p>
-        <a
-          href="javascript:;"
-          class="w-full md:w-auto mb-14 inline-flex items-center justify-center py-3 px-7 text-base font-semibold text-center text-white rounded-full bg-indigo-600 shadow-xs hover:bg-indigo-700 transition-all duration-500"
-        >
-          Free Trial Now
-          <svg
-            class="ml-2"
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M7.5 15L11.0858 11.4142C11.7525 10.7475 12.0858 10.4142 12.0858 10C12.0858 9.58579 11.7525 9.25245 11.0858 8.58579L7.5 5"
-              stroke="white"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </a>
-        <div class="flex justify-center">
-          <img
-            src="@/assets/images/thumb.png"
-            alt="Dashboard image" class="rounded-t-3xl h-auto object-cover"
-          />
+    <section class="relative overflow-hidden">
+      <!-- Background image -->
+      <div class="absolute inset-0 z-0">
+        <img 
+          src="https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" 
+          alt="" 
+          class="w-full h-full object-cover"
+          style="filter: brightness(0.5);"
+        />
+        <div class="absolute inset-0 "></div>
+      </div>
+      
+      <!-- Content container -->
+      <div class="container mx-auto px-4 py-20 md:py-32 relative z-10">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <!-- Left column with promotional text -->
+          <div class="text-white">
+            <h1 class="text-4xl md:text-8xl font-bold mb-4">High End Photo Retouching</h1>
+            <p class="text-lg font-semibold md:text-xl mb-6 text-gray-200">
+              Starting with only 1$ per image
+            </p>
+            <div class="flex flex-wrap gap-4">
+              <button class="bg-white text-gray-900 hover:bg-gray-100 px-6 py-3 rounded-md font-medium transition-colors">
+                Free Trial
+              </button>
+              <button class="bg-green-600 text-white hover:bg-green-700 px-6 py-3 rounded-md font-medium transition-colors">
+                Order Now
+              </button>
+            </div>
+          </div>
+          
+          <!-- Right column is empty to maintain the layout -->
+          <div></div>
         </div>
       </div>
     </section>
-                                            
-</template>
+  </template>
+  
+  <script setup>
+  // No additional script needed for this component
+  </script>
+  
+  <style scoped>
+  /* Any additional custom styles can go here */
+  </style>
