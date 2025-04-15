@@ -1,5 +1,5 @@
 <template>
-    <div class="max-w-8xl mx-auto p-8 font-sans">
+    <div class="max-w-7xl mx-auto p-8 font-sans">
         <div class="text-center mb-8">
             <h1 class="text-5xl font-bold text-gray-800 mb-8">Portfolio</h1>
             <p class="text-red-500 text-xl font-semibold tracking-wide mb-2">Showcasing some of our latest works</p>

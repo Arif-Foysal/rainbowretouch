@@ -16,8 +16,12 @@ import Upload from '@/pages/Upload.vue';
 import Modal from '@/components/Modal.vue';
 import UploadForm from '@/components/UploadForm.vue';
 import FeatureCards from '@/components/FeatureCards.vue';
-
-// import Timeline from '@/components/Timeline.vue';
+import Faq from '@/components/Faq.vue';
+import Brandings from '@/components/Brandings.vue';
+import Timeline from '@/components/Time.vue';
+import DataMap from '@/components/DataMap.vue';
+import FeatureCards2 from '@/components/FeatureCards2.vue';
+import Contact2 from '@/components/Contact2.vue';
 </script>
 
 <template>
@@ -25,19 +29,22 @@ import FeatureCards from '@/components/FeatureCards.vue';
 
 <Hero/>
 <FeatureCards/>
-
-
-
+<BgRemoval/>
+<FeatureCards2/>
+<Faq/>
+<Brandings/>
+<Timeline/>
+<DataMap/>
 <section class="py-8 ">
         <div>
             <CarouselCard/>
             <Support/>
-            <BgRemoval/>
+            
 <Planning/>
 <Investors/>
 
         </div>
-      </section>
+</section>
                                             
 
 
@@ -49,6 +56,7 @@ import FeatureCards from '@/components/FeatureCards.vue';
 <Testimonial/>
 
 <Upload/>
+<Contact2/>
     <!-- Contact Modal -->
 
 </template>
