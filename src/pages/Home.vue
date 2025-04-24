@@ -22,6 +22,9 @@ import Timeline from '@/components/Time.vue';
 import DataMap from '@/components/DataMap.vue';
 import FeatureCards2 from '@/components/FeatureCards2.vue';
 import Contact2 from '@/components/Contact2.vue';
+import Howitworks from '@/components/Howitworks.vue';
+import Professional from '@/components/Professional.vue';
+import PopularServices from '@/components/PopularServices.vue';
 </script>
 
 <template>
@@ -29,15 +32,18 @@ import Contact2 from '@/components/Contact2.vue';
 
 <Hero/>
 <FeatureCards/>
-<BgRemoval/>
+<CarouselCard/>
 <FeatureCards2/>
-<Faq/>
+<Professional/>
+<Howitworks/>
+<BgRemoval/>
+<PopularServices/>
 <Brandings/>
 <Timeline/>
+<Faq/>
 <DataMap/>
 <section class="py-8 ">
         <div>
-            <CarouselCard/>
             <Support/>
             
 <Planning/>
