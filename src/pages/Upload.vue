@@ -17,7 +17,7 @@ const handleFileSelect = (event) => {
 <template>
     <div class="flex flex-col md:flex-row min-h-screen">
       <!-- Left Section - Promotional Content -->
-      <section class="bg-yellow-600 w-full sm:w-2/3 md:w-1/2 p-8 flex flex-col justify-center items-center text-white">
+      <section class="bg-yellow-600 w-full sm:w-2/3 md:w-2/5 p-8 flex flex-col justify-center items-center text-white">
         <div class="max-w-lg mx-auto text-center">
           <h2 class="text-2xl md:text-3xl font-medium mb-6">Get 3 photo editing service for Free</h2>
           
@@ -35,7 +35,7 @@ const handleFileSelect = (event) => {
       </section>
       
       <!-- Right Section - Form -->
-      <section class="bg-white w-full sm:w-1/3 md:w-1/2 p-8 flex flex-col justify-center">
+      <section class="bg-white w-full sm:w-1/3 md:w-3/5 p-8 flex flex-col justify-center">
         <div class="max-w-md mx-auto w-full">
           <h2 class="text-5xl font-bold mb-6">Request a free trial now!</h2>
           

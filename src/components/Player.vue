@@ -6,7 +6,7 @@
   <media-theme-tailwind-audio>
     <video
       slot="media"
-      src="https://stream.mux.com/fXNzVtmtWuyz00xnSrJg4OJH6PyNo6D02UzmgeKGkP5YQ/low.mp4"
+      src="/audio.mp3"
       playsinline
       crossorigin
     ></video>

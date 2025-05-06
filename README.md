@@ -1,6 +1,11 @@
 #todo
 - services ->worldwide ->
-
+- Slider on Services HOmepage
+- Announcement bug fix
+- Upload form background animated particles
+- paypal, visa, bank transfer, western union, moneygram
+- what's ap, fb icons popup 
+- 
 
 # rainbowretouch
 

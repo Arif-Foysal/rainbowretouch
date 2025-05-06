@@ -25,6 +25,8 @@ import Contact2 from '@/components/Contact2.vue';
 import Howitworks from '@/components/Howitworks.vue';
 import Professional from '@/components/Professional.vue';
 import PopularServices from '@/components/PopularServices.vue';
+import Announcement from '@/components/Announcement.vue';
+import BlogList from '@/components/BlogList.vue';
 </script>
 
 <template>
@@ -36,17 +38,17 @@ import PopularServices from '@/components/PopularServices.vue';
 <FeatureCards2/>
 <Professional/>
 <Howitworks/>
-<BgRemoval/>
+
 <PopularServices/>
 <Brandings/>
 <Timeline/>
-<Faq/>
+
 <DataMap/>
 <section class="py-8 ">
         <div>
             <Support/>
             
-<Planning/>
+
 <Investors/>
 
         </div>
@@ -58,9 +60,15 @@ import PopularServices from '@/components/PopularServices.vue';
 </div>
 
 <WithStats/>
-<DiscountCards/>
-<Testimonial/>
+<Announcement/>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+    <DiscountCards/>
+    <Faq/>
+</div>
 
+
+<Testimonial/>
+<BlogList/>
 <Upload/>
 <Contact2/>
     <!-- Contact Modal -->

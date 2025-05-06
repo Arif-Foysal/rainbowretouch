@@ -19,6 +19,9 @@ import Workflow from './pages/Workflow.vue';
 import Modal from '@/components/Modal.vue';
 import UploadForm from '@/components/UploadForm.vue';
 
+
+import Services_Ecomm from './pages/Services_Ecomm.vue';
+
 const pages = [
     {
         title: 'Home',
@@ -51,6 +54,10 @@ const pages = [
     {
         title: 'Contact',
         component: Contact
+    },
+    {
+        title: 'E-Commerce Photo Editing',
+        component: Services_Ecomm
     }
 ];
 

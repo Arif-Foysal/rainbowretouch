@@ -67,9 +67,9 @@
     { name: 'HEADSHOT', price: 3.00 },
     { name: 'PORTRAIT', price: 1.50 },
     { name: 'MODEL', price: 1.00 },
-    { name: 'NEWBORN', price: 1.30 },
-    { name: 'MATERNITY', price: 1.20 },
-    { name: 'HIGHEND', price: 1.50 }
+    { name: 'E-Commerce Photo Editing', price: 1.30 },
+    { name: 'Background Removal', price: 1.20 },
+    { name: 'Photo Retouching', price: 1.50 }
   ]);
   
   // Function to get the appropriate icon for each service
@@ -81,11 +81,11 @@
         return UserCheck;
       case 'MODEL':
         return Camera;
-      case 'NEWBORN':
+      case 'E-Commerce Photo Editing':
         return Baby;
-      case 'MATERNITY':
+      case 'Background Removal':
         return Heart;
-      case 'HIGHEND':
+      case 'Photo Retouching':
         return Crown;
       default:
         return Camera;
