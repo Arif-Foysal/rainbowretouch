@@ -28,7 +28,7 @@ import PopularServices from '@/components/PopularServices.vue';
 import Announcement from '@/components/Announcement.vue';
 import BlogList from '@/components/BlogList.vue';
 </script>
-
+    
 <template>
 <div class="">
 
