@@ -27,6 +27,7 @@ import Professional from '@/components/Professional.vue';
 import PopularServices from '@/components/PopularServices.vue';
 import Announcement from '@/components/Announcement.vue';
 import BlogList from '@/components/BlogList.vue';
+import BeforeAfter from '@/components/BeforeAfter.vue';
 </script>
     
 <template>

@@ -1,109 +1,74 @@
 <template>
-  <section class="py-16 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-4xl mx-auto">
-      <!-- Header Section -->
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-gray-900 mb-4">About FixThePhoto Photo Retouching Service</h2>
-        <p class="text-xl text-gray-600">Image Retouching Company Growth</p>
-      </div>
-
-      <!-- Description -->
-      <div class="mb-12 text-gray-600 space-y-6">
-        <p>FixThePhoto has been in business since 2003. Earlier we specialized in portrait photo editing in Photoshop and GIMP and offered only basic image retouching services. Today we provide the widest range of professional online retouching services of the highest level. Our retouchers make any kind of Photoshop work for all photography genres and of any level of complexity.</p>
-        
-        <p>Our mission is to offer fast, affordable, secure, and high-quality photo retouching help for beginning and professional photographers who can't or don't have time to do image editing on their own.</p>
-        
-        <p>At FixThePhoto we understand that many photographers are just starting out, so we provide specialized photo editing services for everyone. We are constantly developing and trying to make your work easier. You take photos, we edit.</p>
-      </div>
-
-      <!-- Timeline Items -->
-      <div class="space-y-8">
-        <div class="flex items-start gap-4">
-          <div class="flex-shrink-0 w-24 pt-1">
-            <span class="text-gray-700 font-medium">2022</span>
+  <h1 class="text-center text-6xl font-bold text-gray-800">Rainbow Retouch Journey</h1>
+  <br>
+  <p class="text-center text-xl text-gray-700">A visual timeline of Rainbow Retouch’s growth, milestones, and achievements in the world of creative design and digital image enhancement.</p>
+  <br>
+  <div class="max-w-3xl mx-auto py-8 px-4">
+    <div class="relative">
+      <!-- Timeline items -->
+      <div v-for="(item, index) in timelineItems" :key="index" class="relative mb-12">
+        <div class="flex">
+          <!-- Date badge -->
+          <div class="w-28 flex-shrink-0">
+            <div class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm font-semibold inline-block">
+              {{ item.date }}
+            </div>
           </div>
-          <div class="flex-grow">
-            <h3 class="text-lg font-medium text-gray-900 hover:text-amber-500 cursor-pointer transition-colors">FixThePhoto Photo Editing App</h3>
+          
+          <!-- Vertical line and dot -->
+          <div class="relative flex-shrink-0 w-6 flex items-center justify-center">
+            <div class="absolute top-0 bottom-0 w-0.5 bg-blue-200 -z-10" 
+                 :class="index === timelineItems.length - 1 ? 'h-6' : 'h-full'"></div>
+            <div class="w-3 h-3 rounded-full bg-blue-500 z-10"></div>
           </div>
-        </div>
-
-        <div class="flex items-start gap-4">
-          <div class="flex-shrink-0 w-24 pt-1">
-            <span class="text-gray-700 font-medium">2020</span>
+          
+          <!-- Content -->
+          <div class="ml-6 flex-1">
+            <h3 class="text-blue-500 font-semibold text-lg">{{ item.category }}</h3>
+            <h2 class="text-2xl font-bold text-gray-900 mt-1">{{ item.title }}</h2>
+            <p class="text-gray-600 text-lg mt-2">
+              {{ item.description }}
+            </p>
           </div>
-          <div class="flex-grow">
-            <h3 class="text-lg font-medium text-gray-900 hover:text-amber-500 cursor-pointer transition-colors">Reviews Professional Photography Editing Software Gears</h3>
-          </div>
-        </div>
-
-        <div class="flex items-start gap-4">
-          <div class="flex-shrink-0 w-24 pt-1">
-            <span class="text-gray-700 font-medium">2017</span>
-          </div>
-          <div class="flex-grow">
-            <h3 class="text-lg font-medium text-gray-900 hover:text-amber-500 cursor-pointer transition-colors">Shop for Digital Photo Retouching Tools</h3>
-          </div>
-        </div>
-
-        <div class="flex items-start gap-4">
-          <div class="flex-shrink-0 w-24 pt-1">
-            <span class="text-gray-700 font-medium">2016</span>
-          </div>
-          <div class="flex-grow">
-            <h3 class="text-lg font-medium text-gray-900 hover:text-amber-500 cursor-pointer transition-colors">Digital Image Retouching Manipulation</h3>
-          </div>
-        </div>
-
-        <div class="flex items-start gap-4">
-          <div class="flex-shrink-0 w-24 pt-1">
-            <span class="text-gray-700 font-medium">2015</span>
-          </div>
-          <div class="flex-grow">
-            <h3 class="text-lg font-medium text-gray-900 hover:text-amber-500 cursor-pointer transition-colors">Product Photo Retouching Services Clipping Path Photoshop Service</h3>
-          </div>
-        </div>
-
-        <div class="flex items-start gap-4">
-          <div class="flex-shrink-0 w-24 pt-1">
-            <span class="text-gray-700 font-medium">2011</span>
-          </div>
-          <div class="flex-grow">
-            <h3 class="text-lg font-medium text-gray-900 hover:text-amber-500 cursor-pointer transition-colors">Lightroom Photo Editing Services</h3>
-          </div>
-        </div>
-
-        <div class="flex items-start gap-4">
-          <div class="flex-shrink-0 w-24 pt-1">
-            <span class="text-gray-700 font-medium">2009</span>
-          </div>
-          <div class="flex-grow">
-            <h3 class="text-lg font-medium text-gray-900 hover:text-amber-500 cursor-pointer transition-colors">Old Photo Retouching Restoration Services</h3>
-          </div>
-        </div>
-
-        <div class="flex items-start gap-4">
-          <div class="flex-shrink-0 w-24 pt-1">
-            <span class="text-gray-700 font-medium">2003</span>
-          </div>
-          <div class="flex-grow">
-            <h3 class="text-lg font-medium text-gray-900 hover:text-amber-500 cursor-pointer transition-colors">Portrait Retouching Services</h3>
-          </div>
-        </div>
-      </div>
-
-      <!-- CTA Section -->
-      <div class="mt-16 text-center">
-        <h3 class="text-2xl font-bold text-gray-900 mb-4">LET'S WORK TOGETHER</h3>
-        <p class="text-xl text-gray-600 mb-8">Our image retouchers are ready for you.</p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <button class="px-8 py-3 bg-amber-400 hover:bg-amber-500 bg-green-700 hover:bg-green-800 text-white font-medium rounded-lg transition-colors">
-            Try for Free
-          </button>
-          <button class="px-8 py-3 border-2 border-amber-400 text-amber-500 hover:bg-amber-50 font-medium rounded-lg transition-colors">
-            Get a Quote
-          </button>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 </template>
+
+<script setup>
+import { ref } from 'vue';
+
+const timelineItems = ref([
+  {
+    date: 'JAN, 2019',
+    category: 'The beginning',
+    title: 'Rainbow Retouch was founded in British Columbia, USA',
+    description: 'Launched by a team of passionate designers aiming to deliver high-quality photo editing and manipulation services to global clients.'
+  },
+  {
+    date: 'DEC, 2019',
+    category: 'First milestone',
+    title: 'Served 1,000 clients across 10 countries',
+    description: 'Built a reputation for reliable service, quick turnaround, and premium quality retouching.'
+  },
+  {
+    date: 'AUG, 2020',
+    category: 'Scaling Up',
+    title: 'Expanded the team and added advanced image masking and shadow services',
+    description: 'Invested in skilled talent and automation tools to handle bulk orders more efficiently.'
+  },
+  {
+    date: 'APR, 2021',
+    category: 'Creative Studio Launched',
+    title: 'Opened an in-house creative studio for complex editing projects',
+    description: 'Enabled real-time collaboration for advertising agencies and fashion brands.'
+  },
+  {
+    date: 'JUL, 2022',
+    category: 'Industry Recognition',
+    title: 'Featured in ‘Top 10 Photo Editing Agencies’ by CreativeCloudMag',
+    description: 'Recognized for consistency, client satisfaction, and innovative techniques.'
+  }
+]);
+</script>

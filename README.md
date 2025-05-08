@@ -1,6 +1,6 @@
 #todo
-- services ->worldwide ->
-- Slider on Services HOmepage
+- [ ] services ->worldwide ->
+- [x] Slider on Services HOmepage
 - [x] Announcement bug fix
 - Upload form background animated particles
 - paypal, visa, bank transfer, western union, moneygram

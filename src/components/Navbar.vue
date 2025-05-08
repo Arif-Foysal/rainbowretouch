@@ -53,6 +53,7 @@ const serviceCategories = [
   {
     title: "E-Commerce Photo Editing",
     icon: "/icons/image-icon.svg",
+
     services: [
       { name: "Clothing Photo Editing", url: "#" },
       { name: "Shoe Photo Editing", url: "#" },
@@ -204,7 +205,7 @@ onBeforeUnmount(() => {
                             </div>
                             <div class="mega-menu-content">
                                 <div v-for="(category, index) in serviceCategories" :key="index" class="mega-menu-category">
-                                    <div @click="changePage(8)" class="category-header cursor-pointer hover:bg-gray-100 p-2 rounded-md">
+                                    <div @click="changePage(index+8)" class="category-header cursor-pointer hover:bg-blue-100 p-2 rounded-md">
                                         <div class="category-icon">
                                             <img :src="category.icon" alt="" class="w-6 h-6">
                                         </div>
