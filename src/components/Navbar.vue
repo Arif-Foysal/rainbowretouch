@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { useRoute,useRouter } from 'vue-router';
 import logo from '@/assets/logo.png'; // Update the path to your logo
 import Player from './Player.vue';
 
@@ -22,6 +23,13 @@ const changePage = (index) => {
     }
    
 };
+
+//router
+const route = useRoute();
+const router = useRouter();
+
+
+
 
 // Toggle mobile menu
 const toggleMobileMenu = () => {
@@ -53,7 +61,7 @@ const serviceCategories = [
   {
     title: "E-Commerce Photo Editing",
     icon: "/icons/image-icon.svg",
-
+    routeName: "Ecommerce",
     services: [
       { name: "Clothing Photo Editing", url: "#" },
       { name: "Shoe Photo Editing", url: "#" },
@@ -67,6 +75,7 @@ const serviceCategories = [
   {
     title: "Background Removal",
     icon: "/icons/vfx-icon.svg",
+    routeName: "BackgroundRemoval",
     services: [
       { name: "Clipping Path Services", url: "#" },
       { name: "Reflection Shadow", url: "#" },
@@ -80,6 +89,7 @@ const serviceCategories = [
   {
     title: "Photo Retouching",
     icon: "/icons/web-icon.svg",
+    routeName: "PhotoRetouching",
     services: [
       { name: "Headshot Retouching", url: "#" },
       { name: "Portrait Retouching", url: "#" },
@@ -92,6 +102,7 @@ const serviceCategories = [
   {
     title: "Digital Marketing",
     icon: "/icons/web-icon.svg",
+    routeName: "DigitalMarketing",
     services: [
       { name: "Facebook Marketing", url: "#" },
       { name: "Search Engine Optimization(SEO)", url: "#" },
@@ -176,17 +187,33 @@ onBeforeUnmount(() => {
         <div :class="['lg:block lg:w-auto', mobileMenuOpen ? 'block w-full mobile-menu-container' : 'hidden w-full']" id="navbar-default">
             <ul class="font-medium flex flex-col p-4 lg:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 lg:flex-row lg:space-x-8 rtl:space-x-reverse lg:mt-0 lg:border-0 lg:bg-gray-100 mobile-menu-content">
                 <li>
-                    <a @click.prevent="changePage(0)" href="index.php" :class="['block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black', currentPageIndex === 0 ? ' border-b-4 border-indigo-600' : 'text-gray-700']" aria-current="page">Home</a>
+                    <!-- Use router-link for navigation -->
+                    <router-link :to="{ name: 'Home' }" v-slot="{ isExactActive }">
+                        <a
+                            class="block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black border-b-4 border-transparent hover:border-indigo-400"
+                            :class="isExactActive ? 'border-indigo-600' : 'text-gray-600'"
+                        >
+                            Home
+                        </a>
+                    </router-link>
+                  
                 </li>
                 <li>
-                    <a @click.prevent="changePage(1)" href="about.php" :class="['block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black hover:border-indigo-400', currentPageIndex === 1 ? 'border-b-4 border-indigo-600' : 'text-gray-700']">About</a>
+                    <!-- Use router-link for navigation -->
+                    <router-link :to="{ name: 'About' }" v-slot="{ isExactActive }">
+                        <a
+                            class="block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black border-b-4 border-transparent hover:border-indigo-400"
+                            :class="isExactActive ? 'border-indigo-600' : 'text-gray-600'"
+                        >
+                        About</a>
+                    </router-link>
                 </li>
                 <li class="dropdown services-dropdown">
                     <!-- Services dropdown trigger -->
                     <a 
                       href="#" 
-                      :class="['block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black hover:border-indigo-400', currentPageIndex === 2 ? 'border-b-4 border-indigo-600' : 'text-gray-700']" 
-                      aria-current="page"
+                      class="block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black hover:border-indigo-400 text-gray-700"
+                    
                     >
                         <div class="flex items-center justify-between">
                             <p>Services</p>
@@ -203,14 +230,14 @@ onBeforeUnmount(() => {
                                 <h3 class="text-xl font-bold text-gray-800">Our Services</h3>
                                 <p class="text-gray-600">Professional solutions for your business needs</p>
                             </div>
-                            <div class="mega-menu-content">
+                            <div class="mega-menu-content overflow-y-auto max-h-102">
                                 <div v-for="(category, index) in serviceCategories" :key="index" class="mega-menu-category">
-                                    <div @click="changePage(index+8)" class="category-header cursor-pointer hover:bg-blue-100 p-2 rounded-md">
+                                    <router-link :to="{name:category.routeName}" class="category-header cursor-pointer hover:bg-blue-100 p-2 rounded-md">
                                         <div class="category-icon">
                                             <img :src="category.icon" alt="" class="w-6 h-6">
                                         </div>
                                         <h4 class="category-title">{{ category.title }}</h4>
-                                    </div>
+                                    </router-link>
                                     <ul class="category-services">
                                         <li v-for="(service, sIndex) in category.services" :key="sIndex">
                                             <a :href="service.url" class="service-link">{{ service.name }}</a>
@@ -219,7 +246,7 @@ onBeforeUnmount(() => {
                                 </div>
                             </div>
                             <div class="mega-menu-footer">
-                                <a @click.prevent="changePage(2)" href="#" class="view-all-services">View all services</a>
+                                <router-link :to="{name:'Services'}"  class="view-all-services">View all services</router-link>
                                 <a href="#" class="request-quote">Request a quote</a>
                             </div>
                         </div>
@@ -258,19 +285,49 @@ onBeforeUnmount(() => {
                 </li>
                 <!-- Rest of the menu items remain the same -->
                 <li>
-                    <a @click.prevent="changePage(3)" href="pricing.php" :class="['block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black', currentPageIndex === 3 ? 'border-b-4 border-indigo-600' : 'text-gray-700']">Pricing</a>
+                    <router-link :to="{ name: 'Pricing' }" v-slot="{ isExactActive }">
+                        <a
+                            class="block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black border-b-4 border-transparent hover:border-indigo-400"
+                            :class="isExactActive ? 'border-indigo-600' : 'text-gray-600'"
+                        >
+                        Pricing</a>
+                    </router-link>
                 </li>
                 <li>
-                    <a @click.prevent="changePage(4)" href="#" :class="['block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black', currentPageIndex === 4 ? 'border-b-4 border-indigo-600' : 'text-gray-700']">Portfolio</a>
+                    <router-link :to="{ name: 'Portfolio' }" v-slot="{ isExactActive }">
+                        <a
+                            class="block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black border-b-4 border-transparent hover:border-indigo-400"
+                            :class="isExactActive ? 'border-indigo-600' : 'text-gray-600'"
+                        >
+                        Portfolio</a>
+                    </router-link>
                 </li>
                 <li>
-                    <a @click.prevent="changePage(5)" href="blog.php" :class="['block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black', currentPageIndex === 5 ? 'border-b-4 border-indigo-600' : 'text-gray-700']">Blog</a>
+                    <router-link :to="{ name: 'Blog' }" v-slot="{ isExactActive }">
+                        <a
+                            class="block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black border-b-4 border-transparent hover:border-indigo-400"
+                            :class="isExactActive ? 'border-indigo-600' : 'text-gray-600'"
+                        >
+                        Blog</a>
+                    </router-link>
                 </li>
                 <li>
-                    <a @click.prevent="changePage(6)" href="workflow.php" :class="['block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black', currentPageIndex === 6 ? 'border-b-4 border-indigo-600' : 'text-gray-700']">Workflow</a>
+                    <router-link :to="{ name: 'Workflow' }" v-slot="{ isExactActive }">
+                        <a
+                            class="block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black border-b-4 border-transparent hover:border-indigo-400"
+                            :class="isExactActive ? 'border-indigo-600' : 'text-gray-600'"
+                        >
+                        Workflow</a>
+                    </router-link>
                 </li>
                 <li>
-                    <a @click.prevent="changePage(7)" href="contact.php" :class="['block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black', currentPageIndex === 7 ? 'border-b-4 border-indigo-600' : 'text-gray-700']">Contact</a>
+                    <router-link :to="{ name: 'Contact' }" v-slot="{ isExactActive }">
+                        <a
+                            class="block py-2 px-3 lg:p-0 text-lg font-semibold hover:text-black border-b-4 border-transparent hover:border-indigo-400"
+                            :class="isExactActive ? 'border-indigo-600' : 'text-gray-600'"
+                        >
+                        Contact</a>
+                    </router-link>
                 </li>
                 
                 <li class="dropdown">

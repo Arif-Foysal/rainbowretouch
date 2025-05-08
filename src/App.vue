@@ -21,6 +21,7 @@ import UploadForm from '@/components/UploadForm.vue';
 
 
 import Services_Ecomm from './pages/Services_Ecomm.vue';
+import router from './router';
 
 const pages = [
     {
@@ -80,13 +81,18 @@ const openContactModal = () => {
 </script>
 
 <template>
+
+
 <Navbar 
     :pages="pages"
     :currentPageIndex="currentPageIndex"
     v-on:update:current-page-index="changePage"
     @open-contact-modal="openContactModal"
  />
- <component :is="pages[currentPageIndex].component"/>
+ 
+<router-view/>
+
+
  <div>
 
 
@@ -102,5 +108,9 @@ const openContactModal = () => {
 </template>
 
 <style scoped>
+.router-link-exact-active {
+  color: #f00;
+  font-weight: bold;
+}
 
 </style>
