@@ -59,15 +59,13 @@ const toggleCategory = (index) => {
 // Service categories with icons for the mega menu
 const serviceCategories = [
   {
-    title: "E-Commerce Photo Editing",
+    title: "E-Commerce Product Editing",
     icon: "/icons/image-icon.svg",
     routeName: "Ecommerce",
     services: [
-      { name: "Clothing Photo Editing", url: "#" },
-      { name: "Shoe Photo Editing", url: "#" },
-      { name: "Hat and Bag Photo Editing", url: "#" },
-      { name: "Eyeglass photo editing", url: "#" },
-      { name: "Shoe product editing", url: "#" },
+      { name: "Clothing Product Editing", url: "#" },
+      { name: "Shoe Product Editing", url: "#" },
+      { name: "Eyeglass Product Editing", url: "#" },
       { name: "Color Correction", url: "#" },
       { name: "Shadow Creation", url: "#" }
     ]
@@ -78,9 +76,7 @@ const serviceCategories = [
     routeName: "BackgroundRemoval",
     services: [
       { name: "Clipping Path Services", url: "#" },
-      { name: "Reflection Shadow", url: "#" },
-      { name: "Original Shadow", url: "#" },
-      { name: "Drop Shadow", url: "#" },
+      { name: "Create Shadow", url: "#" },
       { name: "Image Masking Service", url: "#" },
         { name: "Ghost Mannequin", url: "#" },
         { name: "Color Correction", url: "#" }
@@ -91,11 +87,9 @@ const serviceCategories = [
     icon: "/icons/web-icon.svg",
     routeName: "PhotoRetouching",
     services: [
-      { name: "Headshot Retouching", url: "#" },
-      { name: "Portrait Retouching", url: "#" },
       { name: "Model Retouching", url: "#" },
-      { name: "Highend Retouching", url: "#" },
-      { name: "Newborn Retouching", url: "#" },
+      { name: "High-end Retouching", url: "#" },
+      { name: "Jewelry Retouching", url: "#" },
       { name: "Wedding Photo Retouching", url: "#" }
     ]
   },

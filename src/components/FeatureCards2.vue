@@ -75,26 +75,26 @@ onMounted(() => {
 </script>
 
 <template>
-  <section ref="sectionRef" class="py-24  overflow-hidden">
+  <section ref="sectionRef" class="py-24 px-8  overflow-hidden ">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-20">
-        <h2 class="text-4xl md:text-5xl font-bold
+      <div class="text-center">
+        <h2 class="text-4xl font-bold
  mb-6">
           Professional Photo Retouching and Editing Services
         </h2>
         <div class="w-32 h-2 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500 mx-auto rounded-full"></div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
         <div
           v-for="(feature, index) in features"
           :key="index"
           class="feature-card opacity-0 group"
         >
-          <div class="relative p-8 rounded-2xl bg-white shadow-[8px_8px_16px_#e2e8f0,-8px_-8px_16px_#ffffff] hover:shadow-[12px_12px_24px_#e2e8f0,-12px_-12px_24px_#ffffff] transition-all duration-500">
+          <div class="relative p-8 rounded-2xl border-2 border-gray-200 hover:bg-gray-100 shadow-[8px_8px_16px_#e2e8f0,-8px_-8px_16px_#ffffff] hover:shadow-[12px_12px_24px_#e2e8f0,-12px_-12px_24px_#ffffff] transition-all duration-500">
             <div class="relative z-10">
               <div 
-                :class="[feature.color, 'inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gray-50 shadow-inner mb-6 group-hover:scale-110 transition-transform duration-500']"
+                :class="[feature.color, 'inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gray-50 shadow-inner mb-6 group-hover:scale-110 transition-transform duration-500']"
                 v-html="feature.icon"
               ></div>
               <h3 class="text-2xl font-bold text-gray-900 mb-4 transform transition-all duration-500 group-hover:-translate-y-1 group-hover:text-amber-600">{{ feature.title }}</h3>

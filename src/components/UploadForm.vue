@@ -1,6 +1,6 @@
 <template>
     <div class="w-full">
-      <form @submit.prevent="submitForm" class="space-y-6">
+      <form @submit.prevent="submitForm" class="space-y-1">
         <!-- Name Field -->
         <div class="grid gap-2">
           <label for="name" class="text-sm font-medium text-gray-700">Your Name</label>
@@ -84,7 +84,7 @@
         </div>
         
         <!-- File Upload -->
-        <div class="w-full mb-5">
+        <div class="w-full mb-4">
           <label 
             for="dropzone-file" 
             class="flex flex-col items-center justify-center py-9 w-full border border-gray-300 border-dashed rounded-2xl cursor-pointer bg-gray-50"

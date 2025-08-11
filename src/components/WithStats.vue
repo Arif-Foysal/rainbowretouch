@@ -138,7 +138,7 @@
   .stat-card {
     background-color: #f8f9fa;
     border-radius: 8px;
-    padding: 30px 20px;
+    padding: 40px 40px;
     display: flex;
     flex-direction: column;
     align-items: center;

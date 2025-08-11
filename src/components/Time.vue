@@ -1,5 +1,12 @@
 <template>
-  <h1 class="text-center text-6xl font-bold text-gray-800">Rainbow Retouch Journey</h1>
+
+    <MarqueeText 
+    :duration="10" 
+    class="text-xl font-bold text-white bg-gray-800 p-2 rounded shadow-sm"
+    :paused="false"
+  >
+   Welcome to rainbow retouch journey 24hrs live support, your trusted partner in creative design and digital image enhancement.
+  </MarqueeText>
   <br>
   <p class="text-center text-xl text-gray-700">A visual timeline of Rainbow Retouch’s growth, milestones, and achievements in the world of creative design and digital image enhancement.</p>
   <br>
@@ -38,6 +45,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import MarqueeText from 'vue-marquee-text-component'
 
 const timelineItems = ref([
   {

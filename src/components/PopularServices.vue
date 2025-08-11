@@ -1,5 +1,5 @@
 <template>
-    <section class="py-16 px-8 md:px-16 lg:px-20  mx-auto">
+    <section class="py-4 px-8 md:px-16 lg:px-20  mx-auto">
       <!-- Section Title -->
       <div class="mb-12 text-center">
         <h2 class="text-3xl md:text-4xl font-bold tracking-wider text-gray-800">
@@ -55,14 +55,14 @@
       </div>
       <br>
       <br>
-      <div class="flex justify-center items-center">
+      <!-- <div class="flex justify-center items-center">
         <button 
               class="py-3 px-4 bg-transparent border-2 border-red-500 text-red-500 rounded-md font-semibold tracking-wide hover:bg-red-500 hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-2"
               aria-label="Read more about the ${service.name} service"
             >
               ALL SERVICES
             </button>
-      </div>
+      </div> -->
     </section>
   </template>
   

@@ -44,23 +44,14 @@ import BeforeAfter from '@/components/BeforeAfter.vue';
 <Brandings/>
 <Timeline/>
 
-<DataMap/>
-<section class="py-8 ">
-        <div>
-            <Support/>
-            
-
-<Investors/>
-
-        </div>
-</section>
-                                            
+<!-- <DataMap/> -->
+                             
 
 
 
 </div>
 
-<WithStats/>
+
 <Announcement/>
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
     <DiscountCards/>
