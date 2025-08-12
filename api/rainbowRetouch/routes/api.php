@@ -93,7 +93,7 @@ Route::get('/services/{id}', function ($id) {
 });
 
 // CREATE - Create new service
-Route::post('/services', function (Request $request) {
+Route::middleware('auth:sanctum')->post('/services', function (Request $request) {
     $validated = $request->validate([
         'name' => 'required|string|max:255',
         'description' => 'required|string'
@@ -139,7 +139,7 @@ Route::get('/subcategories/{id}', function ($id) {
 });
 
 // CREATE - Create new subcategory
-Route::post('/subcategories', function (Request $request) {
+Route::middleware('auth:sanctum')->post('/subcategories', function (Request $request) {
     $validated = $request->validate([
         'service_id' => 'required|exists:services,id',
         'name' => 'required|string|max:255',

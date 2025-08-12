@@ -67,3 +67,60 @@ curl -X DELETE http://localhost:8000/api/contacts/1 \
   -H "Accept: application/json"
 ```
 
+
+## Service api
+
+### Get all services
+
+```bash
+curl -X GET http://localhost:8000/api/services \
+  -H "Accept: application/json"
+```
+
+### Get a specific service by ID
+
+```bash
+curl -X GET http://localhost:8000/api/services/1 \
+  -H "Accept: application/json"
+``` 
+
+### Create a new service (auth required)
+
+```bash
+# First, login to get a token
+curl -X POST http://localhost:8000/api/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "your@email.com",
+    "password": "yourpassword"
+  }'
+
+# Then create a service using the token
+curl -X POST http://localhost:8000/api/services \
+  -H "4|VkwYSzSN6lYPuQimUpSF7Q5RH9aQZOOXY1NAOmVxf78e984e" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{
+    "name": "Logo Design",
+    "description": "Professional logo design services for businesses"
+  }'
+```
+
+### Update a service by ID (auth required)
+
+```bash
+curl -X PUT http://localhost:8000/api/services/1 \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{
+    "name": "Premium Logo Design",
+    "description": "High-quality professional logo design services"
+  }'
+```
+
+### Delete a service by ID (auth required)
+
+```bash
+curl -X DELETE http://localhost:8000/api/services/1 \
+  -H "Accept: application/json"
+```
