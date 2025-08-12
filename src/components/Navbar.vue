@@ -335,9 +335,42 @@ onBeforeUnmount(() => {
                     </a>
                     <div class="dropdown-content">
                         <div class="dropdown-content-container">
-                            <a href="profile.php" @click="closeMenu" class="dropdown-item">Dashboard</a>
-                            <a href="signup.php" @click="closeMenu" class="dropdown-item">Sign Up</a>
-                            <a href="login.php" @click="closeMenu" class="dropdown-item">Log In</a>
+                            <router-link :to="{ name: 'Dashboard' }" v-slot="{ isExactActive }">
+                                <a
+                                    @click="closeMenu"
+                                    class="dropdown-item"
+                                    :class="isExactActive ? 'text-black' : ''"
+                                >
+                                    Dashboard
+                                </a>
+                            </router-link>
+                            <router-link :to="{ name: 'Profile' }" v-slot="{ isExactActive }">
+                                <a
+                                    @click="closeMenu"
+                                    class="dropdown-item"
+                                    :class="isExactActive ? 'text-indigo-600' : ''"
+                                >
+                                    Profile
+                                </a>
+                            </router-link>
+                             <router-link :to="{ name: 'Register' }" v-slot="{ isExactActive }">
+                                <a
+                                    @click="closeMenu"
+                                    class="dropdown-item"
+                                    :class="isExactActive ? 'text-indigo-600' : ''"
+                                >
+                                    Sign Up
+                                </a>
+                            </router-link>
+                            <router-link :to="{ name: 'Login' }" v-slot="{ isExactActive }">
+                                <a
+                                    @click="closeMenu"
+                                    class="dropdown-item"
+                                    :class="isExactActive ? 'text-indigo-600' : ''"
+                                >
+                                    Log In
+                                </a>
+                            </router-link>
                         </div>
                     </div>
                 </li>

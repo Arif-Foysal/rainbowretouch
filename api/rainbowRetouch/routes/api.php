@@ -18,9 +18,23 @@ Route::get('/', function () {
     return ['Laravel is workinggggggggggg' => app()->version()];
 });
 
+// DEBUG ROUTE - Check CSRF token and authentication setup
+Route::get('/debug-csrf', function (Request $request) {
+    return response()->json([
+        'csrf_token' => csrf_token(),
+        'session_id' => session()->getId(),
+        'cookies' => $request->cookies->all(),
+        'headers' => collect($request->headers->all())->map(function($item) {
+            return is_array($item) ? implode(', ', $item) : $item;
+        }),
+    ]);
+});
+
 // ===== AUTHENTICATION ROUTES =====
+// These routes handle SPA authentication with Sanctum
+
 // SIGNUP (Register)
-Route::post('/register', function (Request $request) {
+Route::middleware('guest')->post('/register', function (Request $request) {
     $validated = $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|string|email|max:255|unique:users',
@@ -50,7 +64,7 @@ Route::post('/register', function (Request $request) {
 
 
 // LOGIN
-Route::post('/login', function (Request $request) {
+Route::middleware('guest')->post('/login', function (Request $request) {
     $credentials = $request->validate([
         'email' => 'required|email',
         'password' => 'required',

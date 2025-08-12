@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { EnvelopeIcon, PhoneIcon, ChatBubbleLeftRightIcon } from '@heroicons/vue/24/outline'
 import { SparklesIcon, UserGroupIcon, HeartIcon } from '@heroicons/vue/24/solid'
+import api from '@/services/api'; // Import the API service
 
 const sectionRef = ref(null)
 const name = ref('')
@@ -9,6 +10,7 @@ const email = ref('')
 const message = ref('')
 const isSubmitting = ref(false)
 const submitStatus = ref(null) // 'success', 'error', or null
+const csrfToken = ref('')
 
 const badges = [
   {
@@ -66,50 +68,42 @@ onMounted(() => {
 
   const animatedElements = document.querySelectorAll('.animate-on-scroll')
   animatedElements.forEach(el => observer.observe(el))
+
+
 })
 
 // Function to submit the contact form
 const submitForm = async () => {
   if (!name.value || !email.value || !message.value) {
-    submitStatus.value = 'error'
-    return
+    submitStatus.value = 'error';
+    return;
   }
 
-  isSubmitting.value = true
-  submitStatus.value = null
+  isSubmitting.value = true;
+  submitStatus.value = null;
 
   try {
-    const response = await fetch('http://localhost:8000/api/contacts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-        name: name.value,
-        email: email.value,
-        service: 'Contact Form Inquiry', // You can make this dynamic if needed
-        message: message.value
-      })
-    })
+    const response = await api.post('/contacts', {
+      name: name.value,
+      email: email.value,
+      message: message.value,
+    });
 
-    const data = await response.json()
-    
-    if (response.ok) {
-      submitStatus.value = 'success'
+    if (response.status === 201) {
+      submitStatus.value = 'success';
       // Reset form on success
-      name.value = ''
-      email.value = ''
-      message.value = ''
+      name.value = '';
+      email.value = '';
+      message.value = '';
     } else {
-      submitStatus.value = 'error'
-      console.error('Submission error:', data)
+      submitStatus.value = 'error';
+      console.error('Submission error:', response.data);
     }
   } catch (error) {
-    submitStatus.value = 'error'
-    console.error('Submission error:', error)
+    submitStatus.value = 'error';
+    console.error('Submission error:', error);
   } finally {
-    isSubmitting.value = false
+    isSubmitting.value = false;
   }
 }
 </script>
@@ -168,7 +162,7 @@ const submitForm = async () => {
             
             <!-- Status messages -->
             <div v-if="submitStatus === 'success'" class="text-green-600 bg-green-50 px-4 py-2 rounded-lg">
-              Your message has been sent successfully! We'll get back to you soon.
+              Your message has been sent successfully! Thank you for reaching out to us.
             </div>
             
             <div v-if="submitStatus === 'error'" class="text-red-600 bg-red-50 px-4 py-2 rounded-lg">
