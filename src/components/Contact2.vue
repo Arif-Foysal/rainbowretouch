@@ -4,6 +4,11 @@ import { EnvelopeIcon, PhoneIcon, ChatBubbleLeftRightIcon } from '@heroicons/vue
 import { SparklesIcon, UserGroupIcon, HeartIcon } from '@heroicons/vue/24/solid'
 
 const sectionRef = ref(null)
+const name = ref('')
+const email = ref('')
+const message = ref('')
+const isSubmitting = ref(false)
+const submitStatus = ref(null) // 'success', 'error', or null
 
 const badges = [
   {
@@ -62,6 +67,51 @@ onMounted(() => {
   const animatedElements = document.querySelectorAll('.animate-on-scroll')
   animatedElements.forEach(el => observer.observe(el))
 })
+
+// Function to submit the contact form
+const submitForm = async () => {
+  if (!name.value || !email.value || !message.value) {
+    submitStatus.value = 'error'
+    return
+  }
+
+  isSubmitting.value = true
+  submitStatus.value = null
+
+  try {
+    const response = await fetch('http://localhost:8000/api/contacts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        name: name.value,
+        email: email.value,
+        service: 'Contact Form Inquiry', // You can make this dynamic if needed
+        message: message.value
+      })
+    })
+
+    const data = await response.json()
+    
+    if (response.ok) {
+      submitStatus.value = 'success'
+      // Reset form on success
+      name.value = ''
+      email.value = ''
+      message.value = ''
+    } else {
+      submitStatus.value = 'error'
+      console.error('Submission error:', data)
+    }
+  } catch (error) {
+    submitStatus.value = 'error'
+    console.error('Submission error:', error)
+  } finally {
+    isSubmitting.value = false
+  }
+}
 </script>
 
 <template>
@@ -78,15 +128,17 @@ onMounted(() => {
             Send us your query and you will hear from one of our experts soon.
           </p>
           
-          <form class="space-y-6">
+          <form class="space-y-6" @submit.prevent="submitForm">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label for="name" class="block text-md font-medium text-gray-700 mb-1">Your Name</label>
                 <input 
                   type="text" 
                   id="name" 
+                  v-model="name"
                   class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                   placeholder="John Doe"
+                  required
                 >
               </div>
               <div>
@@ -94,8 +146,10 @@ onMounted(() => {
                 <input 
                   type="email" 
                   id="email" 
+                  v-model="email"
                   class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                   placeholder="john@example.com"
+                  required
                 >
               </div>
             </div>
@@ -105,16 +159,29 @@ onMounted(() => {
               <textarea 
                 id="message" 
                 rows="5" 
+                v-model="message"
                 class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                 placeholder="Tell us about your project..."
+                required
               ></textarea>
+            </div>
+            
+            <!-- Status messages -->
+            <div v-if="submitStatus === 'success'" class="text-green-600 bg-green-50 px-4 py-2 rounded-lg">
+              Your message has been sent successfully! We'll get back to you soon.
+            </div>
+            
+            <div v-if="submitStatus === 'error'" class="text-red-600 bg-red-50 px-4 py-2 rounded-lg">
+              There was an error sending your message. Please try again.
             </div>
             
             <button 
               type="submit" 
               class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105"
+              :disabled="isSubmitting"
             >
-              SEND MESSAGE
+              <span v-if="isSubmitting">SENDING...</span>
+              <span v-else>SEND MESSAGE</span>
             </button>
           </form>
         </div>

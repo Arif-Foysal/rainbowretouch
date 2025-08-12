@@ -10,7 +10,7 @@ Use token-based authentication instead of cookie-based
 return [
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
     'allowed_methods' => ['*'],
-    'allowed_origins' => ['http://rainbowretouch.com'], // Replace with your SPA domain
+    'allowed_origins' => ['http://rainbowretouch.com', 'http://localhost:5153', 'http://localhost:5173'], // Replace with your SPA domain
     'allowed_origins_patterns' => [],
     'allowed_headers' => ['*'],
     'exposed_headers' => [],
