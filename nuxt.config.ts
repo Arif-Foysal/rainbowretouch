@@ -7,7 +7,8 @@ export default defineNuxtConfig({
     '@nuxt/content',
     '@vueuse/nuxt',
     'nuxt-og-image',
-    '@nuxtjs/supabase'
+    '@nuxtjs/supabase',
+    '@vueuse/motion/nuxt'
   ],
   supabase: {
     redirectOptions: {

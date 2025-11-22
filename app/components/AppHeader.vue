@@ -77,9 +77,10 @@ const items = computed(() => [
   <UHeader>
     <template #left>
       <NuxtLink to="/">
-        <AppLogo class="w-auto h-6 shrink-0" />
+        <AppLogo class="w-auto h-14 shrink-0" />
+        <!-- <Logo/> -->
       </NuxtLink>
-      <TemplateMenu />
+      <!-- <TemplateMenu /> -->
     </template>
 
     <UNavigationMenu

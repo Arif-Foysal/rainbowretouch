@@ -18,7 +18,8 @@ definePageMeta({
 
 <template>
   <div v-if="page">
-    <UPageHero
+    <Hero/>
+    <!-- <UPageHero
       :title="page.title"
       :description="page.description"
       :links="page.hero.links"
@@ -35,7 +36,7 @@ definePageMeta({
       </template>
 
       <PromotionalVideo />
-    </UPageHero>
+    </UPageHero> -->
 
     <UPageSection
       v-for="(section, index) in page.sections"
@@ -49,7 +50,7 @@ definePageMeta({
       <ImagePlaceholder />
     </UPageSection>
 
-    <UPageSection
+    <UPageSection v-motion-slide-visible-bottom
       :title="page.features.title"
       :description="page.features.description"
     >
@@ -62,7 +63,13 @@ definePageMeta({
         />
       </UPageGrid>
     </UPageSection>
+    <UPageSection
+          :title="'Rainbow Retouch Timeline'"
+      :description="page.features.description"
+    >
 
+    <Changelog/>
+</UPageSection>
     <UPageSection
       id="testimonials"
       :headline="page.testimonials.headline"
