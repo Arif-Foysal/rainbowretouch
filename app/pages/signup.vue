@@ -11,7 +11,17 @@ useSeoMeta({
   description: 'Create an account to get started'
 })
 
+const supabase = useSupabaseClient()
+const user = useSupabaseUser()
+const router = useRouter()
 const toast = useToast()
+
+// Redirect if already logged in
+watchEffect(() => {
+  if (user.value) {
+    router.push('/dashboard')
+  }
+})
 
 const fields = [{
   name: 'name',
@@ -33,14 +43,30 @@ const fields = [{
 const providers = [{
   label: 'Google',
   icon: 'i-simple-icons-google',
-  onClick: () => {
-    toast.add({ title: 'Google', description: 'Login with Google' })
+  onClick: async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`
+      }
+    })
+    if (error) {
+      toast.add({ title: 'Error', description: error.message, color: 'red' })
+    }
   }
 }, {
   label: 'GitHub',
   icon: 'i-simple-icons-github',
-  onClick: () => {
-    toast.add({ title: 'GitHub', description: 'Login with GitHub' })
+  onClick: async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`
+      }
+    })
+    if (error) {
+      toast.add({ title: 'Error', description: error.message, color: 'red' })
+    }
   }
 }]
 
@@ -52,8 +78,43 @@ const schema = z.object({
 
 type Schema = z.output<typeof schema>
 
-function onSubmit(payload: FormSubmitEvent<Schema>) {
-  console.log('Submitted', payload)
+const loading = ref(false)
+
+async function onSubmit(payload: FormSubmitEvent<Schema>) {
+  loading.value = true
+  
+  const { data, error } = await supabase.auth.signUp({
+    email: payload.data.email,
+    password: payload.data.password,
+    options: {
+      data: {
+        name: payload.data.name
+      }
+    }
+  })
+
+  if (error) {
+    toast.add({
+      title: 'Signup Failed',
+      description: error.message,
+      color: 'red'
+    })
+  } else if (data.user && !data.user.email_confirmed_at) {
+    toast.add({
+      title: 'Check Your Email',
+      description: 'We sent you a confirmation link. Please check your email to complete signup.',
+      color: 'blue'
+    })
+  } else {
+    toast.add({
+      title: 'Success',
+      description: 'Account created successfully!',
+      color: 'green'
+    })
+    // User will be automatically redirected by auth middleware
+  }
+  
+  loading.value = false
 }
 </script>
 
@@ -64,6 +125,7 @@ function onSubmit(payload: FormSubmitEvent<Schema>) {
     :providers="providers"
     title="Create an account"
     :submit="{ label: 'Create account' }"
+    :loading="loading"
     @submit="onSubmit"
   >
     <template #description>

@@ -1,8 +1,56 @@
 <script setup lang="ts">
 const route = useRoute()
 
-const items = computed(() => [{
+const items = computed(() => [
+{
+  label: 'Home',
+  icon: 'i-lucide-home',
+  to: '/',
+  active: route.path === '/'
+}, 
+{
+  label: 'About',
+  to: '/about',
+  active: route.path === '/about',
+  icon: 'i-lucide-store'
+
+},
+{
+  label: 'Services',
+  to: '/services',
+  active: route.path === '/services',
+  icon: 'i-lucide-image-plus',
+  children: [
+      {
+        label: 'Introduction',
+        description: 'Fully styled and customizable components for Nuxt.',
+        icon: 'i-lucide-house'
+      },
+      {
+        label: 'Installation',
+        description: 'Learn how to install and configure Nuxt UI in your application.',
+        icon: 'i-lucide-cloud-download'
+      },
+      {
+        label: 'Icons',
+        icon: 'i-lucide-smile',
+        description: 'You have nothing to do, @nuxt/icon will handle it automatically.'
+      },
+      {
+        label: 'Colors',
+        icon: 'i-lucide-swatch-book',
+        description: 'Choose a primary and a neutral color from your Tailwind CSS theme.'
+      },
+      {
+        label: 'Theme',
+        icon: 'i-lucide-cog',
+        description: 'You can customize components by using the `class` / `ui` props or in your app.config.ts.'
+      }
+    ]
+},
+{
   label: 'Docs',
+  icon: 'i-lucide-book-open',
   to: '/docs',
   active: route.path.startsWith('/docs')
 }, {
@@ -14,7 +62,15 @@ const items = computed(() => [{
 }, {
   label: 'Changelog',
   to: '/changelog'
-}])
+},
+{
+  label: 'Contact',
+  to: '/contact',
+  icon: 'i-lucide-mail'
+}
+
+
+])
 </script>
 
 <template>
@@ -28,7 +84,8 @@ const items = computed(() => [{
 
     <UNavigationMenu
       :items="items"
-      variant="link"
+      variant="pill"
+      
     />
 
     <template #right>
@@ -85,3 +142,21 @@ const items = computed(() => [{
     </template>
   </UHeader>
 </template>
+
+<!-- <style scoped>
+/* Make services dropdown children wider */
+:deep(.navigation-menu-content) {
+  min-width: 1000px;
+  width: max-content;
+}
+
+:deep(.navigation-menu-content .navigation-menu-item) {
+  min-width: 100%;
+  width: auto;
+}
+
+/* Ensure the dropdown content has proper spacing */
+:deep(.navigation-menu-content) {
+  padding: 0.75rem;
+}
+</style> -->

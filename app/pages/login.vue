@@ -11,7 +11,17 @@ useSeoMeta({
   description: 'Login to your account to continue'
 })
 
+const supabase = useSupabaseClient()
+const user = useSupabaseUser()
+const router = useRouter()
 const toast = useToast()
+
+// Redirect if already logged in
+watchEffect(() => {
+  if (user.value) {
+    router.push('/dashboard')
+  }
+})
 
 const fields = [{
   name: 'email',
@@ -33,14 +43,30 @@ const fields = [{
 const providers = [{
   label: 'Google',
   icon: 'i-simple-icons-google',
-  onClick: () => {
-    toast.add({ title: 'Google', description: 'Login with Google' })
+  onClick: async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`
+      }
+    })
+    if (error) {
+      toast.add({ title: 'Error', description: error.message, color: 'red' })
+    }
   }
 }, {
   label: 'GitHub',
   icon: 'i-simple-icons-github',
-  onClick: () => {
-    toast.add({ title: 'GitHub', description: 'Login with GitHub' })
+  onClick: async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`
+      }
+    })
+    if (error) {
+      toast.add({ title: 'Error', description: error.message, color: 'red' })
+    }
   }
 }]
 
@@ -51,8 +77,32 @@ const schema = z.object({
 
 type Schema = z.output<typeof schema>
 
-function onSubmit(payload: FormSubmitEvent<Schema>) {
-  console.log('Submitted', payload)
+const loading = ref(false)
+
+async function onSubmit(payload: FormSubmitEvent<Schema>) {
+  loading.value = true
+  
+  const { error } = await supabase.auth.signInWithPassword({
+    email: payload.data.email,
+    password: payload.data.password
+  })
+
+  if (error) {
+    toast.add({
+      title: 'Login Failed',
+      description: error.message,
+      color: 'red'
+    })
+  } else {
+    toast.add({
+      title: 'Success',
+      description: 'Welcome back!',
+      color: 'green'
+    })
+    // The user will be automatically redirected by the auth middleware
+  }
+  
+  loading.value = false
 }
 </script>
 
@@ -63,6 +113,7 @@ function onSubmit(payload: FormSubmitEvent<Schema>) {
     :providers="providers"
     title="Welcome back"
     icon="i-lucide-lock"
+    :loading="loading"
     @submit="onSubmit"
   >
     <template #description>

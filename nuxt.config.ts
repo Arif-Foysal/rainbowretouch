@@ -6,9 +6,16 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxt/content',
     '@vueuse/nuxt',
-    'nuxt-og-image'
+    'nuxt-og-image',
+    '@nuxtjs/supabase'
   ],
-
+  supabase: {
+    redirectOptions: {
+      login: '/login',
+      callback: '/confirm',
+      exclude: ['/', '/about', '/services', '/docs/**', '/pricing', '/blog/**', '/changelog/**', '/signup', '/login']
+    }
+  },
   devtools: {
     enabled: true
   },
