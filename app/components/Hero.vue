@@ -29,10 +29,10 @@
   >
   
     <template #title>
-      <h1 class=" text-gray-200">Transforming Ideas Into Visual Masterpieces</h1>
+      <h1 class="">Transforming Ideas Into Visual Masterpieces</h1>
     </template>
     <template #description>
-      <p class="mt-4 text-lg text-gray-300">We create stunning visual experiences that captivate audiences and elevate brands. From branding to digital design, we bring your creative vision to life with precision and artistry.</p>
+      <p class="mt-4 text-lg">We create stunning visual experiences that captivate audiences and elevate brands. From branding to digital design, we bring your creative vision to life with precision and artistry.</p>
     </template>
     <template #default>
       <!-- Background Image with Overlay -->

@@ -10,7 +10,7 @@
         <div class="lg:col-span-2">
           <UCard variant="subtle" class="p-2">
             <template #header>
-              <h2 class="text-3xl">Start Your Project</h2>
+              <h2 class="text-3xl">Start Your Projects</h2>
               <p class="text-sm text-gray-500 mt-1">Tell us about your goals and we'll propose the best approach.</p>
             </template>
 
@@ -266,6 +266,8 @@ import { ref, reactive } from 'vue'
 import { useSupabaseClient } from '#imports'
 
 const supabase = useSupabaseClient()
+
+
 
 /* ---------- State ---------- */
 const state = reactive({

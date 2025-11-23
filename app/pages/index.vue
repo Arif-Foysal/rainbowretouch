@@ -11,9 +11,9 @@ useSeoMeta({
   description,
   ogDescription: description
 })
-definePageMeta({
-  auth: false // This page requires authentication
-})
+// definePageMeta({
+//   auth: false // This page requires no authentication
+// })
 </script>
 
 <template>
