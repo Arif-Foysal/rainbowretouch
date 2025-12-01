@@ -1,78 +1,148 @@
 <template>
-    <div>
+  <div class="relative h-[90vh] w-full overflow-hidden">
+    <UCarousel
+      ref="carousel"
+      v-slot="{ item }"
+      :items="slides"
+      :autoplay="{ delay: 5000 }"
+      loop
+      fade
+      arrows
+      dots
+      :ui="{
+        root: 'h-full',
+        viewport: 'h-full',
+        container: 'h-full',
+        item: 'h-full',
+        arrows: 'px-8',
+        prev: '!start-8 !top-1/2 -translate-y-1/2 backdrop-blur-sm bg-black/30 hover:bg-black/50 text-white border-0',
+        next: '!end-8 !top-1/2 -translate-y-1/2 backdrop-blur-sm bg-black/30 hover:bg-black/50 text-white border-0',
+        dots: '!bottom-12 z-20',
+        dot: 'w-12 h-1.5 bg-white/50 hover:bg-white/80 data-[state=active]:bg-white transition-all duration-300'
+      }"
+      class="h-full"
+      @select="onSlideChange"
+    >
+      <!-- Image Background -->
+      <div class="relative h-full w-full">
+        <img 
+          :src="item.image" 
+          :alt="item.title"
+          class="absolute inset-0 h-full w-full object-cover"
+        />
         
-        <!-- <HeroBackground/> -->
-    <UPageHero
-    headline="Rainbow Retouch"
-    title="Transforming Ideas Into Visual Masterpieces"
-    description="We create stunning visual experiences that captivate audiences and elevate brands. From branding to digital design, we bring your creative vision to life with precision and artistry."
-    orientation="horizontal"
-    :links="[
-      {
-        label: 'View Our Work',
-        color: 'primary',
-        size: 'xl',
-        to: '/portfolio'
-      },
-      {
-        label: 'Get in Touch',
-        variant: 'outline',
-        size: 'xl',
-        to: '/contact',
-        trailingIcon: 'i-heroicons-arrow-right-20-solid'
-      }
-    ]"
-    :ui="{
-      root: 'relative isolate overflow-hidden ',
-      container: 'min-h-[600px] lg:min-h-[700px]'
-    }"
-  >
-  
-    <template #title>
-      <h1 class="">Transforming Ideas Into Visual Masterpieces</h1>
-    </template>
-    <template #description>
-      <p class="mt-4 text-lg">We create stunning visual experiences that captivate audiences and elevate brands. From branding to digital design, we bring your creative vision to life with precision and artistry.</p>
-    </template>
-    <template #default>
-      <!-- Background Image with Overlay -->
-      <div class="absolute inset-0 -z-10">
-        <img
-          src="https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=2064"
-          alt="Creative workspace"
-          class="w-full h-full object-cover opacity-30"
-        />
-        <!-- <div class="absolute inset-0 bg-gradient-to-r from-primary/50 via-purple-900/80 to-transparent"></div> -->
-      </div>
-
-      <!-- <HeroBackground /> -->
-      <!-- Decorative Elements -->
-      <div class="absolute inset-0 -z-10 overflow-hidden">
-        <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl"></div>
-        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl"></div>
-      </div>
-
-      <!-- Hero Image/Illustration -->
-      <div class="relative">
-        <img
-          src="https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=2071"
-          alt="Design showcase"
-          class="rounded-2xl shadow-2xl ring-1 ring-white/10 hover:ring-white/20 transition-all duration-300"
-        />
-        <!-- Floating Badge -->
-        <div class="absolute -bottom-6 -left-6 bg-white dark:bg-gray-800 rounded-xl shadow-xl p-4 flex items-center gap-3">
-          <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-            <UIcon name="i-heroicons-sparkles" class="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <div class="font-bold text-gray-900 dark:text-white">500+</div>
-            <div class="text-sm text-gray-600 dark:text-gray-400">Projects Completed</div>
+        <!-- Gradient Overlay -->
+        <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/60 to-transparent" /> -->
+        
+        <!-- Content (bottom-left) -->
+        <div class="absolute inset-0 flex items-end">
+          <div class="container mx-auto px-4 sm:px-6 lg:px-8 pb-40">
+            <div class="max-w-2xl text-left">
+              <!-- Animated Title -->
+              <h1 
+                :key="`title-${activeIndex}`"
+                class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 animate-fade-in-up"
+              >
+                {{ item.title }}
+              </h1>
+              
+              <!-- Animated Description -->
+              <p 
+                :key="`desc-${activeIndex}`"
+                class="text-base sm:text-lg lg:text-xl text-white/90 mb-6 animate-fade-in-up animation-delay-200"
+              >
+                {{ item.description }}
+              </p>
+              
+              <!-- Call to Action Button (optional) -->
+              <div 
+                :key="`cta-${activeIndex}`"
+                class="animate-fade-in-up animation-delay-400"
+              >
+                <UButton 
+                  v-if="item.buttonText"
+                  :to="item.buttonLink"
+                  size="xl"
+                  color="primary"
+                  variant="solid"
+                  class="shadow-2xl"
+                >
+                  {{ item.buttonText }}
+                </UButton>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </template>
-  </UPageHero>
-  <!-- <HeroBackground/> -->
-   <StarsBg/>
-     </div>
+    </UCarousel>
+  </div>
 </template>
+
+<script setup lang="ts">
+const carousel = useTemplateRef('carousel')
+const activeIndex = ref(0)
+
+// Define your slides with images, titles, and descriptions
+const slides = [
+  {
+    image: '/imagePoster/12.png',
+    title: 'Explore the Mountains',
+    description: 'Discover breathtaking views and unforgettable adventures in nature\'s paradise',
+    buttonText: 'Start Exploring',
+    buttonLink: '/explore'
+  },
+  {
+    image: '/imagePoster/13.png',
+    title: 'Find Your Peace',
+    description: 'Experience tranquility and serenity in the most beautiful landscapes',
+    buttonText: 'Learn More',
+    buttonLink: '/about'
+  },
+  {
+    image: '/imagePoster/14.png',
+    title: 'Adventure Awaits',
+    description: 'Embark on a journey that will change your perspective forever',
+    buttonText: 'Get Started',
+    buttonLink: '/start'
+  },
+  {
+    image: '/imagePoster/15.png',
+    title: 'Capture the Moment',
+    description: 'Every sunset brings the promise of a new dawn and endless possibilities',
+    buttonText: 'View Gallery',
+    buttonLink: '/gallery'
+  }
+]
+
+function onSlideChange(index: number) {
+  activeIndex.value = index
+}
+</script>
+
+<style scoped>
+/* Fade in up animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animation-delay-200 {
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+
+.animation-delay-400 {
+  animation-delay: 0.4s;
+  opacity: 0;
+}
+</style>

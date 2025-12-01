@@ -14,7 +14,9 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: '/login',
       callback: '/confirm',
-      exclude: ['/', '/about','/blog/*', '/services', '/docs/**', '/pricing', '/changelog/**', '/signup', '/login', '/contact']
+      exclude: [
+        '/', '/about', '/blog/**', '/services', '/docs/**', '/pricing', '/changelog/**', '/signup', '/login', '/contact'
+      ]
     }
   },
   devtools: {

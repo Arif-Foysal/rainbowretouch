@@ -39,6 +39,13 @@ useSeoMeta({
     </UPageHero> -->
 
     <UPageSection
+      :title="'Excelling in Every Step'"
+      :description="'Our comprehensive design process ensures exceptional results at every stage.'"
+    >
+      <Carousel />
+
+    </UPageSection>
+    <UPageSection
       v-for="(section, index) in page.sections"
       :key="index"
       :title="section.title"
