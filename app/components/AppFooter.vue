@@ -1,38 +1,58 @@
 <script setup lang="ts">
 const columns = [{
-  label: 'Resources',
+  label: 'Services',
   children: [{
-    label: 'Help center'
+    label: 'Brand Identity',
+    to: '/services#branding'
   }, {
-    label: 'Docs'
+    label: 'UI/UX Design',
+    to: '/services#ui-ux'
   }, {
-    label: 'Roadmap'
+    label: 'Illustration',
+    to: '/services#illustration'
   }, {
-    label: 'Changelog'
-  }]
-}, {
-  label: 'Features',
-  children: [{
-    label: 'Affiliates'
-  }, {
-    label: 'Portal'
-  }, {
-    label: 'Jobs'
-  }, {
-    label: 'Sponsors'
+    label: 'Motion Graphics',
+    to: '/services#motion'
   }]
 }, {
   label: 'Company',
   children: [{
-    label: 'About'
+    label: 'About Us',
+    to: '/about'
   }, {
-    label: 'Pricing'
+    label: 'Portfolio',
+    to: '/portfolio'
   }, {
-    label: 'Careers'
+    label: 'Pricing',
+    to: '/pricing'
   }, {
-    label: 'Blog'
+    label: 'Contact',
+    to: '/contact'
+  }]
+}, {
+  label: 'Resources',
+  children: [{
+    label: 'Blog',
+    to: '/blog'
+  }, {
+    label: 'Case Studies',
+    to: '/blog'
+  }, {
+    label: 'Design Tips',
+    to: '/blog'
+  }, {
+    label: 'FAQs',
+    to: '/contact'
   }]
 }]
+
+const paymentIcons = [
+  { name: 'Stripe', icon: 'i-simple-icons-stripe' },
+  { name: 'PayPal', icon: 'i-simple-icons-paypal' },
+  { name: 'Visa', icon: 'i-simple-icons-visa' },
+  { name: 'Mastercard', icon: 'i-simple-icons-mastercard' },
+  { name: 'Apple Pay', icon: 'i-simple-icons-applepay' }
+]
 
 const toast = useToast()
 
@@ -60,29 +80,44 @@ function onSubmit() {
       <UContainer>
         <UFooterColumns :columns="columns">
           <template #right>
-            <form @submit.prevent="onSubmit">
-              <UFormField
-                name="email"
-                label="Subscribe to our newsletter"
-                size="lg"
-              >
-                <UInput
-                  v-model="email"
-                  type="email"
-                  class="w-full"
-                  placeholder="Enter your email"
+            <div class="space-y-4">
+              <form @submit.prevent="onSubmit">
+                <UFormField
+                  name="email"
+                  label="Subscribe to our newsletter"
+                  size="lg"
                 >
-                  <template #trailing>
-                    <UButton
-                      type="submit"
-                      size="xs"
-                      color="neutral"
-                      label="Subscribe"
-                    />
-                  </template>
-                </UInput>
-              </UFormField>
-            </form>
+                  <UInput
+                    v-model="email"
+                    type="email"
+                    class="w-full"
+                    placeholder="Enter your email"
+                  >
+                    <template #trailing>
+                      <UButton
+                        type="submit"
+                        size="xs"
+                        color="neutral"
+                        label="Subscribe"
+                      />
+                    </template>
+                  </UInput>
+                </UFormField>
+              </form>
+              
+              <div class="flex items-center gap-3 flex-wrap">
+                <span class="text-xs text-muted">We accept:</span>
+                <div class="flex items-center gap-2">
+                  <UIcon
+                    v-for="payment in paymentIcons"
+                    :key="payment.name"
+                    :name="payment.icon"
+                    class="w-6 h-6 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                    :title="payment.name"
+                  />
+                </div>
+              </div>
+            </div>
           </template>
         </UFooterColumns>
       </UContainer>
@@ -90,32 +125,40 @@ function onSubmit() {
 
     <template #left>
       <p class="text-muted text-sm">
-        Built with Nuxt UI • © {{ new Date().getFullYear() }}
+        Rainbow Retouch © {{ new Date().getFullYear() }} • All rights reserved
       </p>
     </template>
 
     <template #right>
       <UButton
-        to="https://go.nuxt.com/discord"
+        to="https://instagram.com"
         target="_blank"
-        icon="i-simple-icons-discord"
-        aria-label="Nuxt on Discord"
+        icon="i-simple-icons-instagram"
+        aria-label="Rainbow Retouch on Instagram"
         color="neutral"
         variant="ghost"
       />
       <UButton
-        to="https://go.nuxt.com/x"
+        to="https://dribbble.com"
         target="_blank"
-        icon="i-simple-icons-x"
-        aria-label="Nuxt on X"
+        icon="i-simple-icons-dribbble"
+        aria-label="Rainbow Retouch on Dribbble"
         color="neutral"
         variant="ghost"
       />
       <UButton
-        to="https://github.com/nuxt-ui-templates/saas"
+        to="https://behance.net"
         target="_blank"
-        icon="i-simple-icons-github"
-        aria-label="Nuxt UI on GitHub"
+        icon="i-simple-icons-behance"
+        aria-label="Rainbow Retouch on Behance"
+        color="neutral"
+        variant="ghost"
+      />
+      <UButton
+        to="https://linkedin.com"
+        target="_blank"
+        icon="i-simple-icons-linkedin"
+        aria-label="Rainbow Retouch on LinkedIn"
         color="neutral"
         variant="ghost"
       />

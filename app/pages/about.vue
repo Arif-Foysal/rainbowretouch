@@ -149,54 +149,9 @@
     </UPageSection>
 
     <!-- Our Approach Section -->
-    <UPageSection
-      headline="How We Work"
-      title="Our Design Process"
-      description="A proven methodology that ensures outstanding results every time."
-      orientation="vertical"
-    >
-      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <UCard variant="soft">
-          <div class="space-y-3">
-            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10">
-              <UIcon name="i-lucide-lightbulb" class="w-6 h-6 text-primary" />
-            </div>
-            <h3 class="text-lg font-bold">1. Discovery</h3>
-            <p class="text-sm text-muted">Understanding your brand, goals, and target audience through in-depth research.</p>
-          </div>
-        </UCard>
+ <CardGroup/>
 
-        <UCard variant="soft">
-          <div class="space-y-3">
-            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10">
-              <UIcon name="i-lucide-pencil-ruler" class="w-6 h-6 text-primary" />
-            </div>
-            <h3 class="text-lg font-bold">2. Concept</h3>
-            <p class="text-sm text-muted">Developing creative concepts and visual directions tailored to your needs.</p>
-          </div>
-        </UCard>
 
-        <UCard variant="soft">
-          <div class="space-y-3">
-            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10">
-              <UIcon name="i-lucide-palette" class="w-6 h-6 text-primary" />
-            </div>
-            <h3 class="text-lg font-bold">3. Design</h3>
-            <p class="text-sm text-muted">Bringing concepts to life with meticulous attention to detail and craftsmanship.</p>
-          </div>
-        </UCard>
-
-        <UCard variant="soft">
-          <div class="space-y-3">
-            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10">
-              <UIcon name="i-lucide-check-circle" class="w-6 h-6 text-primary" />
-            </div>
-            <h3 class="text-lg font-bold">4. Delivery</h3>
-            <p class="text-sm text-muted">Finalizing and delivering polished designs ready to make an impact.</p>
-          </div>
-        </UCard>
-      </div>
-    </UPageSection>
 
     <!-- Stats Section -->
     <UPageSection orientation="vertical">
