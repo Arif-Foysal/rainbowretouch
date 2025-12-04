@@ -1,5 +1,6 @@
 <template>
-  <div class="h-screen flex items-center justify-center px-4">
+  <AppHeader />
+  <div class="h-screen flex items-center justify-center px-4 mt-4 relative">
     <UButton
       icon="i-lucide-chevron-left"
       to="/"
@@ -16,4 +17,5 @@
       <slot />
     </UPageCard>
   </div>
+  <AppFooter />
 </template>

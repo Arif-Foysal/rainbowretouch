@@ -72,8 +72,29 @@ const card_items = ref([
     <UPageSection v-for="(section, index) in page.sections" :key="index" :title="section.title"
       :description="section.description" :orientation="section.orientation" :reverse="section.reverse"
       :features="section.features">
-      <ImagePlaceholder />
+      <div class="relative overflow-hidden rounded-3xl shadow-xl ring-1 ring-default/40">
+        <div class="aspect-[4/3] w-full">
+          <NuxtImg
+            :src="section.image || '/imagePoster/1.png'"
+            :alt="section.title"
+            class="w-full h-full object-cover"
+            format="webp"
+            quality="80"
+            sizes="sm:100vw md:1000px"
+          />
+        </div>
+      </div>
     </UPageSection>
+    <div class="mt-6 flex justify-center">
+      <UButton
+        :to="'/services'"
+        size="xl"
+        color="primary"
+        icon="i-lucide-arrow-right-circle"
+      >
+        View All Services
+      </UButton>
+    </div>
     <!-- </UPageSection>  -->
  
 

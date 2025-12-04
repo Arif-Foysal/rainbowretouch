@@ -39,8 +39,8 @@ const props = defineProps({
 		</div>
 
 		<!-- Optional CTA slot -->
-		<div class="mt-6">
+		<!-- <div class="mt-6">
 			<slot name="cta" />
-		</div>
+		</div> -->
 	</UPageSection>
 </template>

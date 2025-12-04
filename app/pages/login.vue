@@ -82,7 +82,7 @@ const loading = ref(false)
 async function onSubmit(payload: FormSubmitEvent<Schema>) {
   loading.value = true
   
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email: payload.data.email,
     password: payload.data.password
   })
@@ -93,13 +93,28 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
       description: error.message,
       color: 'red'
     })
+    loading.value = false
+    return
+  }
+
+  // Fetch user profile to check role
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', data.user.id)
+    .single()
+
+  toast.add({
+    title: 'Success',
+    description: 'Welcome back!',
+    color: 'green'
+  })
+
+  // Redirect based on role
+  if (profile?.role === 'admin') {
+    router.push('/admin')
   } else {
-    toast.add({
-      title: 'Success',
-      description: 'Welcome back!',
-      color: 'green'
-    })
-    // The user will be automatically redirected by the auth middleware
+    router.push('/dashboard')
   }
   
   loading.value = false

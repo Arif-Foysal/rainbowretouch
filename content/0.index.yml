@@ -24,6 +24,7 @@ sections:
     description: Professional photo editing solutions tailored for e-commerce businesses to enhance product images and boost sales
     id: features
     orientation: horizontal
+    image: /imagePoster/1.png
     features:
       - name: 100+ UI Components
         description: From buttons to modals, data tables to forms - all styled with Tailwind CSS and accessible out of the box.
@@ -34,20 +35,21 @@ sections:
       - name: TypeScript First
         description: Full TypeScript support with auto-completion, type safety, and IntelliSense for every component and composable.
         icon: i-lucide-code-2
-  - title: Built for Modern SaaS
-    description: Everything you need to launch and scale your SaaS. From beautiful marketing pages to complex dashboards, ship faster with production-ready patterns.
+  - title: Professional Photo Retouching
+    description: High-end retouching services to make your images look flawless while maintaining natural authenticity.
     orientation: horizontal
     reverse: true
+    image: /imagePoster/3.png
     features:
-      - name: Edge Performance
-        description: Optimized for Core Web Vitals with automatic code splitting, lazy loading, and SSR/SSG support.
-        icon: i-lucide-zap
-      - name: Dark Mode Ready
-        description: Automatic theme switching with smooth transitions. Respects system preferences and remembers user choice.
-        icon: i-lucide-moon
-      - name: Global Ready
-        description: Built-in i18n support for 50+ languages with RTL/LTR layouts and @nuxt/fonts integration.
-        icon: i-lucide-globe
+      - name: Authentic Retouching
+        description: High-end retouching that enhances beauty while maintaining a natural, authentic look.
+        icon: i-lucide-check
+      - name: Brand Consistency
+        description: Flaw removal, skin smoothing, and lighting adjustments tailored to your brand style.
+        icon: i-lucide-flag
+      - name: Color Grading
+        description: Premium color grading and finishing touches that elevate every photo.
+        icon: i-lucide-droplet
 features:
   title: Everything You Need to Ship
   description: Stop building from scratch. Focus on your unique features while Nuxt UI handles the foundations with battle-tested components and patterns.
