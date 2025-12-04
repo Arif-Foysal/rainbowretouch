@@ -15,7 +15,7 @@ export default defineNuxtConfig({
       login: '/login',
       callback: '/confirm',
       exclude: [
-        '/', '/about', '/blog/**', '/services', '/docs/**', '/pricing', '/changelog/**', '/signup', '/login', '/contact', '/portfolio'
+        '/', '/about', '/blog/**', '/services', '/docs/**', '/pricing', '/changelog/**', '/signup', '/login', '/contact', '/portfolio', '/blog'
       ]
     }
   },

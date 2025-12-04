@@ -8,10 +8,16 @@ const toast = useToast()
 const servicesNavigationChildren = [
 
   {
-    label: 'Photo Retouching',
+    label: 'Image Retouching',
     description: 'Magazine-grade cleanup for editorials, lookbooks, and high-volume campaigns.',
     icon: 'i-lucide-wand',
     children: [
+            {
+        label: 'Color Grading',
+        description: 'Professional color grading to balance exposure, refine skin tones, and create a polished, high-end look.',
+        icon: 'i-lucide-palette',
+        to: '/services#grading'
+      },
       {
         label: 'Beauty & Skin Polish',
         description: 'Advanced dodge and burn plus texture recovery for close-ups.',
@@ -32,56 +38,118 @@ const servicesNavigationChildren = [
       }
     ]
   },
+
   {
-    label: 'AI-Powered Automations',
-    description: 'Smart batch workflows with manual QA for every deliverable.',
-    icon: 'i-lucide-cpu',
+    label: 'Ecommerce Photo Editing',
+    description: 'Optimized images for product listings, ads, and catalogs.',
+    icon: 'i-lucide-package-check',
+    children: [
+    {
+      label: 'Background Removal',
+      description: 'Precise cutouts with edge refinement and alpha-channel exports for all product types.',
+      icon: 'i-lucide-crop',
+      to: '/services#background-removal'
+    },
+    {
+      label: 'Ghost Mannequin & Apparel',
+      description: 'Create invisible-mannequin shots and stitch interiors for clean product presentation.',
+      icon: 'i-lucide-user',
+      to: '/services#ghost-mannequin'
+    },
+    {
+      label: 'Color Correction & White Balance',
+      description: 'Batch color correction, white-balance, and consistent look across SKUs.',
+      icon: 'i-lucide-sliders',
+      to: '/services#color-correction'
+    },
+    {
+      label: 'Retouching & Spot Removal',
+      description: 'Remove dust, lint, and blemishes while preserving natural texture.',
+      icon: 'i-lucide-sparkles',
+      to: '/services#retouching'
+    },
+    {
+      label: 'Shadows & Reflections',
+      description: 'Natural drop shadows and soft reflections to enhance product depth.',
+      icon: 'i-lucide-layers',
+      to: '/services#shadows-reflections'
+    },
+    {
+      label: 'Resize, Export & SEO',
+      description: 'Resize, crop, and export multi-resolution assets optimized for performance and SEO.',
+      icon: 'i-lucide-search',
+      to: '/services#resize-export'
+    }
+    ]
+  },
+    {
+    label: 'Image Restoration & Enhancement',
+    description: 'Revive old or damaged photos with expert restoration and enhancement techniques.',
+    icon: 'i-lucide-refresh-ccw',
     children: [
       {
-        label: 'AI Upscaling',
-        description: '4x upscale with grain-matched finishing per asset.',
-        icon: 'i-lucide-zoom-in',
-        to: '/services#ai-upscale'
+        label: 'Damage Repair & Stitching',
+        description: 'Reconstruct tears, scratches, and missing sections using content-aware healing and manual retouching.',
+        icon: 'i-lucide-wrench',
+        to: '/services#damage-repair'
       },
       {
-        label: 'Background Isolation',
-        description: 'Smart cutouts delivered with layered PSD masks.',
-        icon: 'i-lucide-crop',
-        to: '/services#background-isolation'
+        label: 'Color & Tone Restoration',
+        description: 'Recover faded colors, correct discoloration, and rebalance tones for archival prints and scans.',
+        icon: 'i-lucide-sliders',
+        to: '/services#color-restoration'
       },
       {
-        label: 'Batch Tone Matching',
-        description: 'Unify lighting across multi-look shoots automatically.',
-        icon: 'i-lucide-equalizer',
-        to: '/services#tone-matching'
+        label: 'Dust, Scratch & Spot Removal',
+        description: 'Automated and manual cleanup to remove dust, scratches, and surface blemishes while preserving detail.',
+        icon: 'i-lucide-sparkles',
+        to: '/services#dust-scratch-removal'
+      },
+      {
+        label: 'Tonal Recovery & Contrast',
+        description: 'Restore dynamic range and local contrast for depth and clarity in over/under-exposed captures.',
+        icon: 'i-lucide-contrast',
+        to: '/services#tonal-recovery'
+      },
+      {
+        label: 'Noise Reduction & Sharpening',
+        description: 'Advanced denoising paired with detail-preserving sharpening for scanned or low-light images.',
+        icon: 'i-lucide-aperture',
+        to: '/services#noise-reduction'
+      },
+      {
+        label: 'Photo Reconstruction & Composite Repair',
+        description: 'Rebuild heavily damaged images, composite multi-source elements, and recreate missing context.',
+        icon: 'i-lucide-image',
+        to: '/services#photo-reconstruction'
       }
     ]
   },
   {
-    label: 'Creative Delivery',
-    description: 'Final-mile assets and systems to keep teams shipping fast.',
-    icon: 'i-lucide-package-check',
-    children: [
-      {
-        label: 'Color Grading Looks',
-        description: 'Custom LUTs and presets per campaign narrative.',
-        icon: 'i-lucide-palette',
-        to: '/services#grading'
-      },
-      {
-        label: 'Template Systems',
-        description: 'Reusable PSD and Canva kits tailored to your marketing stack.',
-        icon: 'i-lucide-layers',
-        to: '/services#templates'
-      },
-      {
-        label: 'Motion Touchups',
-        description: 'Last-mile cleanup on cinemagraphs and animated loops.',
-        icon: 'i-lucide-clapperboard',
-        to: '/services#motion'
-      }
-    ]
-  }
+  label: 'Creative Composition & Ads',
+  description: 'High-end photo manipulation and compositing for advertising, key art, and marketing visuals.',
+  icon: 'i-lucide-lightbulb',
+  children: [
+    {
+      label: 'Photo Manipulation',
+      description: 'Seamlessly combine multiple images to create surreal, conceptual, or marketing visuals.',
+      icon: 'i-lucide-layers',
+      to: '/services#manipulation'
+    },
+    {
+      label: 'Automotive Retouching',
+      description: 'Specialized reflection management, cleaning, and background replacement for vehicle photography.',
+      icon: 'i-lucide-car',
+      to: '/services#automotive'
+    },
+    {
+      label: 'Jewelry Retouching',
+      description: 'Focus stacking, metal polishing, and gemstone sharpening for macro jewelry photography.',
+      icon: 'i-lucide-diamond',
+      to: '/services#jewelry'
+    }
+  ]
+}
 ]
 
 const activeServiceCategory = ref(servicesNavigationChildren[0])
@@ -119,20 +187,22 @@ const items = computed(() => [
     icon: 'i-lucide-briefcase'
   },
   {
-    label: 'Docs',
+    label: 'Blog',
     icon: 'i-lucide-book-open',
-    to: '/docs',
-    active: route.path.startsWith('/docs')
+    to: '/blog',
+    active: route.path.startsWith('/blog')
   },
   {
     label: 'Pricing',
     to: '/pricing',
     icon: 'i-lucide-tag'
   },
-  {
-    label: 'Blog',
-    to: '/blog'
-  },
+  // {
+  //   label: 'Blog',
+  //   to: '/blog',
+  //   icon: 'i-lucide-book-open'
+
+  // },
   {
     label: 'Contact',
     to: '/contact',
