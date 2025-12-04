@@ -13,15 +13,15 @@ useSeoMeta({
 
 defineOgImageComponent('Saas')
 
-const isYearly = ref('0')
+const pricingType = ref('0')
 
 const items = ref([
   {
-    label: 'Monthly',
+    label: 'Standard',
     value: '0'
   },
   {
-    label: 'Yearly',
+    label: 'Bulk',
     value: '1'
   }
 ])
@@ -35,7 +35,7 @@ const items = ref([
     >
       <template #links>
         <UTabs
-          v-model="isYearly"
+          v-model="pricingType"
           :items="items"
           color="neutral"
           size="xs"
@@ -55,8 +55,8 @@ const items = ref([
           v-for="(plan, index) in page.plans"
           :key="index"
           v-bind="plan"
-          :price="isYearly === '1' ? plan.price.year : plan.price.month"
-          :billing-cycle="isYearly === '1' ? '/year' : '/month'"
+          :price="pricingType === '1' ? plan.price.bulk : plan.price.standard"
+          
         />
       </UPricingPlans>
     </UContainer>

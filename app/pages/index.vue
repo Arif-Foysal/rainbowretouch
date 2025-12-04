@@ -63,16 +63,19 @@ const card_items = ref([
 
     <CardGroup headline="How We Work" title="Why clients love our image editing"
       description="Fast and customer-focused image editing services." orientation="vertical" :items="card_items" />
+
+           <UPageSection
+    title="Our Services"
+    description="Explore the range of professional photo editing services we offer."
+    headline="Services"
+/>
     <UPageSection v-for="(section, index) in page.sections" :key="index" :title="section.title"
       :description="section.description" :orientation="section.orientation" :reverse="section.reverse"
       :features="section.features">
       <ImagePlaceholder />
     </UPageSection>
-    <UPageSection
-    title="Beautiful Vue UI components"
-    description="Nuxt UI provides a comprehensive suite of components and utilities to help you build beautiful and accessible web applications with Vue and Nuxt."
-    headline="Features"
-  />
+    <!-- </UPageSection>  -->
+ 
 
     <UPageSection v-motion-slide-visible-bottom :title="page.features.title" :description="page.features.description">
       <UPageGrid>

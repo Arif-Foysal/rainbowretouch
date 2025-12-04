@@ -20,8 +20,8 @@ hero:
       to: https://github.com/nuxt-ui-templates/saas
       target: _blank
 sections:
-  - title: Powered by Nuxt UI Components
-    description: Access the complete Nuxt UI component library with 100+ beautifully styled, accessible, and customizable Vue components. Everything you need to build professional SaaS applications.
+  - title: Ecommerce Photo Editing Services
+    description: Professional photo editing solutions tailored for e-commerce businesses to enhance product images and boost sales
     id: features
     orientation: horizontal
     features:
@@ -71,80 +71,78 @@ features:
       description: Override any style with the ui prop, customize globally with AppConfig, or use Tailwind classes directly.
       icon: i-lucide-settings
 testimonials:
-  headline: Trusted by Developers
-  title: Join Thousands Building with Nuxt UI
-  description: See why developers choose Nuxt UI to ship their SaaS applications faster and with more confidence.
+  headline: Testimonials
+  title: Clients Love the Quality We Deliver
+  description: Feedback from the people who trust us with their projects.
   items:
-    - quote: Nuxt UI transformed how we build. The component quality is exceptional - everything just works with perfect TypeScript support, accessibility, and dark mode built in.
+    - quote: Rainbow Retouch transformed our product photography. The attention to detail in every edit is incredible - our images now stand out and drive more conversions.
       user:
         name: Sarah Chen
-        description: CTO at TechScale Solutions
+        description: E-commerce Manager at StyleHub
         avatar:
           src: https://i.pravatar.cc/120?img=1
-    - quote: We shipped our MVP in 2 weeks instead of 2 months. The authentication flows and form components saved us countless hours of development time.
+    - quote: We needed 500 product images edited in 3 days for our catalog launch. They delivered on time with flawless quality. Truly professional bulk service.
       user:
         name: Marcus Rodriguez
-        description: VP of Engineering at DataFlow
+        description: Creative Director at FashionBox
         avatar:
           src: https://i.pravatar.cc/120?img=7
-    - quote: The design system with AppConfig is brilliant. We maintain brand consistency across all our products while leveraging the full component library.
+    - quote: Their color correction and retouching skills are exceptional. Every photo looks magazine-ready while maintaining natural authenticity.
       user:
         name: David Kumar
-        description: Security Director at SecureStack
+        description: Brand Manager at LuxeGoods
         avatar:
           src: https://i.pravatar.cc/120?img=3
-    - quote: Perfect Lighthouse scores out of the box. Our Core Web Vitals improved dramatically just by switching to Nuxt UI components.
+    - quote: The turnaround time is unmatched. We get high-quality edits back within hours, which is crucial for our fast-paced marketing campaigns.
       user:
         name: Emily Zhang
-        description: Lead Architect at ScaleForce
+        description: Marketing Director at TrendyWear
         avatar:
           src: https://i.pravatar.cc/120?img=5
-    - quote: The Tailwind Variants system makes customization so intuitive. We can override any component style while keeping the functionality intact.
+    - quote: Background removal has never been this precise. They handle complex edges and fine details that other services mess up completely.
       user:
         name: James Wilson
-        description: DevOps Lead at CloudPro
+        description: Product Manager at HomeDecor Co
         avatar:
           src: https://i.pravatar.cc/120?img=8
-    - quote: From the SaaS template to production in days. The pre-built layouts, navigation, and content structure accelerated our launch.
+    - quote: As a wedding photographer, I trust them with my clients' most precious memories. The retouching is always tasteful and enhances without overdoing it.
       user:
         name: Lisa Patel
-        description: CEO at AutoScale
+        description: Wedding Photographer
         avatar:
           src: https://i.pravatar.cc/120?img=9
-    - quote: Reka UI foundation means accessibility is never an afterthought. We achieved WCAG compliance without any custom work.
+    - quote: Their bulk pricing made professional photo editing affordable for our small business. The quality rivals agencies charging 3x more.
       user:
         name: Michael Torres
-        description: Frontend Lead at AccessFirst
+        description: Owner at Artisan Crafts
         avatar:
           src: https://i.pravatar.cc/120?img=11
-    - quote: The documentation is outstanding. Every component has clear examples, and the community on Discord is incredibly helpful.
+    - quote: Communication is excellent. They understand exactly what we need and the revision process is smooth and efficient. True professionals.
       user:
         name: Rachel Kim
-        description: Performance Engineer at APIHub
+        description: Social Media Manager at BeautyBrand
         avatar:
           src: https://i.pravatar.cc/120?img=10
-    - quote: We replaced three different UI libraries with Nuxt UI. The consistency and quality across all components is unmatched.
+    - quote: We've tried five different editing services. Rainbow Retouch is the only one that consistently delivers perfection across hundreds of images.
       user:
         name: Thomas Weber
-        description: UI Architecture Lead at DesignScale
+        description: Photography Director at StudioPro
         avatar:
           src: https://i.pravatar.cc/120?img=12
-    - quote: The integration with Nuxt modules is seamless. Color mode, fonts, icons - everything works together perfectly.
+    - quote: The RAW file processing and advanced compositing work they do is stunning. They bring creative visions to life with technical excellence.
       user:
         name: Sophia Martinez
-        description: Integration Specialist at TechFlow
+        description: Art Director at Creative Agency
         avatar:
           src: https://i.pravatar.cc/120?img=14
 cta:
-  title: Ready to Start Your Project?
-  description: Let's collaborate to bring your vision to life. Get in touch with us today and let's create something amazing together.
+  title: Transform Your Images Today
+  description: Get professional photo editing and retouching services with fast turnaround and unlimited revisions. Let's bring your vision to life.
   links:
-    - label: Contact Us
-      to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt'
-      target: _blank
+    - label: Free Trial
+      to: '/contact'
       trailingIcon: i-lucide-arrow-right
-    - label: See our work
-      to: '/'
-      target: _blank
+    - label: View Portfolio
+      to: '/portfolio'
       variant: subtle
-      icon: i-lucide-briefcase
+      icon: i-lucide-image

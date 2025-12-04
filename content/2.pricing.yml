@@ -1,82 +1,84 @@
-title: A plan for every need
-description: Our plans are designed to meet the requirements of both beginners and players. Get the right plan that suits you.
+title: Professional Design Services at Competitive Rates
+description: Whether you need single image edits or bulk project services, we have flexible pricing options to suit your needs.
 seo:
   title: Pricing
-  description: Choose the plan that's right for you.
+  description: Choose the pricing plan that's right for your design needs.
 navigation.icon: i-lucide-credit-card
 plans:
   - title: Basic
-    description: A basic plan for individuals.
+    description: Perfect for individual images and small projects.
     price:
-      month: $9.9
-      year: $99.9
+      standard: $15 (1-10 images)
+      bulk: From $9 (50+ images)
     button:
       label: Get Started
       color: neutral
       variant: subtle
     features:
-      - 1 GB Storage
-      - 1 Email Account
-      - 1 Domain
-      - 1 Website
-      - 1 Database
-      - 1 SSL Certificate
-      - 1 Support Ticket
-  - title: Standard
-    description: A standard plan for small teams.
+      - Color Correction
+      - Basic Retouching
+      - Background Removal
+      - 24-Hour Turnaround
+      - 2 Revisions Included
+      - High-Resolution Output
+      - Email Support
+  - title: Professional
+    description: Ideal for businesses and regular clients.
     price:
-      month: $19.9
-      year: $199.9
+      standard: $35 (10-30 images)
+      bulk: From $22 (50+ images)
     highlight: true
     scale: true
     button:
       label: Get Started
     features:
-      - 10 GB Storage
-      - 10 Email Accounts
-      - 10 Domains
-      - 10 Websites
-      - 10 Databases
-      - 10 SSL Certificates
-      - 10 Support Tickets
+      - Advanced Retouching
+      - Photo Manipulation
+      - Custom Designs
+      - 12-Hour Turnaround
+      - 5 Revisions Included
+      - RAW File Support
+      - Priority Support
+      - Dedicated Account Manager
   - title: Premium
-    description: A premium plan for large teams.
+    description: Comprehensive service for agencies and large projects.
     price:
-      month: $29.9
-      year: $299.9
+      standard: $65 (10-50 images)
+      bulk: From $40 (500+ images)
     button:
       label: Get Started
       color: neutral
       variant: subtle
     features:
-      - 100 GB Storage
-      - 100 Email Accounts
-      - 100 Domains
-      - 100 Websites
-      - 100 Databases
-      - 100 SSL Certificates
-      - 100 Support Tickets
+      - Full Creative Direction
+      - Complex Compositing
+      - Brand Identity Design
+      - 6-Hour Turnaround
+      - Unlimited Revisions
+      - Source Files Included
+      - 24/7 Priority Support
+      - Project Management
 logos:
-  title: Trusted by the world's best
+  title: Trusted by creative professionals worldwide
   icons:
-    - i-simple-icons-amazonaws
-    - i-simple-icons-heroku
-    - i-simple-icons-netlify
-    - i-simple-icons-vercel
-    - i-simple-icons-cloudflare
+    - i-simple-icons-adobe
+    - i-simple-icons-figma
+    - i-simple-icons-canva
+    - i-simple-icons-behance
+    - i-simple-icons-dribbble
 faq:
   title: Frequently asked questions
-  description: Culpa consectetur dolor pariatur commodo aliqua amet tempor nisi enim deserunt elit cillum.
+  description: Everything you need to know about our pricing and services.
   items:
-    - label: Is this a secure service?
-      content: Qui sunt nostrud aliquip reprehenderit enim proident veniam magna aliquip velit occaecat eiusmod nisi deserunt sunt.
-    - label: How can I cancel my subscription?
-      content: Consectetur irure Lorem nostrud adipisicing aliqua mollit Lorem sit officia magna eiusmod cupidatat.
-    - label: How does the free trial work?
-      content: Quis officia commodo magna eu qui aliquip duis.
-    - label: Can I switch plans later?
-      content: Dolore irure ullamco dolore eu occaecat magna eiusmod dolor aliqua culpa labore.
+    - label: What's the difference between Standard and Bulk pricing?
+      content: Standard pricing (1-5 items) is our per-project rate for small orders. Bulk pricing offers progressive discounts based on volume - 10-20 items get a small discount, 20-50 items get a medium discount, and 50+ items get our best rates. Higher volume = lower per-item cost.
+    - label: How long does turnaround take?
+      content: Turnaround times vary by plan - Basic (24 hours), Professional (12 hours), and Premium (6 hours). Rush services are available for an additional fee.
+    - label: What file formats do you accept?
+      content: We accept all major image formats including JPG, PNG, TIFF, PSD, and RAW files from all major camera brands.
+    - label: Can I request revisions?
+      content: Yes! Each plan includes a set number of revisions. Basic includes 2 revisions, Professional includes 5, and Premium includes unlimited revisions.
     - label: Do you offer refunds?
-      content: Duis mollit nostrud voluptate mollit Lorem dolore commodo veniam incididunt eiusmod.
-    - label: Do you offer support?
-      content: Aliqua sit nisi consequat pariatur Lorem minim irure qui.
+      content: If you're not satisfied with the final result, we'll work with you until you are. Refunds are considered on a case-by-case basis within 7 days of delivery.
+    - label: How do I get started?
+      content: Simply choose your plan, upload your images, and provide detailed instructions. We'll send you a proof for review before final delivery.

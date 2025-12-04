@@ -49,27 +49,30 @@ const items = computed(() => [
     ]
 },
 {
+  label: 'Portfolio',
+  to: '/portfolio',
+  active: route.path === '/portfolio',
+  icon: 'i-lucide-briefcase'
+},
+{
   label: 'Docs',
   icon: 'i-lucide-book-open',
   to: '/docs',
   active: route.path.startsWith('/docs')
 }, {
   label: 'Pricing',
-  to: '/pricing'
+  to: '/pricing',
+  icon: 'i-lucide-tag',
+  
 }, {
   label: 'Blog',
   to: '/blog'
-}, {
-  label: 'Changelog',
-  to: '/changelog'
 },
 {
   label: 'Contact',
   to: '/contact',
   icon: 'i-lucide-mail'
 }
-
-
 ])
 </script>
 

@@ -28,7 +28,7 @@
         <img 
           :src="item.image" 
           :alt="item.title"
-          class="absolute inset-0 h-full w-full object-cover"
+          class="absolute inset-0 h-full w-full object-contain"
         />
         
         <!-- Gradient Overlay -->
@@ -41,7 +41,7 @@
               <!-- Animated Title -->
               <h1 
                 :key="`title-${activeIndex}`"
-                class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 animate-fade-in-up"
+                class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 animate-fade-in-up"
               >
                 {{ item.title }}
               </h1>
@@ -49,7 +49,7 @@
               <!-- Animated Description -->
               <p 
                 :key="`desc-${activeIndex}`"
-                class="text-base sm:text-lg lg:text-xl text-white/90 mb-6 animate-fade-in-up animation-delay-200"
+                class="text-base sm:text-lg lg:text-xl mb-6 animate-fade-in-up animation-delay-200"
               >
                 {{ item.description }}
               </p>
