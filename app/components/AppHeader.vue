@@ -37,7 +37,7 @@ type ServiceCategoryRow = {
 }
 
 const fallbackServicesNavigation: ServiceNavigationCategory[] = [
-  {
+{
     label: 'Background Removal',
     description: 'Professional clipping paths, multi-path services, and shadow effects.',
     icon: 'i-lucide-wand',
@@ -72,9 +72,22 @@ const fallbackServicesNavigation: ServiceNavigationCategory[] = [
         icon: 'i-lucide-layers',
         to: '/services#shadow-services'
       }
+      // {
+      //   label: 'Neck Joint',
+      //   description: '3D mannequin effect and ghost neck joint services.',
+      //   icon: 'i-lucide-user',
+      //   to: '/services#neck-joint'
+      // },
+      // {
+      //   label: 'Shadow Service',
+      //   description: 'Natural shadows, reflections, and drop shadow effects.',
+      //   icon: 'i-lucide-layers',
+      //   to: '/services#shadow-service'
+      // },
+
     ]
   },
-  {
+    {
     label: 'Photo Retouching',
     description: 'Retouching, color correction, and exposure enhancement services.',
     icon: 'i-lucide-sparkles',
@@ -152,12 +165,12 @@ const fallbackServicesNavigation: ServiceNavigationCategory[] = [
         icon: 'i-lucide-sun',
         to: '/services#exposure-correction'
       },
-      {
-        label: 'Real Estate Photo Enhancement',
-        description: 'Enhance real estate photos for better appeal.',
-        icon: 'i-lucide-home',
-        to: '/services#real-estate-photo-enhancement'
-      }
+ {
+  label: 'Real Estate Photo Enhancement',
+  description: 'Enhance real estate photos for better appeal.',
+  icon: 'i-lucide-home',
+  to: '/services#real-estate-photo-enhancement'
+ }
     ]
   },
   {
@@ -190,7 +203,7 @@ const fallbackServicesNavigation: ServiceNavigationCategory[] = [
         to: '/services#hair-masking'
       },
       {
-        label: 'Product Masking',
+        label:'Product Masking',
         description: 'Specialized masking for product images.',
         icon: 'i-lucide-box',
         to: '/services#product-masking'
@@ -203,7 +216,7 @@ const fallbackServicesNavigation: ServiceNavigationCategory[] = [
     icon: 'i-lucide-layers',
     children: [
       {
-        label: 'Image Manipulation',
+        label: 'Image Manupulation ',
         description: 'Creative image manipulation and compositing services.',
         icon: 'i-lucide-layers',
         to: '/services#image-manipulation'
@@ -215,19 +228,19 @@ const fallbackServicesNavigation: ServiceNavigationCategory[] = [
         to: '/services#ai-image-generation-editing'
       },
       {
-        label: 'Object Removal',
+        label: 'Object Removal ',
         description: 'Seamless removal of unwanted objects from images.',
         icon: 'streamline-ultimate:scissors-2-bold',
         to: '/services#object-removal'
       },
       {
-        label: 'Virtual Staging',
+        label: 'Virtual Staging ',
         description: 'Enhance property images with virtual furniture and decor.',
         icon: 'i-lucide-wand-2',
         to: '/services#virtual-staging'
       },
       {
-        label: 'Photo Restoration',
+        label: 'Photo Restoration ',
         description: 'Restore old and damaged photos to their former glory.',
         icon: 'i-lucide-image',
         to: '/services#photo-restoration'
