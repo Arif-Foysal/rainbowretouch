@@ -5,7 +5,38 @@ const user = useSupabaseUser()
 const router = useRouter()
 const toast = useToast()
 
-const servicesNavigationChildren = [
+type ServiceNavigationItem = {
+  label: string
+  description?: string | null
+  icon?: string | null
+  to?: string
+}
+
+type ServiceNavigationCategory = {
+  id?: string
+  label: string
+  description?: string | null
+  icon?: string | null
+  children: ServiceNavigationItem[]
+}
+
+type ServiceCategoryRow = {
+  id: string
+  label: string
+  description: string | null
+  icon: string | null
+  order_index: number
+  service_items: Array<{
+    id: string
+    label: string
+    description: string | null
+    icon: string | null
+    href: string | null
+    order_index: number
+  }> | null
+}
+
+const fallbackServicesNavigation: ServiceNavigationCategory[] = [
   {
     label: 'Background Removal',
     description: 'Professional clipping paths, multi-path services, and shadow effects.',
@@ -41,22 +72,9 @@ const servicesNavigationChildren = [
         icon: 'i-lucide-layers',
         to: '/services#shadow-services'
       }
-      // {
-      //   label: 'Neck Joint',
-      //   description: '3D mannequin effect and ghost neck joint services.',
-      //   icon: 'i-lucide-user',
-      //   to: '/services#neck-joint'
-      // },
-      // {
-      //   label: 'Shadow Service',
-      //   description: 'Natural shadows, reflections, and drop shadow effects.',
-      //   icon: 'i-lucide-layers',
-      //   to: '/services#shadow-service'
-      // },
-     
     ]
   },
-    {
+  {
     label: 'Photo Retouching',
     description: 'Retouching, color correction, and exposure enhancement services.',
     icon: 'i-lucide-sparkles',
@@ -134,12 +152,12 @@ const servicesNavigationChildren = [
         icon: 'i-lucide-sun',
         to: '/services#exposure-correction'
       },
- {
-  label: 'Real Estate Photo Enhancement',
-  description: 'Enhance real estate photos for better appeal.',
-  icon: 'i-lucide-home',
-  to: '/services#real-estate-photo-enhancement'
- }
+      {
+        label: 'Real Estate Photo Enhancement',
+        description: 'Enhance real estate photos for better appeal.',
+        icon: 'i-lucide-home',
+        to: '/services#real-estate-photo-enhancement'
+      }
     ]
   },
   {
@@ -172,7 +190,7 @@ const servicesNavigationChildren = [
         to: '/services#hair-masking'
       },
       {
-        label:'Product Masking',
+        label: 'Product Masking',
         description: 'Specialized masking for product images.',
         icon: 'i-lucide-box',
         to: '/services#product-masking'
@@ -185,7 +203,7 @@ const servicesNavigationChildren = [
     icon: 'i-lucide-layers',
     children: [
       {
-        label: 'Image Manupulation ',
+        label: 'Image Manipulation',
         description: 'Creative image manipulation and compositing services.',
         icon: 'i-lucide-layers',
         to: '/services#image-manipulation'
@@ -197,19 +215,19 @@ const servicesNavigationChildren = [
         to: '/services#ai-image-generation-editing'
       },
       {
-        label: 'Object Removal ',
+        label: 'Object Removal',
         description: 'Seamless removal of unwanted objects from images.',
         icon: 'streamline-ultimate:scissors-2-bold',
         to: '/services#object-removal'
       },
       {
-        label: 'Virtual Staging ',
+        label: 'Virtual Staging',
         description: 'Enhance property images with virtual furniture and decor.',
         icon: 'i-lucide-wand-2',
         to: '/services#virtual-staging'
       },
       {
-        label: 'Photo Restoration ',
+        label: 'Photo Restoration',
         description: 'Restore old and damaged photos to their former glory.',
         icon: 'i-lucide-image',
         to: '/services#photo-restoration'
@@ -243,64 +261,112 @@ const servicesNavigationChildren = [
   }
 ]
 
+const { data: servicesData } = await useAsyncData('services-navigation', async () => {
+  const { data, error } = await supabase
+    .from('service_categories')
+    .select<ServiceCategoryRow>('id, label, description, icon, order_index, service_items(id, label, description, icon, href, order_index)')
+    .order('order_index', { ascending: true })
+    .order('order_index', { foreignTable: 'service_items', ascending: true })
 
-const activeServiceCategory = ref(servicesNavigationChildren[0])
+  if (error) {
+    console.error('Error fetching services navigation:', error)
+    return fallbackServicesNavigation
+  }
+
+  if (!data?.length) {
+    return fallbackServicesNavigation
+  }
+
+  return data.map((category) => ({
+    id: category.id,
+    label: category.label,
+    description: category.description,
+    icon: category.icon,
+    children: (category.service_items || []).map((item) => ({
+      label: item.label,
+      description: item.description,
+      icon: item.icon,
+      to: item.href || '/services'
+    }))
+  }))
+})
+
+const servicesNavigationChildren = computed<ServiceNavigationCategory[]>(() => {
+  return servicesData.value?.length ? servicesData.value : fallbackServicesNavigation
+})
+
+const activeServiceCategory = ref<ServiceNavigationCategory | null>(null)
 const activeServiceCategoryLabel = computed(() => activeServiceCategory.value?.label || '')
-const setActiveServiceCategory = (category: (typeof servicesNavigationChildren)[number]) => {
+
+watch(
+  () => servicesNavigationChildren.value,
+  (categories) => {
+    if (!categories.length) {
+      activeServiceCategory.value = null
+      return
+    }
+
+    const currentLabel = activeServiceCategory.value?.label
+    const matchingCategory = currentLabel ? categories.find((category) => category.label === currentLabel) : null
+
+    activeServiceCategory.value = matchingCategory || categories[0]
+  },
+  { immediate: true }
+)
+
+const setActiveServiceCategory = (category: ServiceNavigationCategory) => {
   activeServiceCategory.value = category
 }
 
-const items = computed(() => [
-  {
-    label: 'Home',
-    icon: 'i-lucide-home',
-    to: '/',
-    active: route.path === '/'
-  },
-  {
-    label: 'About',
-    to: '/about',
-    active: route.path === '/about',
-    icon: 'i-lucide-store'
-  },
-  {
-    label: 'Services',
-    slot: 'services',
-    type: 'trigger',
-    to: '/services',
-    active: route.path.startsWith('/services'),
-    icon: 'i-lucide-image-plus',
-    children: servicesNavigationChildren
-  },
-  {
-    label: 'Portfolio',
-    to: '/portfolio',
-    active: route.path === '/portfolio',
-    icon: 'i-lucide-briefcase'
-  },
-  {
-    label: 'Blog',
-    icon: 'i-lucide-book-open',
-    to: '/blog',
-    active: route.path.startsWith('/blog')
-  },
-  {
-    label: 'Pricing',
-    to: '/pricing',
-    icon: 'i-lucide-tag'
-  },
-  // {
-  //   label: 'Blog',
-  //   to: '/blog',
-  //   icon: 'i-lucide-book-open'
+const items = computed(() => {
+  const servicesChildren = servicesNavigationChildren.value
 
-  // },
-  {
-    label: 'Contact',
-    to: '/contact',
-    icon: 'i-lucide-mail'
-  }
-])
+  return [
+    {
+      label: 'Home',
+      icon: 'i-lucide-home',
+      to: '/',
+      active: route.path === '/'
+    },
+    {
+      label: 'About',
+      to: '/about',
+      active: route.path === '/about',
+      icon: 'i-lucide-store'
+    },
+    {
+      label: 'Services',
+      slot: 'services',
+      type: 'trigger',
+      to: '/services',
+      active: route.path.startsWith('/services'),
+      icon: 'i-lucide-image-plus',
+      children: servicesChildren
+    },
+    {
+      label: 'Portfolio',
+      to: '/portfolio',
+      active: route.path === '/portfolio',
+      icon: 'i-lucide-briefcase'
+    },
+    {
+      label: 'Blog',
+      icon: 'i-lucide-book-open',
+      to: '/blog',
+      active: route.path.startsWith('/blog')
+    },
+    {
+      label: 'Pricing',
+      to: '/pricing',
+      icon: 'i-lucide-tag'
+    },
+    {
+      label: 'Contact',
+      to: '/contact',
+      icon: 'i-lucide-mail'
+    }
+  ]
+})
 
 const isAuthenticated = computed(() => Boolean(user.value))
 

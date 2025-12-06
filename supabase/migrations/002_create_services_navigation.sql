@@ -28,15 +28,39 @@ create index if not exists service_items_category_idx on service_items(category_
 alter table service_categories enable row level security;
 alter table service_items enable row level security;
 
-create policy if not exists "Allow public read access to service_categories"
-  on service_categories
-  for select
-  using (true);
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_policies
+    where schemaname = 'public'
+      and tablename = 'service_categories'
+      and policyname = 'Allow public read access to service_categories'
+  ) then
+    create policy "Allow public read access to service_categories"
+      on service_categories
+      for select
+      using (true);
+  end if;
+end;
+$$;
 
-create policy if not exists "Allow public read access to service_items"
-  on service_items
-  for select
-  using (true);
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_policies
+    where schemaname = 'public'
+      and tablename = 'service_items'
+      and policyname = 'Allow public read access to service_items'
+  ) then
+    create policy "Allow public read access to service_items"
+      on service_items
+      for select
+      using (true);
+  end if;
+end;
+$$;
 
 -- Seed service categories
 insert into service_categories (id, label, description, icon, order_index)
