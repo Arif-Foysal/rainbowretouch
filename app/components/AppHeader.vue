@@ -1,9 +1,44 @@
 <script setup lang="ts">
+import type { NavigationMenuItem } from '@nuxt/ui'
+
 const route = useRoute()
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 const router = useRouter()
 const toast = useToast()
+const { isAdmin, fetchProfile } = useUserProfile()
+
+let authUnsubscribe: (() => void) | null = null
+
+onMounted(async () => {
+  if (process.server) return
+
+  if (user.value?.id) {
+    await fetchProfile()
+  }
+
+  const { data } = supabase.auth.onAuthStateChange(async () => {
+    const sessionUserId = supabase.auth.getSession ? (await supabase.auth.getSession())?.data.session?.user?.id : undefined
+    const id = sessionUserId || user.value?.id
+    if (id) {
+      await fetchProfile(id)
+    }
+  })
+
+  authUnsubscribe = data?.subscription?.unsubscribe ?? null
+})
+
+onUnmounted(() => {
+  authUnsubscribe?.()
+})
+type ServiceItem = {
+  id: string
+  label: string
+  description: string | null
+  icon: string | null
+  href: string | null
+  order_index: number
+}
 
 type ServiceNavigationItem = {
   label: string
@@ -26,14 +61,7 @@ type ServiceCategoryRow = {
   description: string | null
   icon: string | null
   order_index: number
-  service_items: Array<{
-    id: string
-    label: string
-    description: string | null
-    icon: string | null
-    href: string | null
-    order_index: number
-  }> | null
+  service_items: ServiceItem[] | null
 }
 
 const fallbackServicesNavigation: ServiceNavigationCategory[] = [
@@ -277,7 +305,7 @@ const fallbackServicesNavigation: ServiceNavigationCategory[] = [
 const { data: servicesData } = await useAsyncData('services-navigation', async () => {
   const { data, error } = await supabase
     .from('service_categories')
-    .select<ServiceCategoryRow>('id, label, description, icon, order_index, service_items(id, label, description, icon, href, order_index)')
+    .select('id, label, description, icon, order_index, service_items(id, label, description, icon, href, order_index)')
     .order('order_index', { ascending: true })
     .order('order_index', { foreignTable: 'service_items', ascending: true })
 
@@ -286,11 +314,13 @@ const { data: servicesData } = await useAsyncData('services-navigation', async (
     return fallbackServicesNavigation
   }
 
-  if (!data?.length) {
+  const typedData = data as ServiceCategoryRow[] | null
+
+  if (!typedData?.length) {
     return fallbackServicesNavigation
   }
 
-  return data.map((category) => ({
+  return typedData.map((category) => ({
     id: category.id,
     label: category.label,
     description: category.description,
@@ -308,6 +338,21 @@ const servicesNavigationChildren = computed<ServiceNavigationCategory[]>(() => {
   return servicesData.value?.length ? servicesData.value : fallbackServicesNavigation
 })
 
+// Ensure profile is loaded on client when user changes so we can show admin button
+watch(user, async (val) => {
+  if (process.server) return
+  if (!val?.id) return
+  await fetchProfile()
+}, { immediate: true })
+
+// Refetch profile on route change to ensure admin flag stays available after navigation
+watch(() => route.path, async () => {
+  if (process.server) return
+  const id = user.value?.id
+  if (!id) return
+  await fetchProfile(id)
+})
+
 const activeServiceCategory = ref<ServiceNavigationCategory | null>(null)
 const activeServiceCategoryLabel = computed(() => activeServiceCategory.value?.label || '')
 
@@ -322,7 +367,7 @@ watch(
     const currentLabel = activeServiceCategory.value?.label
     const matchingCategory = currentLabel ? categories.find((category) => category.label === currentLabel) : null
 
-    activeServiceCategory.value = matchingCategory || categories[0]
+    activeServiceCategory.value = matchingCategory || categories[0] || null
   },
   { immediate: true }
 )
@@ -331,7 +376,7 @@ const setActiveServiceCategory = (category: ServiceNavigationCategory) => {
   activeServiceCategory.value = category
 }
 
-const items = computed(() => {
+const items = computed<NavigationMenuItem[]>(() => {
   const servicesChildren = servicesNavigationChildren.value
 
   return [
@@ -378,7 +423,7 @@ const items = computed(() => {
       to: '/contact',
       icon: 'i-lucide-mail'
     }
-  ]
+  ] as NavigationMenuItem[]
 })
 
 const isAuthenticated = computed(() => Boolean(user.value))
@@ -414,7 +459,7 @@ const handleLogout = async () => {
           <div class="flex flex-col gap-6 md:flex-row">
             <div class="space-y-2 md:w-1/3">
               <button
-                v-for="category in item.children"
+                v-for="category in ((item as any)?.children || [])"
                 :key="category.label"
                 type="button"
                 class="group flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
@@ -533,6 +578,16 @@ const handleLogout = async () => {
         v-else
         @click="handleLogout"
       />
+
+      <UButton
+        v-if="isAuthenticated && isAdmin"
+        label="Admin"
+        color="primary"
+        variant="outline"
+        trailing-icon="i-lucide-arrow-right"
+        to="/admin"
+        class="hidden lg:inline-flex"
+      />
     </template>
 
     <template #body>
@@ -567,6 +622,14 @@ const handleLogout = async () => {
           variant="subtle"
           block
           @click="handleLogout"
+        />
+        <UButton
+          v-if="isAdmin"
+          label="Admin"
+          color="primary"
+          to="/admin"
+          block
+          class="mb-2"
         />
         <UButton
           label="Dashboard"

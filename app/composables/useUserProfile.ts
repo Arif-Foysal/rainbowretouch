@@ -13,8 +13,10 @@ export const useUserProfile = () => {
   const profile = useState<UserProfile | null>('userProfile', () => null)
   const isAdmin = computed(() => profile.value?.role === 'admin')
 
-  const fetchProfile = async () => {
-    if (!user.value) {
+  const fetchProfile = async (explicitUserId?: string) => {
+    const userId = explicitUserId || user.value?.id
+
+    if (!userId) {
       profile.value = null
       return null
     }
@@ -22,7 +24,7 @@ export const useUserProfile = () => {
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
-      .eq('id', user.value.id)
+      .eq('id', userId)
       .single()
 
     if (error) {

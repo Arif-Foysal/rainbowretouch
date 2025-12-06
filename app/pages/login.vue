@@ -16,12 +16,25 @@ const user = useSupabaseUser()
 const router = useRouter()
 const toast = useToast()
 
-// Redirect if already logged in
-watchEffect(() => {
-  if (user.value) {
-    router.push('/dashboard')
-  }
-})
+type Profile = { role: string | null }
+
+// Redirect logged-in users based on their role to avoid sending admins to /dashboard
+const hasRedirected = ref(false)
+
+watch(user, async (val) => {
+  if (!val || hasRedirected.value) return
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', val.id)
+    .single()
+
+  const role = (profile as Profile | null)?.role
+  const target = role === 'admin' ? '/admin' : '/dashboard'
+  hasRedirected.value = true
+  router.push(target)
+}, { immediate: true })
 
 const fields = [{
   name: 'email',
@@ -51,7 +64,7 @@ const providers = [{
       }
     })
     if (error) {
-      toast.add({ title: 'Error', description: error.message, color: 'red' })
+      toast.add({ title: 'Error', description: error.message, color: 'error' })
     }
   }
 }, {
@@ -65,7 +78,7 @@ const providers = [{
       }
     })
     if (error) {
-      toast.add({ title: 'Error', description: error.message, color: 'red' })
+      toast.add({ title: 'Error', description: error.message, color: 'error' })
     }
   }
 }]
@@ -91,7 +104,7 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
     toast.add({
       title: 'Login Failed',
       description: error.message,
-      color: 'red'
+      color: 'error'
     })
     loading.value = false
     return
@@ -107,15 +120,13 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
   toast.add({
     title: 'Success',
     description: 'Welcome back!',
-    color: 'green'
+    color: 'success'
   })
 
   // Redirect based on role
-  if (profile?.role === 'admin') {
-    router.push('/admin')
-  } else {
-    router.push('/dashboard')
-  }
+  const role = (profile as Profile | null)?.role
+  const target = role === 'admin' ? '/admin' : '/dashboard'
+  router.push(target)
   
   loading.value = false
 }
