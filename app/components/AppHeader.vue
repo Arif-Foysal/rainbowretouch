@@ -6,151 +6,243 @@ const router = useRouter()
 const toast = useToast()
 
 const servicesNavigationChildren = [
-
   {
-    label: 'Image Retouching',
-    description: 'Magazine-grade cleanup for editorials, lookbooks, and high-volume campaigns.',
+    label: 'Background Removal',
+    description: 'Professional clipping paths, multi-path services, and shadow effects.',
     icon: 'i-lucide-wand',
     children: [
-            {
-        label: 'Color Grading',
-        description: 'Professional color grading to balance exposure, refine skin tones, and create a polished, high-end look.',
-        icon: 'i-lucide-palette',
-        to: '/services#grading'
-      },
       {
-        label: 'Beauty & Skin Polish',
-        description: 'Advanced dodge and burn plus texture recovery for close-ups.',
-        icon: 'i-lucide-sparkles',
-        to: '/services#beauty-polish'
-      },
-      {
-        label: 'Garment Detailing',
-        description: 'Wrinkle removal, edge cleanup, and fabric reshaping.',
+        label: 'Clipping Path',
+        description: 'Simple, medium, complex, and super complex clipping path services.',
         icon: 'i-lucide-scissors',
-        to: '/services#garment-detail'
+        to: '/services#clipping-path'
       },
       {
-        label: 'Environmental Cleanup',
-        description: 'Remove props, distractions, and uneven lighting on set.',
-        icon: 'i-lucide-brush',
-        to: '/services#environment-cleanup'
+        label: 'Multi Path',
+        description: 'Multiple clipping paths in a single image.',
+        icon: 'i-lucide-layers',
+        to: '/services#multi-path'
+      },
+      {
+        label: 'Image Cut Out',
+        description: 'Precise image cut out services for various needs.',
+        icon: 'i-lucide-wand',
+        to: '/services#image-cut-out'
+      },
+      {
+        label: 'Ghost Mannequin',
+        description: '3D mannequin effect and ghost mannequin services.',
+        icon: 'i-lucide-user',
+        to: '/services#ghost-mannequin'
+      },
+      {
+        label: 'Shadow Services',
+        description: 'Natural shadows, reflections, and drop shadow effects.',
+        icon: 'i-lucide-layers',
+        to: '/services#shadow-services'
       }
-    ]
-  },
-
-  {
-    label: 'Ecommerce Photo Editing',
-    description: 'Optimized images for product listings, ads, and catalogs.',
-    icon: 'i-lucide-package-check',
-    children: [
-    {
-      label: 'Background Removal',
-      description: 'Precise cutouts with edge refinement and alpha-channel exports for all product types.',
-      icon: 'i-lucide-crop',
-      to: '/services#background-removal'
-    },
-    {
-      label: 'Ghost Mannequin & Apparel',
-      description: 'Create invisible-mannequin shots and stitch interiors for clean product presentation.',
-      icon: 'i-lucide-user',
-      to: '/services#ghost-mannequin'
-    },
-    {
-      label: 'Color Correction & White Balance',
-      description: 'Batch color correction, white-balance, and consistent look across SKUs.',
-      icon: 'i-lucide-sliders',
-      to: '/services#color-correction'
-    },
-    {
-      label: 'Retouching & Spot Removal',
-      description: 'Remove dust, lint, and blemishes while preserving natural texture.',
-      icon: 'i-lucide-sparkles',
-      to: '/services#retouching'
-    },
-    {
-      label: 'Shadows & Reflections',
-      description: 'Natural drop shadows and soft reflections to enhance product depth.',
-      icon: 'i-lucide-layers',
-      to: '/services#shadows-reflections'
-    },
-    {
-      label: 'Resize, Export & SEO',
-      description: 'Resize, crop, and export multi-resolution assets optimized for performance and SEO.',
-      icon: 'i-lucide-search',
-      to: '/services#resize-export'
-    }
+      // {
+      //   label: 'Neck Joint',
+      //   description: '3D mannequin effect and ghost neck joint services.',
+      //   icon: 'i-lucide-user',
+      //   to: '/services#neck-joint'
+      // },
+      // {
+      //   label: 'Shadow Service',
+      //   description: 'Natural shadows, reflections, and drop shadow effects.',
+      //   icon: 'i-lucide-layers',
+      //   to: '/services#shadow-service'
+      // },
+     
     ]
   },
     {
-    label: 'Image Restoration & Enhancement',
-    description: 'Revive old or damaged photos with expert restoration and enhancement techniques.',
-    icon: 'i-lucide-refresh-ccw',
+    label: 'Photo Retouching',
+    description: 'Retouching, color correction, and exposure enhancement services.',
+    icon: 'i-lucide-sparkles',
     children: [
       {
-        label: 'Damage Repair & Stitching',
-        description: 'Reconstruct tears, scratches, and missing sections using content-aware healing and manual retouching.',
-        icon: 'i-lucide-wrench',
-        to: '/services#damage-repair'
-      },
-      {
-        label: 'Color & Tone Restoration',
-        description: 'Recover faded colors, correct discoloration, and rebalance tones for archival prints and scans.',
-        icon: 'i-lucide-sliders',
-        to: '/services#color-restoration'
-      },
-      {
-        label: 'Dust, Scratch & Spot Removal',
-        description: 'Automated and manual cleanup to remove dust, scratches, and surface blemishes while preserving detail.',
+        label: 'Portrait Retouching',
+        description: 'Professional retouching for portraits and headshots.',
         icon: 'i-lucide-sparkles',
-        to: '/services#dust-scratch-removal'
+        to: '/services#portrait-retouching'
       },
       {
-        label: 'Tonal Recovery & Contrast',
-        description: 'Restore dynamic range and local contrast for depth and clarity in over/under-exposed captures.',
-        icon: 'i-lucide-contrast',
-        to: '/services#tonal-recovery'
+        label: 'Headshot Retouching',
+        description: 'Enhance headshots with expert retouching.',
+        icon: 'material-symbols:person-pin',
+        to: '/services#headshot-retouching'
       },
       {
-        label: 'Noise Reduction & Sharpening',
-        description: 'Advanced denoising paired with detail-preserving sharpening for scanned or low-light images.',
-        icon: 'i-lucide-aperture',
-        to: '/services#noise-reduction'
+        label: 'Fashion Photo Retouch',
+        description: 'Professional retouching for fashion photography.',
+        icon: 'i-lucide-sparkles',
+        to: '/services#fashion-photo-retouch'
       },
       {
-        label: 'Photo Reconstruction & Composite Repair',
-        description: 'Rebuild heavily damaged images, composite multi-source elements, and recreate missing context.',
-        icon: 'i-lucide-image',
-        to: '/services#photo-reconstruction'
+        label: 'Newborn Photo Retouch',
+        description: 'Specialized retouching for newborn photography.',
+        icon: 'i-lucide-baby',
+        to: '/services#newborn-photo-retouch'
+      },
+      {
+        label: 'Ecommerce Product Photo Retouch',
+        description: 'Enhance product images for e-commerce and catalogs.',
+        icon: 'i-lucide-palette',
+        to: '/services#ecommerce-product-photo-retouch'
+      },
+      {
+        label: 'Jewelry Retouching',
+        description: 'Specialized jewelry photo enhancement.',
+        icon: 'i-lucide-diamond',
+        to: '/services#jewelry-retouch'
+      },
+      {
+        label: 'Weeding Photo Retouch',
+        description: 'Professional retouching for wedding photographs.',
+        icon: 'i-lucide-sun',
+        to: '/services#weeding-photo-retouch'
+      },
+      {
+        label: 'High End Retouch',
+        description: 'Advanced retouching techniques for high-end photography.',
+        icon: 'i-lucide-star',
+        to: '/services#high-end-retouch'
       }
     ]
   },
   {
-  label: 'Creative Composition & Ads',
-  description: 'High-end photo manipulation and compositing for advertising, key art, and marketing visuals.',
-  icon: 'i-lucide-lightbulb',
-  children: [
-    {
-      label: 'Photo Manipulation',
-      description: 'Seamlessly combine multiple images to create surreal, conceptual, or marketing visuals.',
-      icon: 'i-lucide-layers',
-      to: '/services#manipulation'
-    },
-    {
-      label: 'Automotive Retouching',
-      description: 'Specialized reflection management, cleaning, and background replacement for vehicle photography.',
-      icon: 'i-lucide-car',
-      to: '/services#automotive'
-    },
-    {
-      label: 'Jewelry Retouching',
-      description: 'Focus stacking, metal polishing, and gemstone sharpening for macro jewelry photography.',
-      icon: 'i-lucide-diamond',
-      to: '/services#jewelry'
-    }
-  ]
-}
+    label: 'Image Enhancement',
+    description: 'Retouching, color correction, and exposure enhancement services.',
+    icon: 'i-lucide-sparkles',
+    children: [
+      {
+        label: 'Lightroom Image Editing',
+        description: 'Professional retouching for all photo types.',
+        icon: 'i-lucide-sparkles',
+        to: '/services#lightroom-image-editing'
+      },
+      {
+        label: 'Color Correction',
+        description: 'Professional color grading and correction.',
+        icon: 'i-lucide-palette',
+        to: '/services#color-correction'
+      },
+      {
+        label: 'Exposure Correction',
+        description: 'Fix over/under-exposed images.',
+        icon: 'i-lucide-sun',
+        to: '/services#exposure-correction'
+      },
+ {
+  label: 'Real Estate Photo Enhancement',
+  description: 'Enhance real estate photos for better appeal.',
+  icon: 'i-lucide-home',
+  to: '/services#real-estate-photo-enhancement'
+ }
+    ]
+  },
+  {
+    label: 'Image Masking',
+    description: 'Masking, photo restoration, and image manipulation services.',
+    icon: 'i-lucide-layers',
+    children: [
+      {
+        label: 'Layer Masking',
+        description: 'Professional masking services for all needs.',
+        icon: 'i-lucide-layers',
+        to: '/services#layer-masking'
+      },
+      {
+        label: 'Multi Masking',
+        description: 'Advanced multi-layer masking techniques.',
+        icon: 'i-lucide-refresh-ccw',
+        to: '/services#multi-masking'
+      },
+      {
+        label: 'Alpha Channel Masking',
+        description: 'Precise alpha channel masking for complex images.',
+        icon: 'i-lucide-pen-tool',
+        to: '/services#alpha-channel-masking'
+      },
+      {
+        label: 'Hair Masking',
+        description: 'Expert hair masking for detailed cutouts.',
+        icon: 'i-lucide-wand-2',
+        to: '/services#hair-masking'
+      },
+      {
+        label:'Product Masking',
+        description: 'Specialized masking for product images.',
+        icon: 'i-lucide-box',
+        to: '/services#product-masking'
+      }
+    ]
+  },
+  {
+    label: 'Advanced Design',
+    description: 'Advanced design services including masking, photo restoration, and image manipulation.',
+    icon: 'i-lucide-layers',
+    children: [
+      {
+        label: 'Image Manupulation ',
+        description: 'Creative image manipulation and compositing services.',
+        icon: 'i-lucide-layers',
+        to: '/services#image-manipulation'
+      },
+      {
+        label: 'AI Image Generation & Editing',
+        description: 'Leverage AI to create and edit stunning images.',
+        icon: 'simple-icons:codemagic',
+        to: '/services#ai-image-generation-editing'
+      },
+      {
+        label: 'Object Removal ',
+        description: 'Seamless removal of unwanted objects from images.',
+        icon: 'streamline-ultimate:scissors-2-bold',
+        to: '/services#object-removal'
+      },
+      {
+        label: 'Virtual Staging ',
+        description: 'Enhance property images with virtual furniture and decor.',
+        icon: 'i-lucide-wand-2',
+        to: '/services#virtual-staging'
+      },
+      {
+        label: 'Photo Restoration ',
+        description: 'Restore old and damaged photos to their former glory.',
+        icon: 'i-lucide-image',
+        to: '/services#photo-restoration'
+      }
+    ]
+  },
+  {
+    label: 'Web Application Development',
+    description: 'Building responsive and dynamic web applications with modern web technologies.',
+    icon: 'material-symbols:web-traffic',
+    children: [
+      {
+        label: 'Front End Development',
+        description: 'Creating visually appealing and user-friendly interfaces.',
+        icon: 'i-lucide-pen-tool',
+        to: '/services#front-end-development'
+      },
+      {
+        label: 'API Development',
+        description: 'Building robust and scalable APIs for seamless integration.',
+        icon: 'i-lucide-film',
+        to: '/services#api-development'
+      },
+      {
+        label: 'Full Stack Development',
+        description: 'Comprehensive web solutions from front end to back end.',
+        icon: 'i-lucide-code',
+        to: '/services#full-stack-development'
+      }
+    ]
+  }
 ]
+
 
 const activeServiceCategory = ref(servicesNavigationChildren[0])
 const activeServiceCategoryLabel = computed(() => activeServiceCategory.value?.label || '')
@@ -224,6 +316,7 @@ const handleLogout = async () => {
 </script>
 
 <template>
+  <TopBar />
   <UHeader>
     <template #left>
       <NuxtLink to="/">
@@ -395,6 +488,13 @@ const handleLogout = async () => {
           variant="subtle"
           block
           @click="handleLogout"
+        />
+        <UButton
+          label="Dashboard"
+          color="neutral"
+          to="/dashboard"
+          block
+          
         />
       </template>
     </template>

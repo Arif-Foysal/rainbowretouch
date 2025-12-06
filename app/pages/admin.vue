@@ -385,7 +385,7 @@ const fetchContactRequests = async () => {
                     v-for="(attachment, index) in request.attachments"
                     :key="`${request.id}-attachment-${index}`"
                     type="button"
-                    class="w-28 h-28 rounded-xl overflow-hidden border border-default bg-muted/30 flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition hover:shadow-lg"
+                    class="w-70 h-60 rounded-xl overflow-hidden border border-default bg-muted/30 flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition hover:shadow-lg"
                     @click="openAttachmentModal(attachment, request)"
                   >
                     <img
@@ -397,7 +397,7 @@ const fetchContactRequests = async () => {
                     <div v-else class="flex-1 flex items-center justify-center text-xs text-muted px-2 text-center">
                       No preview
                     </div>
-                    <div class="p-1 text-xs text-center text-muted bg-background/80">
+                    <div class="p-1 text-lg text-center text-muted bg-background/80">
                       {{ attachment.name || `Attachment ${index + 1}` }}
                     </div>
                   </button>
