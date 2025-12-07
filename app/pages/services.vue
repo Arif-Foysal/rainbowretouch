@@ -35,21 +35,20 @@
       >
         <div class="relative overflow-hidden rounded-3xl shadow-xl ring-1 ring-default/40">
           <div class="aspect-4/3 w-full">
-            <NuxtImg
+            <img
               :src="section.image || '/imagePoster/1.png'"
               :alt="section.title"
               class="h-full w-full object-cover"
-              format="webp"
-              quality="80"
-              sizes="sm:100vw md:1000px"
+              loading="lazy"
             />
           </div>
         </div>
       </UPageSection>
     </div>
   </div>
-      <UPageCTA
-      v-bind="page.cta"
+    <UPageCTA
+      v-if="ctaProps"
+      v-bind="ctaProps"
       variant="subtle"
       class="overflow-hidden"
     >
@@ -126,5 +125,6 @@ const groupedSections = computed(() => {
 })
 
 const { data: page } = await useAsyncData('index', () => queryCollection('index').first())
+const ctaProps = computed(() => page.value?.cta ?? null)
 const hasSections = computed(() => groupedSections.value.some((group) => group.sections.length > 0))
 </script>
