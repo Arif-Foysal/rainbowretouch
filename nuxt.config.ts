@@ -1,4 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+const supabaseUrl = process.env.SUPABASE_URL
+const supabaseDomain = supabaseUrl ? new URL(supabaseUrl).hostname : null
+
 export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
@@ -42,7 +45,7 @@ export default defineNuxtConfig({
 
   image: {
     provider: 'ipx',
-    domains: ['jxrnbucgmfmgovgkjkoo.supabase.co']
+    domains: ['jxrnbucgmfmgovgkjkoo.supabase.co', 'picsum.photos', supabaseDomain].filter((d): d is string => !!d)
   },
 
   eslint: {
