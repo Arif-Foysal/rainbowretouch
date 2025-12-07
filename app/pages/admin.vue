@@ -1288,6 +1288,7 @@ const fetchContactRequests = async () => {
               v-model="categoryForm.icon"
               placeholder="i-lucide-sparkles"
               :disabled="isSavingCategory"
+              model-value="i-lucide-sparkles"
             />
           </UFormGroup>
           <UFormGroup label="Order">
@@ -1366,6 +1367,7 @@ const fetchContactRequests = async () => {
                 v-model="serviceForm.icon"
                 placeholder="i-lucide-sparkles"
                 :disabled="isSavingService"
+                model-value="i-lucide-sparkles"
               />
             </UFormGroup>
             <UFormGroup label="URL">

@@ -43,6 +43,9 @@
             />
           </div>
         </div>
+          <template #footer>
+    <UButton label="Free Trial" to="/contact" size="lg" trailing-icon="i-lucide-arrow-right"/>
+  </template>
       </UPageSection>
     </div>
   </div>
