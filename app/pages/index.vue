@@ -73,9 +73,9 @@ const card_items = ref([
       :description="section.description" :orientation="section.orientation" :reverse="section.reverse"
       :features="section.features">
       <div class="relative overflow-hidden rounded-3xl shadow-xl ring-1 ring-default/40">
-        <div class="aspect-[4/3] w-full">
+        <div class="aspect-4/3 w-full">
           <NuxtImg
-            :src="section.image || '/imagePoster/1.png'"
+            :src="(section as any).image || '/imagePoster/1.png'"
             :alt="section.title"
             class="w-full h-full object-cover"
             format="webp"

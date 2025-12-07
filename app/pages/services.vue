@@ -1,29 +1,130 @@
 <template>
-
-<UPageHeader
-title="Our Editing Services"
-description="We streamline your visual workflow with pixel-perfect product editing, restoration, and retouching delivered at scale."
-headline="Turn raw captures into commercial assets"
-
+  <UPageHeader
+    :title="headerTitle"
+    :description="headerDescription"
+    headline="Turn raw captures into commercial assets"
   />
-    <UPageSection v-for="(section, index) in page.sections" :key="index" :title="section.title"
-      :description="section.description" :orientation="section.orientation" :reverse="section.reverse"
-      :features="section.features">
-      <div class="relative overflow-hidden rounded-3xl shadow-xl ring-1 ring-default/40">
-        <div class="aspect-[4/3] w-full">
-          <NuxtImg
-            :src="section.image || '/imagePoster/1.png'"
-            :alt="section.title"
-            class="w-full h-full object-cover"
-            format="webp"
-            quality="80"
-            sizes="sm:100vw md:1000px"
-          />
-        </div>
-      </div>
-    </UPageSection>
+<br><br>
+  <div v-if="pending" class="flex items-center justify-center py-16">
+    <UIcon name="i-lucide-loader-2" class="h-8 w-8 animate-spin text-primary" />
+  </div>
 
+  <div v-else>
+    <UEmpty
+      v-if="!hasSections"
+      icon="i-lucide-layers"
+      title="No services available"
+      description="Services will appear here once added in the admin."
+    />
+
+<div v-for="group in groupedSections" :key="group.id" class="space-y-6 pb-12">
+      <div class="space-y-2 flex flex-col items-center text-center mx-auto">
+        <h2 class="text-5xl font-bold tracking-tight text-foreground">{{ group.title }}</h2>
+        <p v-if="group.description" class="text-lg text-primary">{{ group.description }}</p>
+      </div>
+
+      <UPageSection
+        v-for="section in group.sections"
+        :key="section.id"
+        :id="section.id"
+        :title="section.title"
+        :description="section.description || undefined"
+        :orientation="section.orientation"
+        :reverse="section.reverse"
+        :features="section.features"
+      >
+        <div class="relative overflow-hidden rounded-3xl shadow-xl ring-1 ring-default/40">
+          <div class="aspect-4/3 w-full">
+            <NuxtImg
+              :src="section.image || '/imagePoster/1.png'"
+              :alt="section.title"
+              class="h-full w-full object-cover"
+              format="webp"
+              quality="80"
+              sizes="sm:100vw md:1000px"
+            />
+          </div>
+        </div>
+      </UPageSection>
+    </div>
+  </div>
+      <UPageCTA
+      v-bind="page.cta"
+      variant="subtle"
+      class="overflow-hidden"
+    >
+      <LazyStarsBg />
+    </UPageCTA>
 </template>
-<script setup>
+
+<script setup lang="ts">
+type ServiceImage = { image_url: string; alt: string | null; order_index: number }
+type ServiceFeature = { label: string; description: string | null; icon?: string | null }
+type ServiceItem = {
+  id: string
+  label: string
+  description: string | null
+  href: string | null
+  order_index: number
+  service_item_images?: ServiceImage[]
+  service_item_features?: ServiceFeature[]
+}
+type ServiceCategory = { id: string; label: string; description: string | null; order_index: number; service_items?: ServiceItem[] }
+
+const supabase = useSupabaseClient()
+
+const { data, pending } = await useAsyncData('services-page', async () => {
+  const { data, error } = await supabase
+    .from('service_categories')
+    .select('id, label, description, order_index, service_items(id, label, description, href, order_index, service_item_images(image_url, alt, order_index), service_item_features(label, description, icon))')
+    .order('order_index', { ascending: true })
+    .order('order_index', { foreignTable: 'service_items', ascending: true })
+
+  if (error) {
+    throw error
+  }
+
+  return data ?? []
+})
+
+const categories = computed<ServiceCategory[]>(() => (data.value as ServiceCategory[] | null) ?? [])
+
+const headerTitle = computed(() => 'Our Services')
+const headerDescription = computed(
+  () => 'We streamline your visual workflow with pixel-perfect product editing, restoration, and retouching delivered at scale.'
+)
+
+const groupedSections = computed(() => {
+  return categories.value.map((category) => {
+    const sections = (category.service_items || []).map((item, idx) => {
+      const anchorFragment = item.href?.split('#')[1]?.trim()
+      const image = item.service_item_images?.[0]?.image_url
+      const features = (item.service_item_features || []).map((feature) => ({
+        title: feature.label,
+        description: feature.description || undefined,
+        icon: feature.icon || undefined
+      }))
+
+      return {
+        id: anchorFragment || `${category.id}-${item.id}`,
+        title: item.label,
+        description: item.description,
+        orientation: 'horizontal' as const,
+        reverse: idx % 2 === 1,
+        image,
+        features
+      }
+    })
+
+    return {
+      id: category.id,
+      title: category.label,
+      description: category.description,
+      sections
+    }
+  })
+})
+
 const { data: page } = await useAsyncData('index', () => queryCollection('index').first())
+const hasSections = computed(() => groupedSections.value.some((group) => group.sections.length > 0))
 </script>
