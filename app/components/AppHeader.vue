@@ -66,7 +66,7 @@ type ServiceCategoryRow = {
 
 const fallbackServicesNavigation: ServiceNavigationCategory[] = [
 {
-    label: 'Background Removal',
+    label: 'Background Removal-',
     description: 'Professional clipping paths, multi-path services, and shadow effects.',
     icon: 'i-lucide-wand',
     children: [

@@ -40,6 +40,11 @@ export default defineNuxtConfig({
     }
   },
 
+  image: {
+    provider: 'ipx',
+    domains: ['jxrnbucgmfmgovgkjkoo.supabase.co']
+  },
+
   eslint: {
     config: {
       stylistic: {
