@@ -22,13 +22,7 @@ export default defineNuxtConfig({
     '@vueuse/motion/nuxt'
   ],
   supabase: {
-    redirectOptions: {
-      login: '/login',
-      callback: '/confirm',
-      exclude: [
-        '/', '/about', '/blog/**', '/services', '/docs/**', '/pricing', '/changelog/**', '/signup', '/login', '/contact', '/portfolio', '/blog'
-      ]
-    }
+    redirect: false
   },
   devtools: {
     enabled: true
