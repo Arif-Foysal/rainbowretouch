@@ -83,7 +83,23 @@ const { data, pending } = await useAsyncData('services-page', async () => {
     .order('order_index', { foreignTable: 'service_items', ascending: true })
 
   if (error) {
+    console.error('Error fetching services:', error)
     throw error
+  }
+
+  // Debug logging to check image URLs
+  if (data) {
+    console.log('Services data fetched:', data.length, 'categories')
+    data.forEach(cat => {
+      cat.service_items?.forEach(item => {
+        const img = item.service_item_images?.[0]?.image_url
+        if (img) {
+          console.log(`Service: ${item.label}, Image URL: ${img}`)
+        } else {
+          console.warn(`Service: ${item.label} has missing image!`)
+        }
+      })
+    })
   }
 
   return data ?? []

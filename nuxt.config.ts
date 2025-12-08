@@ -1,6 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 const supabaseUrl = process.env.SUPABASE_URL
+
+if (!supabaseUrl) {
+  console.warn('SUPABASE_URL is missing in process.env!')
+} else {
+  console.log('Nuxt Config: Found SUPABASE_URL, extracting hostname...')
+}
+
 const supabaseDomain = supabaseUrl ? new URL(supabaseUrl).hostname : null
+console.log('Nuxt Config: Added Supabase domain to image provider:', supabaseDomain)
 
 export default defineNuxtConfig({
   modules: [
