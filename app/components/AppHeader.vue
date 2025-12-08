@@ -533,61 +533,65 @@ const handleLogout = async () => {
     <template #right>
       <UColorModeButton />
 
-      <UButton
-        icon="i-lucide-log-in"
-        color="neutral"
-        variant="ghost"
-        to="/login"
-        class="lg:hidden"
-        v-if="!isAuthenticated"
-      />
+      <ClientOnly>
+        <div class="flex items-center gap-2">
+          <UButton
+            icon="i-lucide-log-in"
+            color="neutral"
+            variant="ghost"
+            to="/login"
+            class="lg:hidden"
+            v-if="!isAuthenticated"
+          />
 
-      <UButton
-        icon="i-lucide-log-out"
-        color="neutral"
-        variant="ghost"
-        class="lg:hidden"
-        v-else
-        @click="handleLogout"
-      />
+          <UButton
+            icon="i-lucide-log-out"
+            color="neutral"
+            variant="ghost"
+            class="lg:hidden"
+            v-else
+            @click="handleLogout"
+          />
 
-      <UButton
-        label="Sign in"
-        color="neutral"
-        variant="outline"
-        to="/login"
-        class="hidden lg:inline-flex"
-        v-if="!isAuthenticated"
-      />
+          <UButton
+            label="Sign in"
+            color="neutral"
+            variant="outline"
+            to="/login"
+            class="hidden lg:inline-flex"
+            v-if="!isAuthenticated"
+          />
 
-      <UButton
-        label="Sign up"
-        color="neutral"
-        trailing-icon="i-lucide-arrow-right"
-        class="hidden lg:inline-flex"
-        to="/signup"
-        v-if="!isAuthenticated"
-      />
+          <UButton
+            label="Sign up"
+            color="neutral"
+            trailing-icon="i-lucide-arrow-right"
+            class="hidden lg:inline-flex"
+            to="/signup"
+            v-if="!isAuthenticated"
+          />
 
-      <UButton
-        label="Log out"
-        color="neutral"
-        variant="outline"
-        icon="i-lucide-log-out"
-        class="hidden lg:inline-flex"
-        v-else
-        @click="handleLogout"
-      />
+          <UButton
+            label="Log out"
+            color="neutral"
+            variant="outline"
+            icon="i-lucide-log-out"
+            class="hidden lg:inline-flex"
+            v-else
+            @click="handleLogout"
+          />
 
-      <UButton
-        v-if="isAuthenticated && isAdmin"
-        label="Admin"
-        color="primary"
-        variant="outline"
-        trailing-icon="i-lucide-arrow-right"
-        to="/admin"
-        class="hidden lg:inline-flex"
-      />
+          <UButton
+            v-if="isAuthenticated && isAdmin"
+            label="Admin"
+            color="primary"
+            variant="outline"
+            trailing-icon="i-lucide-arrow-right"
+            to="/admin"
+            class="hidden lg:inline-flex"
+          />
+        </div>
+      </ClientOnly>
     </template>
 
     <template #body>

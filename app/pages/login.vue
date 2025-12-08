@@ -22,7 +22,7 @@ type Profile = { role: string | null }
 const hasRedirected = ref(false)
 
 watch(user, async (val) => {
-  if (!val || hasRedirected.value) return
+  if (!val?.id || hasRedirected.value) return
 
   const { data: profile } = await supabase
     .from('profiles')
