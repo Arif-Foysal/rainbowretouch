@@ -723,6 +723,9 @@ const saveImage = async () => {
 
     if (error) throw error;
 
+    // Clear cached data for the services page
+    await clearNuxtData("services-page");
+
     toast.add({
       title:
         imageModalMode.value === "create" ? "Image uploaded" : "Image updated",
