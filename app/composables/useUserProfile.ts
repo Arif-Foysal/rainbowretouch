@@ -12,28 +12,44 @@ export const useUserProfile = () => {
 
   const profile = useState<UserProfile | null>('userProfile', () => null)
   const isAdmin = computed(() => profile.value?.role === 'admin')
+  const loading = useState('userProfileLoading', () => false)
 
   const fetchProfile = async (explicitUserId?: string) => {
-    const userId = explicitUserId || user.value?.id
+    let userId = explicitUserId || user.value?.id
 
     if (!userId) {
-      profile.value = null
-      return null
+      const { data: authData } = await supabase.auth.getUser()
+      if (authData?.user?.id) {
+         userId = authData.user.id
+      } else {
+         profile.value = null
+         return null
+      }
     }
 
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single()
-
-    if (error) {
-      console.error('Error fetching profile:', error)
-      return null
+    // Return existing profile if we have it and it matches the requested user
+    if (profile.value && profile.value.id === userId && !explicitUserId) {
+      return profile.value
     }
 
-    profile.value = (data as UserProfile) || null
-    return data
+    loading.value = true
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single()
+
+      if (error) {
+        console.error('Error fetching profile:', error)
+        return null
+      }
+
+      profile.value = (data as UserProfile) || null
+      return data
+    } finally {
+      loading.value = false
+    }
   }
 
   const updateProfile = async (updates: Partial<UserProfile>) => {
@@ -55,7 +71,8 @@ export const useUserProfile = () => {
 
   return {
     profile: readonly(profile),
-    isAdmin: readonly(isAdmin),
+    isAdmin, // Allow this to be reactive
+    loading: readonly(loading),
     fetchProfile,
     updateProfile
   }
