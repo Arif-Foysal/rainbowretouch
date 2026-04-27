@@ -40,8 +40,14 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return navigateTo('/login')
   }
 
-  // If user IS logged in and tries to access Login/Signup -> Redirect to Dashboard
+  // If user IS logged in and tries to access Login/Signup -> Redirect based on role
   if (user.value && (to.path === '/login' || to.path === '/signup')) {
-    return navigateTo('/dashboard')
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.value.id)
+      .single()
+    const role = (profile as { role?: string } | null)?.role
+    return navigateTo(role === 'admin' ? '/admin' : '/dashboard')
   }
 })

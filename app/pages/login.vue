@@ -12,29 +12,10 @@ useSeoMeta({
 })
 
 const supabase = useSupabaseClient()
-const user = useSupabaseUser()
 const router = useRouter()
 const toast = useToast()
 
 type Profile = { role: string | null }
-
-// Redirect logged-in users based on their role to avoid sending admins to /dashboard
-const hasRedirected = ref(false)
-
-watch(user, async (val) => {
-  if (!val?.id || hasRedirected.value) return
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', val.id)
-    .single()
-
-  const role = (profile as Profile | null)?.role
-  const target = role === 'admin' ? '/admin' : '/dashboard'
-  hasRedirected.value = true
-  router.push(target)
-}, { immediate: true })
 
 const fields = [{
   name: 'email',
