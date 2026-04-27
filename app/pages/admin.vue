@@ -142,8 +142,275 @@ const selectedAttachment = ref<{
   contactName?: string;
 } | null>(null);
 
+type SectionKey = "overview" | "users" | "services" | "contacts";
+type ServicesTab = "services" | "categories" | "features" | "photos";
+
+const navItems: Array<{
+  key: SectionKey;
+  label: string;
+  icon: string;
+  description: string;
+}> = [
+  {
+    key: "overview",
+    label: "Overview",
+    icon: "i-lucide-layout-dashboard",
+    description: "Key metrics at a glance"
+  },
+  {
+    key: "users",
+    label: "Users",
+    icon: "i-lucide-users",
+    description: "Manage members and roles"
+  },
+  {
+    key: "services",
+    label: "Services",
+    icon: "i-lucide-layers",
+    description: "Categories, services, features, photos"
+  },
+  {
+    key: "contacts",
+    label: "Contact Requests",
+    icon: "i-lucide-inbox",
+    description: "Inbound inquiries"
+  }
+];
+
+const activeSection = ref<SectionKey>("overview");
+const servicesTab = ref<ServicesTab>("services");
+const mobileNavOpen = ref(false);
+const userSearch = ref("");
+const categorySearch = ref("");
+const serviceSearch = ref("");
+const serviceCategoryFilter = ref<string>("");
+const featureSearch = ref("");
+const featureServiceFilter = ref<string>("");
+const photoSearch = ref("");
+const photoServiceFilter = ref<string>("");
+const expandedPhotoServices = ref<Set<string>>(new Set());
+
+const togglePhotoService = (serviceId: string) => {
+  const next = new Set(expandedPhotoServices.value);
+  if (next.has(serviceId)) {
+    next.delete(serviceId);
+  } else {
+    next.add(serviceId);
+  }
+  expandedPhotoServices.value = next;
+};
+
+const servicesSearch = ref("");
+
+const expandedServices = ref<Set<string>>(new Set());
+
+const toggleService = (serviceId: string) => {
+  const next = new Set(expandedServices.value);
+  if (next.has(serviceId)) {
+    next.delete(serviceId);
+  } else {
+    next.add(serviceId);
+  }
+  expandedServices.value = next;
+};
+
+const filteredServiceHierarchy = computed(() => {
+  const q = servicesSearch.value.trim().toLowerCase();
+  return serviceCategories.value
+    .map((category) => ({
+      ...category,
+      service_items: (category.service_items ?? []).filter((service) => {
+        if (!q) return true;
+        return (
+          service.label.toLowerCase().includes(q) ||
+          (service.description ?? "").toLowerCase().includes(q) ||
+          category.label.toLowerCase().includes(q) ||
+          (service.service_item_features ?? []).some((f) =>
+            f.label.toLowerCase().includes(q)
+          )
+        );
+      })
+    }))
+    .filter((category) => !q || category.service_items.length > 0);
+});
+
+const photoCategoryGroups = computed(() =>
+  serviceCategories.value
+    .map((category) => ({
+      ...category,
+      service_items: (category.service_items ?? []).filter((service) => {
+        if (!photoSearch.value.trim()) return true;
+        const q = photoSearch.value.trim().toLowerCase();
+        return (
+          service.label.toLowerCase().includes(q) ||
+          category.label.toLowerCase().includes(q)
+        );
+      })
+    }))
+    .filter((category) => category.service_items.length > 0)
+);
+const contactSearch = ref("");
+
+const setSection = (key: SectionKey) => {
+  activeSection.value = key;
+  mobileNavOpen.value = false;
+};
+
+const currentSection = computed(
+  () => navItems.find((item) => item.key === activeSection.value) ?? navItems[0]!
+);
+
 const serviceCategories = ref<ServiceCategoryRecord[]>([]);
 const servicesNavigationLoading = ref(true);
+
+type FlatService = ServiceItemRecord & {
+  categoryId: string;
+  categoryLabel: string;
+};
+type FlatFeature = FeatureRecord & {
+  serviceLabel: string;
+  categoryLabel: string;
+};
+type FlatPhoto = ImageRecord & {
+  serviceLabel: string;
+  categoryLabel: string;
+};
+
+const flatServices = computed<FlatService[]>(() =>
+  serviceCategories.value.flatMap((category) =>
+    (category.service_items ?? []).map((service) => ({
+      ...service,
+      categoryId: category.id,
+      categoryLabel: category.label
+    }))
+  )
+);
+
+const flatFeatures = computed<FlatFeature[]>(() =>
+  serviceCategories.value.flatMap((category) =>
+    (category.service_items ?? []).flatMap((service) =>
+      (service.service_item_features ?? []).map((feature) => ({
+        ...feature,
+        serviceLabel: service.label,
+        categoryLabel: category.label
+      }))
+    )
+  )
+);
+
+const flatPhotos = computed<FlatPhoto[]>(() =>
+  serviceCategories.value.flatMap((category) =>
+    (category.service_items ?? []).flatMap((service) =>
+      (service.service_item_images ?? []).map((image) => ({
+        ...image,
+        serviceLabel: service.label,
+        categoryLabel: category.label
+      }))
+    )
+  )
+);
+
+const filteredUsers = computed(() => {
+  const q = userSearch.value.trim().toLowerCase();
+  if (!q) return users.value;
+  return users.value.filter((user) =>
+    [user.full_name, user.email, user.role]
+      .filter(Boolean)
+      .some((field) => (field as string).toLowerCase().includes(q))
+  );
+});
+
+const filteredCategories = computed(() => {
+  const q = categorySearch.value.trim().toLowerCase();
+  if (!q) return serviceCategories.value;
+  return serviceCategories.value.filter((category) =>
+    [category.label, category.description]
+      .filter(Boolean)
+      .some((field) => (field as string).toLowerCase().includes(q))
+  );
+});
+
+const filteredFlatServices = computed(() => {
+  let list = flatServices.value;
+  if (serviceCategoryFilter.value) {
+    list = list.filter((s) => s.categoryId === serviceCategoryFilter.value);
+  }
+  const q = serviceSearch.value.trim().toLowerCase();
+  if (q) {
+    list = list.filter((service) =>
+      [service.label, service.description, service.href]
+        .filter(Boolean)
+        .some((field) => (field as string).toLowerCase().includes(q))
+    );
+  }
+  return list;
+});
+
+const filteredFlatFeatures = computed(() => {
+  let list = flatFeatures.value;
+  if (featureServiceFilter.value) {
+    list = list.filter((f) => f.service_item_id === featureServiceFilter.value);
+  }
+  const q = featureSearch.value.trim().toLowerCase();
+  if (q) {
+    list = list.filter((feature) =>
+      [feature.label, feature.description, feature.serviceLabel]
+        .filter(Boolean)
+        .some((field) => (field as string).toLowerCase().includes(q))
+    );
+  }
+  return list;
+});
+
+const filteredFlatPhotos = computed(() => {
+  let list = flatPhotos.value;
+  if (photoServiceFilter.value) {
+    list = list.filter((p) => p.service_item_id === photoServiceFilter.value);
+  }
+  const q = photoSearch.value.trim().toLowerCase();
+  if (q) {
+    list = list.filter((photo) =>
+      [photo.alt, photo.serviceLabel, photo.categoryLabel]
+        .filter(Boolean)
+        .some((field) => (field as string).toLowerCase().includes(q))
+    );
+  }
+  return list;
+});
+
+const filteredContactRequests = computed(() => {
+  const q = contactSearch.value.trim().toLowerCase();
+  if (!q) return contactRequests.value;
+  return contactRequests.value.filter((request) =>
+    [
+      request.first_name,
+      request.last_name,
+      request.email,
+      request.phone,
+      request.subject,
+      request.message
+    ]
+      .filter(Boolean)
+      .some((field) => (field as string).toLowerCase().includes(q))
+  );
+});
+
+const findServiceById = (id: string): ServiceItemRecord | undefined => {
+  for (const category of serviceCategories.value) {
+    const match = category.service_items?.find((s) => s.id === id);
+    if (match) return match;
+  }
+  return undefined;
+};
+
+const findCategoryIdForService = (serviceId: string): string => {
+  for (const category of serviceCategories.value) {
+    if (category.service_items?.some((s) => s.id === serviceId)) {
+      return category.id;
+    }
+  }
+  return "";
+};
 
 const isCategoryModalOpen = ref(false);
 const categoryModalMode = ref<"create" | "edit">("create");
@@ -390,21 +657,25 @@ const deleteCategory = async (category: ServiceCategoryRecord) => {
   }
 };
 
-const openCreateServiceModal = (category: ServiceCategoryRecord) => {
+const openCreateServiceModal = (category?: ServiceCategoryRecord) => {
   resetServiceForm();
   serviceModalMode.value = "create";
-  serviceForm.categoryId = category.id;
-  serviceForm.order_index = (category.service_items?.length || 0) + 1;
+  if (category) {
+    serviceForm.categoryId = category.id;
+    serviceForm.order_index = (category.service_items?.length || 0) + 1;
+  } else if (serviceCategoryFilter.value) {
+    serviceForm.categoryId = serviceCategoryFilter.value;
+  }
   isServiceModalOpen.value = true;
 };
 
 const openEditServiceModal = (
-  category: ServiceCategoryRecord,
-  service: ServiceItemRecord
+  service: ServiceItemRecord,
+  categoryId: string
 ) => {
   serviceModalMode.value = "edit";
   serviceForm.id = service.id;
-  serviceForm.categoryId = category.id;
+  serviceForm.categoryId = categoryId;
   serviceForm.label = service.label;
   serviceForm.description = service.description || "";
   serviceForm.icon = service.icon || "";
@@ -431,38 +702,45 @@ const resetImageForm = () => {
   imageUploadFiles.value = [];
 };
 
-const openCreateFeatureModal = (service: ServiceItemRecord) => {
+const openCreateFeatureModal = (service?: ServiceItemRecord) => {
   resetFeatureForm();
   featureModalMode.value = "create";
-  featureForm.serviceId = service.id;
+  if (service) {
+    featureForm.serviceId = service.id;
+  } else if (featureServiceFilter.value) {
+    featureForm.serviceId = featureServiceFilter.value;
+  }
   isFeatureModalOpen.value = true;
 };
 
-const openCreateImageModal = (service: ServiceItemRecord) => {
+const openCreateImageModal = (service?: ServiceItemRecord) => {
   resetImageForm();
   imageModalMode.value = "create";
-  imageForm.serviceId = service.id;
-  imageForm.order_index = (service.service_item_images?.length || 0) + 1;
+  if (service) {
+    imageForm.serviceId = service.id;
+    imageForm.order_index = (service.service_item_images?.length || 0) + 1;
+  } else if (photoServiceFilter.value) {
+    imageForm.serviceId = photoServiceFilter.value;
+    const target = findServiceById(photoServiceFilter.value);
+    imageForm.order_index = (target?.service_item_images?.length || 0) + 1;
+  }
   isImageModalOpen.value = true;
 };
 
-const openEditFeatureModal = (
-  service: ServiceItemRecord,
-  feature: FeatureRecord
-) => {
+const openEditFeatureModal = (feature: FeatureRecord) => {
   featureModalMode.value = "edit";
   featureForm.id = feature.id;
-  featureForm.serviceId = service.id;
+  featureForm.serviceId = feature.service_item_id || "";
   featureForm.label = feature.label;
   featureForm.icon = feature.icon || "";
   featureForm.description = feature.description || "";
   isFeatureModalOpen.value = true;
 };
 
-const openEditImageModal = (service: ServiceItemRecord, image: ImageRecord) => {
+const openEditImageModal = (image: ImageRecord) => {
   imageModalMode.value = "edit";
   imageForm.id = image.id;
-  imageForm.serviceId = service.id;
+  imageForm.serviceId = image.service_item_id || "";
   imageForm.image_url = image.image_url;
   imageForm.storage_path = image.storage_path || "";
   imageForm.alt = image.alt || "";
@@ -946,559 +1224,985 @@ const fetchContactRequests = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-background">
-    <UContainer class="py-8">
-      <!-- Header -->
-      <div class="flex items-center justify-between mb-8">
-        <div>
-          <h1 class="text-4xl font-bold text-highlighted">Admin Dashboard</h1>
-          <p class="text-muted mt-2">Welcome back, {{ profile?.email }}</p>
-        </div>
-        <UButton
-          label="Logout"
-          color="neutral"
-          variant="outline"
-          icon="i-lucide-log-out"
-          @click="logout"
-        />
-      </div>
+  <div class="min-h-dvh bg-muted/20">
+    <a
+      href="#admin-main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-white"
+    >Skip to admin content</a>
 
-      <!-- Stats Grid -->
-      <UPageGrid class="gap-4 mb-8">
-        <UCard v-for="stat in stats" :key="stat.label" class="p-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-muted">{{ stat.label }}</p>
-              <p class="text-3xl font-bold text-highlighted mt-1">
-                {{ stat.value }}
-              </p>
-            </div>
-            <UIcon :name="stat.icon" class="w-8 h-8 text-primary" />
-          </div>
-        </UCard>
-      </UPageGrid>
-
-      <!-- Users Table -->
-      <UCard>
-        <template #header>
-          <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-highlighted">All Users</h2>
-            <UBadge :label="`${users.length} users`" color="primary" />
-          </div>
-        </template>
-
-        <div v-if="loading" class="flex items-center justify-center py-12">
-          <UIcon
-            name="i-lucide-loader-2"
-            class="w-8 h-8 animate-spin text-primary"
-          />
-        </div>
-
-        <div v-else class="divide-y divide-default">
-          <div
-            v-for="userItem in users"
-            :key="userItem.id"
-            class="py-4 flex items-center justify-between"
+    <div class="flex">
+      <!-- Sidebar (desktop) -->
+      <aside
+        class="sticky top-0 hidden h-dvh w-72 shrink-0 flex-col border-r border-default bg-background lg:flex"
+        aria-label="Admin navigation"
+      >
+        <div class="flex items-center gap-3 border-b border-default px-6 py-5">
+          <span
+            class="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary"
+            aria-hidden="true"
           >
-            <div class="flex items-center gap-4">
-              <UAvatar
-                :src="userItem.avatar_url || undefined"
-                :alt="userItem.full_name || userItem.email || 'User avatar'"
-                size="md"
-              />
-              <div>
-                <p class="font-semibold text-highlighted">
-                  {{ userItem.full_name || "No name" }}
-                </p>
-                <p class="text-sm text-muted">
-                  {{ userItem.email || "No email" }}
-                </p>
-              </div>
-            </div>
-            <div class="flex items-center gap-3">
-              <UBadge
-                :label="userItem.role || 'user'"
-                :color="userItem.role === 'admin' ? 'primary' : 'neutral'"
-              />
-              <p class="text-xs text-muted">
-                Joined
-                {{
-                  userItem.created_at
-                    ? new Date(userItem.created_at).toLocaleDateString()
-                    : "N/A"
-                }}
-              </p>
-            </div>
+            <UIcon name="i-lucide-rainbow" class="h-5 w-5" />
+          </span>
+          <div class="leading-tight">
+            <p class="text-sm font-semibold text-highlighted">
+              Rainbow Retouch
+            </p>
+            <p class="text-xs text-muted">Admin console</p>
           </div>
         </div>
-      </UCard>
 
-      <!-- Services Navigation -->
-      <UCard class="mt-10">
-        <template #header>
-          <div class="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <h2 class="text-2xl font-bold text-highlighted">
-                Services Navigation
-              </h2>
-              <p class="text-sm text-muted">
-                Manage the categories and services shown in the header menu.
+        <nav class="flex-1 overflow-y-auto px-3 py-4" aria-label="Sections">
+          <ul class="space-y-1">
+            <li v-for="item in navItems" :key="item.key">
+              <button
+                type="button"
+                class="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                :class="
+                  activeSection === item.key
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-muted hover:bg-muted/40 hover:text-highlighted'
+                "
+                :aria-current="activeSection === item.key ? 'page' : undefined"
+                @click="setSection(item.key)"
+              >
+                <UIcon :name="item.icon" class="h-4 w-4" aria-hidden="true" />
+                <span class="flex-1">{{ item.label }}</span>
+                <UIcon
+                  v-if="activeSection === item.key"
+                  name="i-lucide-chevron-right"
+                  class="h-3.5 w-3.5"
+                  aria-hidden="true"
+                />
+              </button>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="border-t border-default p-4">
+          <div class="flex items-center gap-3">
+            <UAvatar
+              :alt="profile?.full_name || profile?.email || 'Admin avatar'"
+              :src="profile?.avatar_url || undefined"
+              size="sm"
+            />
+            <div class="min-w-0 flex-1">
+              <p class="truncate text-sm font-medium text-highlighted">
+                {{ profile?.full_name || "Admin" }}
               </p>
-              <p>
-                Select icons from
-                <a
-                  href="https://icones.js.org/"
-                  target="_blank"
-                  class="text-primary underline"
-                  >Icones</a
-                >
+              <p class="truncate text-xs text-muted">
+                {{ profile?.email }}
               </p>
             </div>
             <UButton
-              label="Add Category"
+              icon="i-lucide-log-out"
+              color="neutral"
+              variant="ghost"
+              size="sm"
+              aria-label="Sign out"
+              @click="logout"
+            />
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main column -->
+      <div class="flex min-w-0 flex-1 flex-col">
+        <!-- Topbar -->
+        <header
+          class="sticky top-0 z-20 flex flex-wrap items-center gap-3 border-b border-default bg-background/85 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/70 sm:px-6 lg:px-8"
+        >
+          <UButton
+            class="lg:hidden"
+            icon="i-lucide-menu"
+            color="neutral"
+            variant="ghost"
+            aria-label="Open navigation"
+            @click="mobileNavOpen = true"
+          />
+          <div class="min-w-0">
+            <p class="text-xs font-medium uppercase tracking-wide text-muted">
+              {{ currentSection.description }}
+            </p>
+            <h1 class="text-xl font-semibold text-highlighted sm:text-2xl">
+              {{ currentSection.label }}
+            </h1>
+          </div>
+          <div class="ml-auto flex items-center gap-2">
+            <UButton
+              v-if="activeSection === 'overview'"
+              label="Refresh"
+              icon="i-lucide-refresh-cw"
+              color="neutral"
+              variant="outline"
+              size="sm"
+              @click="
+                fetchUsers();
+                fetchContactRequests();
+                fetchServicesNavigation();
+              "
+            />
+            <UButton
+              v-if="activeSection === 'services'"
+              label="Add category"
               icon="i-lucide-plus"
               color="primary"
+              size="sm"
               @click="openCreateCategoryModal"
             />
           </div>
-        </template>
+        </header>
 
-        <div
-          v-if="servicesNavigationLoading"
-          class="flex items-center justify-center py-12"
+        <main
+          id="admin-main"
+          tabindex="-1"
+          class="flex-1 px-4 py-6 sm:px-6 lg:px-8"
         >
-          <UIcon
-            name="i-lucide-loader-2"
-            class="w-8 h-8 animate-spin text-primary"
-          />
-        </div>
-
-        <div v-else>
-          <UEmpty
-            v-if="!serviceCategories.length"
-            icon="i-lucide-layers"
-            title="No services configured"
-            description="Create your first category to populate the navigation menu."
-          />
-
-          <div v-else class="space-y-6">
-            <div
-              v-for="category in serviceCategories"
-              :key="category.id"
-              class="space-y-5 rounded-2xl border border-default p-5"
-            >
-              <div class="flex flex-wrap items-start justify-between gap-4">
-                <div class="flex items-start gap-3">
-                  <div
-                    class="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary"
+          <!-- OVERVIEW -->
+          <section
+            v-if="activeSection === 'overview'"
+            aria-labelledby="overview-heading"
+            class="space-y-6"
+          >
+            <h2 id="overview-heading" class="sr-only">Overview</h2>
+            <UPageGrid class="gap-4">
+              <UCard
+                v-for="stat in stats"
+                :key="stat.label"
+                class="transition hover:border-primary/40"
+              >
+                <div class="flex items-center justify-between gap-4 p-6">
+                  <div>
+                    <p class="text-sm font-medium text-muted">{{ stat.label }}</p>
+                    <p class="mt-2 text-3xl font-bold text-highlighted">
+                      {{ stat.value }}
+                    </p>
+                  </div>
+                  <span
+                    class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary"
+                    aria-hidden="true"
                   >
-                    <UIcon
-                      :name="category.icon || 'i-lucide-folder'"
-                      class="h-5 w-5"
+                    <UIcon :name="stat.icon" class="h-6 w-6" />
+                  </span>
+                </div>
+              </UCard>
+            </UPageGrid>
+
+            <div class="grid gap-6 lg:grid-cols-2">
+              <UCard>
+                <template #header>
+                  <div class="flex items-center justify-between gap-3">
+                    <div>
+                      <h3 class="text-base font-semibold text-highlighted">
+                        Recent contact requests
+                      </h3>
+                      <p class="text-xs text-muted">
+                        Latest 5 inquiries
+                      </p>
+                    </div>
+                    <UButton
+                      label="View all"
+                      icon="i-lucide-arrow-right"
+                      trailing
+                      color="neutral"
+                      variant="ghost"
+                      size="xs"
+                      @click="setSection('contacts')"
                     />
                   </div>
-                  <div>
-                    <p class="text-lg font-semibold text-highlighted">
-                      {{ category.label }}
-                    </p>
-                    <p
-                      v-if="category.description"
-                      class="text-sm text-muted mt-1"
-                    >
-                      {{ category.description }}
-                    </p>
-                    <p class="text-xs text-muted mt-2">
-                      Display order: {{ category.order_index }}
+                </template>
+                <ul
+                  v-if="contactRequests.length"
+                  class="divide-y divide-default"
+                >
+                  <li
+                    v-for="request in contactRequests.slice(0, 5)"
+                    :key="request.id"
+                    class="flex items-center justify-between gap-3 py-3"
+                  >
+                    <div class="min-w-0">
+                      <p class="truncate text-sm font-medium text-highlighted">
+                        {{ request.first_name }} {{ request.last_name }}
+                      </p>
+                      <p class="truncate text-xs text-muted">
+                        {{ request.subject }}
+                      </p>
+                    </div>
+                    <time
+                      v-if="request.created_at"
+                      :datetime="request.created_at"
+                      class="shrink-0 text-xs text-muted"
+                    >{{
+                      new Date(request.created_at).toLocaleDateString()
+                    }}</time>
+                  </li>
+                </ul>
+                <UEmpty
+                  v-else
+                  icon="i-lucide-inbox"
+                  title="No contact requests"
+                  description="New inquiries will appear here."
+                />
+              </UCard>
+
+              <UCard>
+                <template #header>
+                  <div class="flex items-center justify-between gap-3">
+                    <div>
+                      <h3 class="text-base font-semibold text-highlighted">
+                        New users
+                      </h3>
+                      <p class="text-xs text-muted">
+                        Most recent signups
+                      </p>
+                    </div>
+                    <UButton
+                      label="View all"
+                      icon="i-lucide-arrow-right"
+                      trailing
+                      color="neutral"
+                      variant="ghost"
+                      size="xs"
+                      @click="setSection('users')"
+                    />
+                  </div>
+                </template>
+                <ul
+                  v-if="users.length"
+                  class="divide-y divide-default"
+                >
+                  <li
+                    v-for="userItem in users.slice(0, 5)"
+                    :key="userItem.id"
+                    class="flex items-center gap-3 py-3"
+                  >
+                    <UAvatar
+                      :src="userItem.avatar_url || undefined"
+                      :alt="userItem.full_name || userItem.email || 'User'"
+                      size="sm"
+                    />
+                    <div class="min-w-0 flex-1">
+                      <p class="truncate text-sm font-medium text-highlighted">
+                        {{ userItem.full_name || "No name" }}
+                      </p>
+                      <p class="truncate text-xs text-muted">
+                        {{ userItem.email }}
+                      </p>
+                    </div>
+                    <UBadge
+                      :label="userItem.role || 'user'"
+                      :color="userItem.role === 'admin' ? 'primary' : 'neutral'"
+                      size="xs"
+                    />
+                  </li>
+                </ul>
+                <UEmpty
+                  v-else
+                  icon="i-lucide-users"
+                  title="No users yet"
+                  description="Signed-up users will appear here."
+                />
+              </UCard>
+            </div>
+          </section>
+
+          <!-- USERS -->
+          <section
+            v-else-if="activeSection === 'users'"
+            aria-labelledby="users-heading"
+            class="space-y-4"
+          >
+            <h2 id="users-heading" class="sr-only">Users</h2>
+            <UCard>
+              <template #header>
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <h3 class="text-base font-semibold text-highlighted">
+                      All users
+                    </h3>
+                    <UBadge
+                      :label="`${users.length}`"
+                      color="primary"
+                      variant="subtle"
+                    />
+                  </div>
+                  <UInput
+                    v-model="userSearch"
+                    icon="i-lucide-search"
+                    placeholder="Search users…"
+                    class="w-full sm:w-64"
+                    aria-label="Search users"
+                  />
+                </div>
+              </template>
+
+              <div
+                v-if="loading"
+                role="status"
+                class="flex items-center justify-center py-12"
+              >
+                <UIcon
+                  name="i-lucide-loader-2"
+                  class="h-8 w-8 animate-spin text-primary"
+                  aria-hidden="true"
+                />
+                <span class="sr-only">Loading users…</span>
+              </div>
+              <UEmpty
+                v-else-if="!filteredUsers.length"
+                icon="i-lucide-users"
+                title="No users match"
+                description="Try a different search term."
+              />
+              <ul v-else class="divide-y divide-default">
+                <li
+                  v-for="userItem in filteredUsers"
+                  :key="userItem.id"
+                  class="flex flex-wrap items-center justify-between gap-3 py-4"
+                >
+                  <div class="flex items-center gap-3">
+                    <UAvatar
+                      :src="userItem.avatar_url || undefined"
+                      :alt="userItem.full_name || userItem.email || 'User avatar'"
+                      size="md"
+                    />
+                    <div>
+                      <p class="font-medium text-highlighted">
+                        {{ userItem.full_name || "No name" }}
+                      </p>
+                      <p class="text-sm text-muted">
+                        {{ userItem.email || "No email" }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <UBadge
+                      :label="userItem.role || 'user'"
+                      :color="userItem.role === 'admin' ? 'primary' : 'neutral'"
+                      variant="subtle"
+                    />
+                    <p class="text-xs text-muted">
+                      Joined
+                      <time
+                        v-if="userItem.created_at"
+                        :datetime="userItem.created_at"
+                      >{{
+                        new Date(userItem.created_at).toLocaleDateString()
+                      }}</time>
+                      <span v-else>N/A</span>
                     </p>
                   </div>
-                </div>
-                <div class="flex items-center gap-2">
-                  <UButton
-                    size="xs"
-                    label="Add Service"
-                    icon="i-lucide-plus"
-                    color="primary"
-                    @click="openCreateServiceModal(category)"
-                  />
-                  <UButton
-                    size="xs"
-                    label="Edit"
-                    icon="i-lucide-pencil"
-                    color="neutral"
-                    variant="ghost"
-                    @click="openEditCategoryModal(category)"
-                  />
-                  <UButton
-                    size="xs"
-                    label="Delete"
-                    icon="i-lucide-trash"
-                    color="error"
-                    variant="ghost"
-                    @click="deleteCategory(category)"
-                  />
-                </div>
+                </li>
+              </ul>
+            </UCard>
+          </section>
+
+          <!-- SERVICES -->
+          <section
+            v-else-if="activeSection === 'services'"
+            aria-labelledby="services-heading"
+            class="space-y-4"
+          >
+            <h2 id="services-heading" class="sr-only">Services management</h2>
+
+            <!-- Loading -->
+            <div
+              v-if="servicesNavigationLoading"
+              role="status"
+              class="flex items-center justify-center py-16"
+            >
+              <UIcon
+                name="i-lucide-loader-2"
+                class="h-8 w-8 animate-spin text-primary"
+                aria-hidden="true"
+              />
+              <span class="sr-only">Loading services…</span>
+            </div>
+
+            <!-- Unified hierarchy -->
+            <template v-else>
+              <!-- Toolbar -->
+              <div class="flex items-center gap-3">
+                <UInput
+                  v-model="servicesSearch"
+                  icon="i-lucide-search"
+                  placeholder="Search categories, services, features…"
+                  class="w-full sm:w-96"
+                  aria-label="Search services"
+                />
+                <p class="shrink-0 text-sm text-muted">
+                  {{ serviceCategories.length }} {{ serviceCategories.length === 1 ? 'category' : 'categories' }},
+                  {{ flatServices.length }} {{ flatServices.length === 1 ? 'service' : 'services' }}
+                </p>
               </div>
 
-              <div>
-                <p
-                  class="text-sm font-semibold uppercase tracking-wide text-muted"
+              <UEmpty
+                v-if="!serviceCategories.length"
+                icon="i-lucide-layers"
+                title="No categories yet"
+                description="Click 'Add category' to get started."
+              />
+              <UEmpty
+                v-else-if="!filteredServiceHierarchy.length"
+                icon="i-lucide-search-x"
+                title="Nothing matches"
+                description="Try a different search term."
+              />
+
+              <!-- Category list -->
+              <div v-else class="space-y-6">
+                <section
+                  v-for="category in filteredServiceHierarchy"
+                  :key="category.id"
+                  :aria-labelledby="`cat-heading-${category.id}`"
+                  class="rounded-2xl border border-default bg-background"
                 >
-                  Services
-                </p>
-                <UEmpty
-                  v-if="!category.service_items.length"
-                  icon="i-lucide-circle-help"
-                  title="No services"
-                  description="Add a service to populate this category."
-                  class="mt-3 rounded-xl border border-dashed border-default py-6"
-                />
-
-                <div v-else class="mt-3 space-y-3">
-                  <div
-                    v-for="serviceItem in category.service_items"
-                    :key="serviceItem.id"
-                    class="flex flex-col gap-3 rounded-xl border border-default/70 p-4 md:flex-row md:items-center md:justify-between"
-                  >
-                    <div class="flex items-start gap-3">
-                      <div
-                        class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary"
-                      >
-                        <UIcon
-                          :name="serviceItem.icon || 'i-lucide-sparkles'"
-                          class="h-4 w-4"
-                        />
-                      </div>
-                      <div>
-                        <p class="font-medium text-highlighted">
-                          {{ serviceItem.label }}
-                        </p>
-                        <p
-                          v-if="serviceItem.description"
-                          class="text-sm text-muted mt-1"
-                        >
-                          {{ serviceItem.description }}
-                        </p>
-                        <div
-                          class="mt-1 flex flex-wrap gap-4 text-xs text-muted"
-                        >
-                          <span>Order: {{ serviceItem.order_index }}</span>
-                          <span v-if="serviceItem.href"
-                            >URL: {{ serviceItem.href }}</span
-                          >
-                        </div>
-                      </div>
-                    </div>
-
-                    <div
-                      v-if="
-                        Array.isArray(serviceItem.service_item_features) &&
-                        serviceItem.service_item_features.length
-                      "
-                      class="mt-3 rounded-xl border border-dashed border-default p-3 bg-muted/20 w-full"
+                  <!-- Category header -->
+                  <header class="flex flex-wrap items-center gap-3 px-5 py-4 border-b border-default">
+                    <span
+                      class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary"
+                      aria-hidden="true"
                     >
-                      <p
-                        class="text-xs font-semibold uppercase tracking-wide text-muted mb-2"
+                      <UIcon :name="category.icon || 'i-lucide-folder'" class="h-5 w-5" />
+                    </span>
+                    <div class="min-w-0 flex-1">
+                      <h3
+                        :id="`cat-heading-${category.id}`"
+                        class="font-semibold text-highlighted"
                       >
-                        Features
+                        {{ category.label }}
+                      </h3>
+                      <p v-if="category.description" class="text-sm text-muted line-clamp-1">
+                        {{ category.description }}
                       </p>
-                      <div class="space-y-2">
-                        <div
-                          v-for="feature in serviceItem.service_item_features ||
-                          []"
-                          :key="feature.id"
-                          class="flex items-start justify-between gap-3 rounded-lg border border-default/70 p-3"
-                        >
-                          <div class="flex items-start gap-3">
-                            <div
-                              class="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary"
-                            >
-                              <UIcon
-                                :name="feature.icon || 'i-lucide-star'"
-                                class="h-4 w-4"
-                              />
-                            </div>
-                            <div>
-                              <p class="font-medium text-highlighted">
-                                {{ feature.label }}
-                              </p>
-                              <p
-                                v-if="feature.description"
-                                class="text-xs text-muted mt-1"
-                              >
-                                {{ feature.description }}
-                              </p>
-                            </div>
-                          </div>
-                          <div class="flex items-center gap-2">
-                            <UButton
-                              size="xs"
-                              icon="i-lucide-pencil"
-                              variant="ghost"
-                              color="neutral"
-                              @click="
-                                openEditFeatureModal(serviceItem, feature)
-                              "
-                            />
-                            <UButton
-                              size="xs"
-                              icon="i-lucide-trash"
-                              variant="ghost"
-                              color="error"
-                              @click="deleteFeature(feature)"
-                            />
-                          </div>
-                        </div>
-                      </div>
                     </div>
-                    <div
-                      v-if="
-                        Array.isArray(serviceItem.service_item_images) &&
-                        serviceItem.service_item_images.length
-                      "
-                      class="mt-3 rounded-xl border border-dashed border-default p-3 bg-muted/10 w-full"
-                    >
-                      <p
-                        class="text-xs font-semibold uppercase tracking-wide text-muted mb-2"
-                      >
-                        Photos
-                      </p>
-                      <div class="grid gap-3 grid-cols-1">
-                        <div
-                          v-for="image in serviceItem.service_item_images || []"
-                          :key="image.id"
-                          class="group relative overflow-hidden rounded-lg border border-default/70 bg-background"
-                        >
-                          <img
-                            :src="image.image_url"
-                            :alt="image.alt || serviceItem.label"
-                            class="h-40 w-full object-cover"
-                          />
-                          <div
-                            class="flex items-center justify-between px-3 py-2 text-xs text-muted"
-                          >
-                            <span class="truncate">{{
-                              image.alt || "No alt text"
-                            }}</span>
-                            <span class="text-[11px]"
-                              >Order: {{ image.order_index }}</span
-                            >
-                          </div>
-                          <div
-                            class="absolute right-2 top-2 flex gap-1 opacity-0 transition group-hover:opacity-100"
-                          >
-                            <UButton
-                              size="xs"
-                              icon="i-lucide-pencil"
-                              variant="ghost"
-                              color="neutral"
-                              @click="openEditImageModal(serviceItem, image)"
-                            />
-                            <UButton
-                              size="xs"
-                              icon="i-lucide-trash"
-                              variant="ghost"
-                              color="error"
-                              @click="deleteImage(image)"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="flex flex-col items-center gap-2">
+                    <UBadge
+                      :label="`${category.service_items?.length || 0} service${(category.service_items?.length || 0) === 1 ? '' : 's'}`"
+                      color="neutral"
+                      variant="subtle"
+                      size="xs"
+                    />
+                    <div class="flex items-center gap-1">
                       <UButton
                         size="xs"
-                        label="Add Feature"
+                        label="Add service"
                         icon="i-lucide-plus"
                         color="primary"
                         variant="soft"
-                        @click="openCreateFeatureModal(serviceItem)"
+                        :aria-label="`Add a service to ${category.label}`"
+                        @click="openCreateServiceModal(category)"
                       />
                       <UButton
                         size="xs"
-                        label="Upload Photo"
-                        icon="i-lucide-image-plus"
-                        color="primary"
-                        variant="outline"
-                        @click="openCreateImageModal(serviceItem)"
-                      />
-                      <UButton
-                        size="xs"
-                        label="Edit"
                         icon="i-lucide-pencil"
-                        color="neutral"
                         variant="ghost"
-                        @click="openEditServiceModal(category, serviceItem)"
+                        color="neutral"
+                        :aria-label="`Edit category ${category.label}`"
+                        @click="openEditCategoryModal(category)"
                       />
                       <UButton
                         size="xs"
-                        label="Delete"
                         icon="i-lucide-trash"
-                        color="error"
                         variant="ghost"
-                        @click="deleteService(serviceItem)"
+                        color="error"
+                        :aria-label="`Delete category ${category.label}`"
+                        @click="deleteCategory(category)"
                       />
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </UCard>
+                  </header>
 
-      <!-- Contact Requests -->
-      <UCard class="mt-10">
-        <template #header>
-          <div class="flex items-center justify-between">
-            <div>
-              <h2 class="text-2xl font-bold text-highlighted">
-                Contact Requests
-              </h2>
-              <p class="text-sm text-muted">
-                Latest inquiries from the contact form
-              </p>
+                  <!-- Services list -->
+                  <UEmpty
+                    v-if="!category.service_items?.length"
+                    icon="i-lucide-sparkles"
+                    title="No services yet"
+                    :description="`Add the first service to ${category.label}.`"
+                    class="py-8"
+                  />
+                  <ul v-else class="divide-y divide-default">
+                    <li
+                      v-for="service in category.service_items"
+                      :key="service.id"
+                    >
+                      <!-- Service row -->
+                      <div class="flex items-center gap-3 px-5 py-3.5">
+                        <button
+                          type="button"
+                          class="flex flex-1 items-center gap-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg min-w-0"
+                          :aria-expanded="expandedServices.has(service.id)"
+                          :aria-controls="`service-panel-${service.id}`"
+                          @click="toggleService(service.id)"
+                        >
+                          <span
+                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted/50 text-muted"
+                            aria-hidden="true"
+                          >
+                            <UIcon :name="service.icon || 'i-lucide-sparkles'" class="h-4 w-4" />
+                          </span>
+                          <div class="min-w-0 flex-1">
+                            <p class="font-medium text-highlighted">{{ service.label }}</p>
+                            <p v-if="service.description" class="truncate text-xs text-muted">
+                              {{ service.description }}
+                            </p>
+                          </div>
+                          <div class="flex shrink-0 items-center gap-2">
+                            <UBadge
+                              :label="`${service.service_item_features?.length || 0} feat`"
+                              color="neutral"
+                              variant="subtle"
+                              size="xs"
+                            />
+                            <UBadge
+                              :label="`${service.service_item_images?.length || 0} photo${(service.service_item_images?.length || 0) === 1 ? '' : 's'}`"
+                              color="neutral"
+                              variant="subtle"
+                              size="xs"
+                            />
+                            <UIcon
+                              name="i-lucide-chevron-down"
+                              class="h-4 w-4 text-muted transition-transform duration-200"
+                              :class="expandedServices.has(service.id) ? 'rotate-180' : ''"
+                              aria-hidden="true"
+                            />
+                          </div>
+                        </button>
+                        <div class="flex shrink-0 items-center gap-1">
+                          <UButton
+                            size="xs"
+                            icon="i-lucide-pencil"
+                            variant="ghost"
+                            color="neutral"
+                            :aria-label="`Edit service ${service.label}`"
+                            @click="openEditServiceModal(service, category.id)"
+                          />
+                          <UButton
+                            size="xs"
+                            icon="i-lucide-trash"
+                            variant="ghost"
+                            color="error"
+                            :aria-label="`Delete service ${service.label}`"
+                            @click="deleteService(service)"
+                          />
+                        </div>
+                      </div>
+
+                      <!-- Expanded panel: Features + Photos -->
+                      <div
+                        v-show="expandedServices.has(service.id)"
+                        :id="`service-panel-${service.id}`"
+                        class="border-t border-default/60 bg-muted/20"
+                      >
+                        <div class="grid gap-0 md:grid-cols-2 md:divide-x md:divide-default">
+                          <!-- Features column -->
+                          <div class="p-4">
+                            <div class="mb-3 flex items-center justify-between gap-2">
+                              <div class="flex items-center gap-2">
+                                <UIcon name="i-lucide-star" class="h-4 w-4 text-muted" aria-hidden="true" />
+                                <h4 class="text-sm font-semibold text-highlighted">Features</h4>
+                                <UBadge
+                                  v-if="service.service_item_features?.length"
+                                  :label="`${service.service_item_features.length}`"
+                                  color="neutral"
+                                  variant="subtle"
+                                  size="xs"
+                                />
+                              </div>
+                              <UButton
+                                size="xs"
+                                label="Add"
+                                icon="i-lucide-plus"
+                                color="primary"
+                                variant="ghost"
+                                :aria-label="`Add a feature to ${service.label}`"
+                                @click="openCreateFeatureModal(service)"
+                              />
+                            </div>
+                            <UEmpty
+                              v-if="!service.service_item_features?.length"
+                              icon="i-lucide-star"
+                              title="No features"
+                              description="Add features to highlight this service."
+                              class="rounded-xl border border-dashed border-default py-5 text-sm"
+                            />
+                            <ul v-else class="space-y-1">
+                              <li
+                                v-for="feature in service.service_item_features"
+                                :key="feature.id"
+                                class="group flex items-center gap-2 rounded-lg px-2 py-2 transition hover:bg-background"
+                              >
+                                <span
+                                  class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary"
+                                  aria-hidden="true"
+                                >
+                                  <UIcon :name="feature.icon || 'i-lucide-check'" class="h-3.5 w-3.5" />
+                                </span>
+                                <div class="min-w-0 flex-1">
+                                  <p class="text-sm font-medium text-highlighted">{{ feature.label }}</p>
+                                  <p v-if="feature.description" class="truncate text-xs text-muted">
+                                    {{ feature.description }}
+                                  </p>
+                                </div>
+                                <div class="flex items-center gap-0.5 opacity-0 transition group-hover:opacity-100 group-focus-within:opacity-100">
+                                  <UButton
+                                    size="xs"
+                                    icon="i-lucide-pencil"
+                                    variant="ghost"
+                                    color="neutral"
+                                    :aria-label="`Edit feature ${feature.label}`"
+                                    @click="openEditFeatureModal(feature)"
+                                  />
+                                  <UButton
+                                    size="xs"
+                                    icon="i-lucide-trash"
+                                    variant="ghost"
+                                    color="error"
+                                    :aria-label="`Delete feature ${feature.label}`"
+                                    @click="deleteFeature(feature)"
+                                  />
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+
+                          <!-- Photos column -->
+                          <div class="border-t border-default/60 p-4 md:border-t-0">
+                            <div class="mb-3 flex items-center justify-between gap-2">
+                              <div class="flex items-center gap-2">
+                                <UIcon name="i-lucide-image" class="h-4 w-4 text-muted" aria-hidden="true" />
+                                <h4 class="text-sm font-semibold text-highlighted">Photos</h4>
+                                <UBadge
+                                  v-if="service.service_item_images?.length"
+                                  :label="`${service.service_item_images.length}`"
+                                  color="neutral"
+                                  variant="subtle"
+                                  size="xs"
+                                />
+                              </div>
+                              <UButton
+                                size="xs"
+                                label="Upload"
+                                icon="i-lucide-image-plus"
+                                color="primary"
+                                variant="ghost"
+                                :aria-label="`Upload a photo for ${service.label}`"
+                                @click="openCreateImageModal(service)"
+                              />
+                            </div>
+                            <UEmpty
+                              v-if="!service.service_item_images?.length"
+                              icon="i-lucide-image-off"
+                              title="No photos"
+                              :description="`Upload photos for ${service.label}.`"
+                              class="rounded-xl border border-dashed border-default py-5 text-sm"
+                            />
+                            <ul
+                              v-else
+                              class="grid grid-cols-2 gap-2 sm:grid-cols-3"
+                            >
+                              <li
+                                v-for="photo in service.service_item_images"
+                                :key="photo.id"
+                                class="group relative overflow-hidden rounded-xl border border-default bg-background transition hover:border-primary/40 focus-within:border-primary/60"
+                              >
+                                <img
+                                  :src="photo.image_url"
+                                  :alt="photo.alt || `${service.label} photo`"
+                                  class="h-24 w-full object-cover"
+                                />
+                                <p class="truncate px-1.5 py-1 text-xs text-muted">
+                                  {{ photo.alt || "No alt" }}
+                                </p>
+                                <div
+                                  class="absolute right-1 top-1 flex gap-0.5 opacity-0 transition group-hover:opacity-100 group-focus-within:opacity-100"
+                                >
+                                  <UButton
+                                    size="xs"
+                                    icon="i-lucide-pencil"
+                                    variant="solid"
+                                    color="neutral"
+                                    :aria-label="`Edit photo ${photo.alt || ''}`"
+                                    @click="openEditImageModal(photo)"
+                                  />
+                                  <UButton
+                                    size="xs"
+                                    icon="i-lucide-trash"
+                                    variant="solid"
+                                    color="error"
+                                    :aria-label="`Delete photo ${photo.alt || ''}`"
+                                    @click="deleteImage(photo)"
+                                  />
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </section>
+              </div>
+            </template>
+          </section>
+
+          <!-- CONTACTS -->
+          <section
+            v-else-if="activeSection === 'contacts'"
+            aria-labelledby="contacts-heading"
+            class="space-y-4"
+          >
+            <h2 id="contacts-heading" class="sr-only">Contact requests</h2>
+            <UCard>
+              <template #header>
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <h3 class="text-base font-semibold text-highlighted">
+                      Contact requests
+                    </h3>
+                    <UBadge
+                      :label="`${contactRequests.length}`"
+                      color="primary"
+                      variant="subtle"
+                    />
+                  </div>
+                  <UInput
+                    v-model="contactSearch"
+                    icon="i-lucide-search"
+                    placeholder="Search by name, subject, message…"
+                    class="w-full sm:w-72"
+                    aria-label="Search contact requests"
+                  />
+                </div>
+              </template>
+
+              <div
+                v-if="contactLoading"
+                role="status"
+                class="flex items-center justify-center py-12"
+              >
+                <UIcon
+                  name="i-lucide-loader-2"
+                  class="h-8 w-8 animate-spin text-primary"
+                  aria-hidden="true"
+                />
+                <span class="sr-only">Loading contact requests…</span>
+              </div>
+              <UEmpty
+                v-else-if="!contactRequests.length"
+                icon="i-lucide-inbox"
+                title="No contact requests yet"
+                description="New requests will appear here as soon as clients reach out."
+              />
+              <UEmpty
+                v-else-if="!filteredContactRequests.length"
+                icon="i-lucide-search-x"
+                title="Nothing matches"
+                description="Try a different search term."
+              />
+              <ul v-else class="space-y-4">
+                <li
+                  v-for="request in filteredContactRequests"
+                  :key="request.id"
+                  class="rounded-2xl border border-default p-5 transition-colors hover:border-primary/40 focus-within:border-primary/60"
+                >
+                  <article :aria-labelledby="`request-${request.id}-name`">
+                    <header class="flex flex-wrap items-start justify-between gap-4">
+                      <div>
+                        <h4
+                          :id="`request-${request.id}-name`"
+                          class="text-lg font-semibold text-highlighted"
+                        >
+                          {{ request.first_name }} {{ request.last_name }}
+                        </h4>
+                        <div class="mt-2 flex flex-wrap gap-3 text-sm text-muted">
+                          <a
+                            :href="`mailto:${request.email}`"
+                            class="inline-flex items-center gap-2 hover:text-highlighted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
+                            :aria-label="`Email ${request.first_name} ${request.last_name}`"
+                          >
+                            <UIcon name="i-lucide-mail" class="h-4 w-4" aria-hidden="true" />
+                            {{ request.email }}
+                          </a>
+                          <a
+                            v-if="request.phone"
+                            :href="`tel:${request.phone}`"
+                            class="inline-flex items-center gap-2 hover:text-highlighted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
+                            :aria-label="`Call ${request.first_name} ${request.last_name}`"
+                          >
+                            <UIcon name="i-lucide-phone" class="h-4 w-4" aria-hidden="true" />
+                            {{ request.phone }}
+                          </a>
+                        </div>
+                      </div>
+                      <div class="text-right">
+                        <p class="text-xs font-medium uppercase tracking-wide text-muted">
+                          Received
+                        </p>
+                        <p class="text-sm font-semibold text-highlighted">
+                          <time
+                            v-if="request.created_at"
+                            :datetime="request.created_at"
+                          >{{
+                            new Date(request.created_at).toLocaleDateString()
+                          }}</time>
+                          <span v-else>—</span>
+                        </p>
+                      </div>
+                    </header>
+
+                    <dl class="mt-4 grid gap-4 sm:grid-cols-3">
+                      <div>
+                        <dt class="text-xs font-medium uppercase tracking-wide text-muted">
+                          Subject
+                        </dt>
+                        <dd class="font-medium text-highlighted">
+                          {{ request.subject }}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt class="text-xs font-medium uppercase tracking-wide text-muted">
+                          Budget
+                        </dt>
+                        <dd class="font-medium text-highlighted">
+                          {{ request.budget || "Not specified" }}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt class="text-xs font-medium uppercase tracking-wide text-muted">
+                          Deadline
+                        </dt>
+                        <dd class="font-medium text-highlighted">
+                          <time
+                            v-if="request.deadline"
+                            :datetime="request.deadline"
+                          >{{
+                            new Date(request.deadline).toLocaleDateString()
+                          }}</time>
+                          <span v-else>Flexible</span>
+                        </dd>
+                      </div>
+                    </dl>
+
+                    <div class="mt-4">
+                      <p class="mb-2 text-xs font-medium uppercase tracking-wide text-muted">
+                        Message
+                      </p>
+                      <p class="whitespace-pre-line text-sm leading-relaxed text-default">
+                        {{ request.message }}
+                      </p>
+                    </div>
+
+                    <div v-if="request.attachments.length" class="mt-4">
+                      <p
+                        :id="`request-${request.id}-attachments`"
+                        class="mb-2 text-xs font-medium uppercase tracking-wide text-muted"
+                      >
+                        Attachments
+                      </p>
+                      <ul
+                        class="flex flex-wrap gap-3"
+                        :aria-labelledby="`request-${request.id}-attachments`"
+                      >
+                        <li
+                          v-for="(attachment, index) in request.attachments"
+                          :key="`${request.id}-attachment-${index}`"
+                        >
+                          <button
+                            type="button"
+                            class="flex h-44 w-44 flex-col overflow-hidden rounded-xl border border-default bg-muted/30 transition hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                            :aria-label="`Preview attachment ${attachment.name || index + 1}`"
+                            @click="openAttachmentModal(attachment, request)"
+                          >
+                            <img
+                              v-if="attachment.url"
+                              :src="attachment.url"
+                              :alt="attachment.name || `Attachment ${index + 1}`"
+                              class="h-full w-full object-cover"
+                            />
+                            <div
+                              v-else
+                              class="flex flex-1 items-center justify-center px-2 text-center text-xs text-muted"
+                            >
+                              No preview
+                            </div>
+                            <div
+                              class="truncate bg-background/80 p-1 text-center text-xs text-muted"
+                            >
+                              {{ attachment.name || `Attachment ${index + 1}` }}
+                            </div>
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </article>
+                </li>
+              </ul>
+            </UCard>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- Mobile sidebar drawer -->
+    <USlideover
+      v-model:open="mobileNavOpen"
+      side="left"
+      :ui="{ content: 'max-w-xs' }"
+    >
+      <template #content>
+        <div class="flex h-full flex-col bg-background">
+          <div class="flex items-center justify-between border-b border-default px-4 py-4">
+            <div class="flex items-center gap-2">
+              <span
+                class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary"
+                aria-hidden="true"
+              >
+                <UIcon name="i-lucide-rainbow" class="h-4 w-4" />
+              </span>
+              <span class="text-sm font-semibold text-highlighted">
+                Admin
+              </span>
             </div>
-            <UBadge
-              :label="`${contactRequests.length} requests`"
+            <UButton
+              icon="i-lucide-x"
               color="neutral"
+              variant="ghost"
+              size="sm"
+              aria-label="Close navigation"
+              @click="mobileNavOpen = false"
             />
           </div>
-        </template>
-
-        <div
-          v-if="contactLoading"
-          class="flex items-center justify-center py-12"
-        >
-          <UIcon
-            name="i-lucide-loader-2"
-            class="w-8 h-8 animate-spin text-primary"
-          />
-        </div>
-
-        <div v-else>
-          <UEmpty
-            v-if="!contactRequests.length"
-            icon="i-lucide-inbox"
-            title="No contact requests yet"
-            description="New requests will appear here as soon as clients reach out."
-          />
-
-          <div v-else class="space-y-6">
-            <div
-              v-for="request in contactRequests"
-              :key="request.id"
-              class="border border-default rounded-2xl p-5 hover:border-primary/40 transition-colors"
-            >
-              <div class="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <p class="text-sm text-muted uppercase tracking-wide">
-                    Contact
-                  </p>
-                  <h3 class="text-xl font-semibold text-highlighted">
-                    {{ request.first_name }} {{ request.last_name }}
-                  </h3>
-                  <div class="flex flex-wrap gap-3 text-sm text-muted mt-2">
-                    <span class="flex items-center gap-2">
-                      <UIcon name="i-lucide-mail" class="w-4 h-4" />
-                      {{ request.email }}
-                    </span>
-                    <span v-if="request.phone" class="flex items-center gap-2">
-                      <UIcon name="i-lucide-phone" class="w-4 h-4" />
-                      {{ request.phone }}
-                    </span>
-                  </div>
-                </div>
-
-                <div class="text-right">
-                  <p class="text-sm text-muted">Received</p>
-                  <p class="text-lg font-semibold text-highlighted">
-                    {{
-                      new Date(request.created_at || "").toLocaleDateString()
-                    }}
-                  </p>
-                </div>
-              </div>
-
-              <div class="mt-4 grid gap-4 sm:grid-cols-2">
-                <div>
-                  <p class="text-sm text-muted uppercase tracking-wide">
-                    Subject
-                  </p>
-                  <p class="text-lg font-medium text-highlighted">
-                    {{ request.subject }}
-                  </p>
-                </div>
-                <div class="flex gap-6 text-sm">
-                  <div>
-                    <p class="text-muted uppercase tracking-wide text-xs">
-                      Budget
-                    </p>
-                    <p class="text-highlighted font-medium">
-                      {{ request.budget || "Not specified" }}
-                    </p>
-                  </div>
-                  <div>
-                    <p class="text-muted uppercase tracking-wide text-xs">
-                      Deadline
-                    </p>
-                    <p class="text-highlighted font-medium">
-                      {{
-                        request.deadline
-                          ? new Date(request.deadline).toLocaleDateString()
-                          : "Flexible"
-                      }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="mt-4">
-                <p class="text-sm text-muted uppercase tracking-wide mb-2">
-                  Message
-                </p>
-                <p class="text-base leading-relaxed text-default">
-                  {{ request.message }}
-                </p>
-              </div>
-
-              <div v-if="request.attachments.length" class="mt-5">
-                <p class="text-sm text-muted uppercase tracking-wide mb-3">
-                  Attachments
-                </p>
-                <div class="flex flex-wrap gap-4">
-                  <button
-                    v-for="(attachment, index) in request.attachments"
-                    :key="`${request.id}-attachment-${index}`"
-                    type="button"
-                    class="w-70 h-60 rounded-xl overflow-hidden border border-default bg-muted/30 flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition hover:shadow-lg"
-                    @click="openAttachmentModal(attachment, request)"
-                  >
-                    <img
-                      v-if="attachment.url"
-                      :src="attachment.url"
-                      :alt="attachment.name || `Attachment ${index + 1}`"
-                      class="w-full h-full object-cover"
-                    />
-                    <div
-                      v-else
-                      class="flex-1 flex items-center justify-center text-xs text-muted px-2 text-center"
-                    >
-                      No preview
-                    </div>
-                    <div
-                      class="p-1 text-lg text-center text-muted bg-background/80"
-                    >
-                      {{ attachment.name || `Attachment ${index + 1}` }}
-                    </div>
-                  </button>
-                </div>
-              </div>
-            </div>
+          <nav class="flex-1 overflow-y-auto px-3 py-4" aria-label="Sections">
+            <ul class="space-y-1">
+              <li v-for="item in navItems" :key="item.key">
+                <button
+                  type="button"
+                  class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  :class="
+                    activeSection === item.key
+                      ? 'bg-primary/10 text-primary'
+                      : 'text-muted hover:bg-muted/40 hover:text-highlighted'
+                  "
+                  :aria-current="activeSection === item.key ? 'page' : undefined"
+                  @click="setSection(item.key)"
+                >
+                  <UIcon :name="item.icon" class="h-4 w-4" aria-hidden="true" />
+                  {{ item.label }}
+                </button>
+              </li>
+            </ul>
+          </nav>
+          <div class="border-t border-default p-4">
+            <UButton
+              label="Sign out"
+              icon="i-lucide-log-out"
+              color="neutral"
+              variant="outline"
+              block
+              @click="logout"
+            />
           </div>
         </div>
-      </UCard>
-    </UContainer>
-
+      </template>
+    </USlideover>
     <UModal v-model:open="isCategoryModalOpen" :ui="{ content: 'max-w-xl' }">
       <template #header>
         <div>
@@ -1509,13 +2213,13 @@ const fetchContactRequests = async () => {
                 : "Edit category"
             }}
           </p>
-          <p class="text-lg font-semibold text-highlighted">
+          <h2 class="text-lg font-semibold text-highlighted">
             {{
               categoryModalMode === "create"
                 ? "New Services Category"
                 : "Update Services Category"
             }}
-          </p>
+          </h2>
         </div>
       </template>
 
@@ -1586,13 +2290,13 @@ const fetchContactRequests = async () => {
               serviceModalMode === "create" ? "Create service" : "Edit service"
             }}
           </p>
-          <p class="text-lg font-semibold text-highlighted">
+          <h2 class="text-lg font-semibold text-highlighted">
             {{
               serviceModalMode === "create"
                 ? "New Service Item"
                 : "Update Service Item"
             }}
-          </p>
+          </h2>
         </div>
       </template>
 
@@ -1680,13 +2384,13 @@ const fetchContactRequests = async () => {
               featureModalMode === "create" ? "Create feature" : "Edit feature"
             }}
           </p>
-          <p class="text-lg font-semibold text-highlighted">
+          <h2 class="text-lg font-semibold text-highlighted">
             {{
               featureModalMode === "create"
                 ? "New Service Feature"
                 : "Update Service Feature"
             }}
-          </p>
+          </h2>
         </div>
       </template>
 
@@ -1754,13 +2458,13 @@ const fetchContactRequests = async () => {
           <p class="text-sm text-muted">
             {{ imageModalMode === "create" ? "Upload photo" : "Edit photo" }}
           </p>
-          <p class="text-lg font-semibold text-highlighted">
+          <h2 class="text-lg font-semibold text-highlighted">
             {{
               imageModalMode === "create"
                 ? "New Service Photo"
                 : "Update Service Photo"
             }}
-          </p>
+          </h2>
         </div>
       </template>
 
@@ -1846,9 +2550,9 @@ const fetchContactRequests = async () => {
         <div class="flex items-center justify-between w-full">
           <div>
             <p class="text-sm text-muted">Attachment</p>
-            <p class="text-lg font-semibold text-highlighted">
+            <h2 class="text-lg font-semibold text-highlighted">
               {{ selectedAttachment?.name || "Preview" }}
-            </p>
+            </h2>
             <p class="text-xs text-muted">
               {{ selectedAttachment?.contactName }}
             </p>
@@ -1859,6 +2563,7 @@ const fetchContactRequests = async () => {
             icon="i-lucide-download"
             color="neutral"
             variant="outline"
+            :aria-label="`Download attachment ${selectedAttachment?.name || ''}`.trim()"
             @click="downloadSelectedAttachment"
           />
         </div>
