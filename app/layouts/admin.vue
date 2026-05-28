@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const route = useRoute()
-const showBadge = computed(() => route.path !== '/admin-chat')
+const showBadge = computed(() => route.path !== '/admin-chat' && route.path !== '/admin-seo')
 </script>
 
 <template>

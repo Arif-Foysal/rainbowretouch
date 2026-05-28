@@ -1367,6 +1367,15 @@ const fetchContactRequests = async () => {
                 <span class="flex-1">Live Chat</span>
               </NuxtLink>
             </li>
+            <li>
+              <NuxtLink
+                to="/admin-seo"
+                class="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm text-muted hover:bg-muted/40 hover:text-highlighted transition-colors"
+              >
+                <UIcon name="i-lucide-search" class="h-4 w-4" aria-hidden="true" />
+                <span class="flex-1">SEO</span>
+              </NuxtLink>
+            </li>
           </ul>
         </nav>
 

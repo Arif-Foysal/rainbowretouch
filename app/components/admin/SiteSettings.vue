@@ -102,15 +102,6 @@ const settingDefs: SettingDef[] = [
     ]
   },
   {
-    key: 'seo',
-    title: 'SEO Defaults',
-    description: 'Default title and description for pages',
-    fields: [
-      { path: 'default_title', label: 'Default Title', type: 'text' },
-      { path: 'default_description', label: 'Default Description', type: 'textarea' }
-    ]
-  },
-  {
     key: 'payments',
     title: 'Footer — Payment Methods',
     description: 'Logos shown at the top of the footer',
