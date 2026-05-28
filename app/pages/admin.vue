@@ -142,7 +142,19 @@ const selectedAttachment = ref<{
   contactName?: string;
 } | null>(null);
 
-type SectionKey = "overview" | "users" | "services" | "contacts";
+type SectionKey =
+  | "overview"
+  | "settings"
+  | "hero"
+  | "services"
+  | "portfolio"
+  | "testimonials"
+  | "pricing"
+  | "faqs"
+  | "team"
+  | "blog"
+  | "users"
+  | "contacts";
 type ServicesTab = "services" | "categories" | "features" | "photos";
 
 const navItems: Array<{
@@ -151,31 +163,102 @@ const navItems: Array<{
   icon: string;
   description: string;
 }> = [
-  {
-    key: "overview",
-    label: "Overview",
-    icon: "i-lucide-layout-dashboard",
-    description: "Key metrics at a glance"
-  },
-  {
-    key: "users",
-    label: "Users",
-    icon: "i-lucide-users",
-    description: "Manage members and roles"
-  },
-  {
-    key: "services",
-    label: "Services",
-    icon: "i-lucide-layers",
-    description: "Categories, services, features, photos"
-  },
-  {
-    key: "contacts",
-    label: "Contact Requests",
-    icon: "i-lucide-inbox",
-    description: "Inbound inquiries"
-  }
+  { key: "overview", label: "Overview", icon: "i-lucide-layout-dashboard", description: "Key metrics at a glance" },
+  { key: "settings", label: "Site Settings", icon: "i-lucide-settings", description: "Brand, contact, social, hero video, SEO" },
+  { key: "services", label: "Services", icon: "i-lucide-layers", description: "Categories, services, features, photos" },
+  { key: "portfolio", label: "Portfolio", icon: "i-lucide-briefcase", description: "Showcase images" },
+  { key: "testimonials", label: "Testimonials", icon: "i-lucide-message-square-quote", description: "Customer quotes" },
+  { key: "pricing", label: "Pricing", icon: "i-lucide-tag", description: "Plans and tiers" },
+  { key: "faqs", label: "FAQs", icon: "i-lucide-help-circle", description: "Common questions" },
+  { key: "team", label: "Team", icon: "i-lucide-user-circle", description: "Team members" },
+  { key: "blog", label: "Blog Posts", icon: "i-lucide-book-open", description: "Articles and posts" },
+  { key: "users", label: "Users", icon: "i-lucide-users", description: "Manage members and roles" },
+  { key: "contacts", label: "Leads / Inquiries", icon: "i-lucide-inbox", description: "Inbound inquiries" }
 ];
+
+// CRUD field definitions for SimpleCrud component
+const heroFields = [
+  { key: 'title', label: 'Title', type: 'text', required: true },
+  { key: 'description', label: 'Description', type: 'textarea' },
+  { key: 'image_url', label: 'Background Image', type: 'image', storageBucket: 'site-content' },
+  { key: 'button_text', label: 'Button Label', type: 'text' },
+  { key: 'button_link', label: 'Button Link', type: 'text' },
+  { key: 'order_index', label: 'Order', type: 'number' },
+  { key: 'is_active', label: 'Visible on site', type: 'boolean' }
+] as const;
+const testimonialFields = [
+  { key: 'quote', label: 'Quote', type: 'textarea', required: true },
+  { key: 'author_name', label: 'Author Name', type: 'text', required: true },
+  { key: 'author_role', label: 'Author Role', type: 'text' },
+  { key: 'avatar_url', label: 'Avatar', type: 'image', storageBucket: 'site-content' },
+  { key: 'order_index', label: 'Order', type: 'number' },
+  { key: 'is_active', label: 'Visible on site', type: 'boolean' }
+] as const;
+const faqFields = [
+  { key: 'question', label: 'Question', type: 'text', required: true },
+  { key: 'answer', label: 'Answer', type: 'textarea', required: true },
+  { key: 'category', label: 'Category', type: 'text' },
+  { key: 'order_index', label: 'Order', type: 'number' },
+  { key: 'is_active', label: 'Visible on site', type: 'boolean' }
+] as const;
+const pricingFields = [
+  { key: 'title', label: 'Plan Name', type: 'text', required: true },
+  { key: 'description', label: 'Description', type: 'textarea' },
+  { key: 'price_standard', label: 'Standard Price', type: 'text' },
+  { key: 'price_bulk', label: 'Bulk Price', type: 'text' },
+  { key: 'features', label: 'Features (one per line)', type: 'json-array' },
+  { key: 'is_highlighted', label: 'Highlight this plan', type: 'boolean' },
+  { key: 'button_label', label: 'Button Label', type: 'text' },
+  { key: 'button_link', label: 'Button Link', type: 'text' },
+  { key: 'order_index', label: 'Order', type: 'number' },
+  { key: 'is_active', label: 'Visible on site', type: 'boolean' }
+] as const;
+const portfolioFields = [
+  { key: 'title', label: 'Title', type: 'text' },
+  { key: 'description', label: 'Description', type: 'textarea' },
+  { key: 'image_url', label: 'Image', type: 'image', required: true, storageBucket: 'site-content' },
+  { key: 'category', label: 'Category', type: 'text' },
+  { key: 'order_index', label: 'Order', type: 'number' },
+  { key: 'is_active', label: 'Visible on site', type: 'boolean' }
+] as const;
+const teamFields = [
+  { key: 'name', label: 'Name', type: 'text', required: true },
+  { key: 'role', label: 'Role', type: 'text' },
+  { key: 'bio', label: 'Bio', type: 'textarea' },
+  { key: 'avatar_url', label: 'Avatar', type: 'image', storageBucket: 'site-content' },
+  { key: 'order_index', label: 'Order', type: 'number' },
+  { key: 'is_active', label: 'Visible on site', type: 'boolean' }
+] as const;
+const blogFields = [
+  { key: 'slug', label: 'Slug (URL)', type: 'text', required: true, hint: 'e.g., my-post-title' },
+  { key: 'title', label: 'Title', type: 'text', required: true },
+  { key: 'excerpt', label: 'Excerpt', type: 'textarea' },
+  { key: 'body', label: 'Body (HTML)', type: 'textarea' },
+  { key: 'cover_image_url', label: 'Cover Image', type: 'image', storageBucket: 'site-content' },
+  { key: 'author_name', label: 'Author', type: 'text' },
+  { key: 'is_published', label: 'Published', type: 'boolean' }
+] as const;
+
+const leadStatuses = [
+  { value: 'new', label: 'New', color: 'primary' },
+  { value: 'contacted', label: 'Contacted', color: 'info' },
+  { value: 'qualified', label: 'Qualified', color: 'warning' },
+  { value: 'won', label: 'Won', color: 'success' },
+  { value: 'lost', label: 'Lost', color: 'error' }
+] as const;
+
+const updateLeadStatus = async (req: ContactRequest, status: string) => {
+  const { error } = await (supabase as any)
+    .from('contact_requests')
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq('id', req.id);
+  if (error) {
+    toast.add({ title: 'Error', description: 'Failed to update lead status', color: 'error' });
+  } else {
+    (req as any).status = status;
+    toast.add({ title: 'Updated', description: `Lead marked as ${status}`, color: 'success' });
+  }
+};
 
 const activeSection = ref<SectionKey>("overview");
 const servicesTab = ref<ServicesTab>("services");
@@ -1943,6 +2026,87 @@ const fetchContactRequests = async () => {
             </template>
           </section>
 
+          <!-- SETTINGS -->
+          <section v-else-if="activeSection === 'settings'" class="space-y-4">
+            <AdminSiteSettings />
+          </section>
+
+          <!-- HERO SLIDES -->
+          <section v-else-if="activeSection === 'hero'" class="space-y-4">
+            <AdminSimpleCrud
+              table="hero_slides"
+              title="Hero carousel slides"
+              item-label="slide"
+              :fields="heroFields as any"
+              image-field="image_url"
+            />
+          </section>
+
+          <!-- PORTFOLIO -->
+          <section v-else-if="activeSection === 'portfolio'" class="space-y-4">
+            <AdminSimpleCrud
+              table="portfolio_items"
+              title="Portfolio items"
+              item-label="portfolio item"
+              :fields="portfolioFields as any"
+              image-field="image_url"
+            />
+          </section>
+
+          <!-- TESTIMONIALS -->
+          <section v-else-if="activeSection === 'testimonials'" class="space-y-4">
+            <AdminSimpleCrud
+              table="testimonials"
+              title="Testimonials"
+              item-label="testimonial"
+              :fields="testimonialFields as any"
+              image-field="avatar_url"
+            />
+          </section>
+
+          <!-- PRICING -->
+          <section v-else-if="activeSection === 'pricing'" class="space-y-4">
+            <AdminSimpleCrud
+              table="pricing_plans"
+              title="Pricing plans"
+              item-label="plan"
+              :fields="pricingFields as any"
+            />
+          </section>
+
+          <!-- FAQS -->
+          <section v-else-if="activeSection === 'faqs'" class="space-y-4">
+            <AdminSimpleCrud
+              table="faqs"
+              title="FAQs"
+              item-label="FAQ"
+              :fields="faqFields as any"
+            />
+          </section>
+
+          <!-- TEAM -->
+          <section v-else-if="activeSection === 'team'" class="space-y-4">
+            <AdminSimpleCrud
+              table="team_members"
+              title="Team members"
+              item-label="team member"
+              :fields="teamFields as any"
+              image-field="avatar_url"
+            />
+          </section>
+
+          <!-- BLOG -->
+          <section v-else-if="activeSection === 'blog'" class="space-y-4">
+            <AdminSimpleCrud
+              table="blog_posts"
+              title="Blog posts"
+              item-label="post"
+              :fields="blogFields as any"
+              :order-by="{ column: 'created_at', ascending: false }"
+              image-field="cover_image_url"
+            />
+          </section>
+
           <!-- CONTACTS -->
           <section
             v-else-if="activeSection === 'contacts'"
@@ -2032,7 +2196,7 @@ const fetchContactRequests = async () => {
                           </a>
                         </div>
                       </div>
-                      <div class="text-right">
+                      <div class="text-right space-y-2">
                         <p class="text-xs font-medium uppercase tracking-wide text-muted">
                           Received
                         </p>
@@ -2045,6 +2209,17 @@ const fetchContactRequests = async () => {
                           }}</time>
                           <span v-else>—</span>
                         </p>
+                        <div class="flex flex-wrap justify-end gap-1">
+                          <UButton
+                            v-for="s in leadStatuses"
+                            :key="s.value"
+                            :label="s.label"
+                            size="xs"
+                            :color="((request as any).status || 'new') === s.value ? (s.color as any) : 'neutral'"
+                            :variant="((request as any).status || 'new') === s.value ? 'solid' : 'subtle'"
+                            @click="updateLeadStatus(request, s.value)"
+                          />
+                        </div>
                       </div>
                     </header>
 

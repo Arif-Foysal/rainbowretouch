@@ -1,148 +1,114 @@
-<template>
-  <div class="relative h-[90vh] w-full overflow-hidden">
-    <UCarousel
-      ref="carousel"
-      v-slot="{ item }"
-      :items="slides"
-      :autoplay="{ delay: 5000 }"
-      loop
-      fade
-      arrows
-      dots
-      :ui="{
-        root: 'h-full',
-        viewport: 'h-full',
-        container: 'h-full',
-        item: 'h-full',
-        arrows: 'px-8',
-        prev: '!start-8 !top-1/2 -translate-y-1/2 backdrop-blur-sm bg-black/30 hover:bg-black/50 text-white border-0',
-        next: '!end-8 !top-1/2 -translate-y-1/2 backdrop-blur-sm bg-black/30 hover:bg-black/50 text-white border-0',
-        dots: '!bottom-12 z-20',
-        dot: 'w-12 h-1.5 bg-white/50 hover:bg-white/80 data-[state=active]:bg-white transition-all duration-300'
-      }"
-      class="h-full"
-      @select="onSlideChange"
-    >
-      <!-- Image Background -->
-      <div class="relative h-full w-full">
-        <img 
-          :src="item.image" 
-          :alt="item.title"
-          class="absolute inset-0 h-full w-full object-contain"
-        />
-        
-        <!-- Gradient Overlay -->
-        <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/60 to-transparent" /> -->
-        
-        <!-- Content (bottom-left) -->
-        <div class="absolute inset-0 flex items-end">
-          <div class="container mx-auto px-4 sm:px-6 lg:px-8 pb-40">
-            <div class="max-w-2xl text-left">
-              <!-- Animated Title -->
-              <h1 
-                :key="`title-${activeIndex}`"
-                class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 animate-fade-in-up"
-              >
-                {{ item.title }}
-              </h1>
-              
-              <!-- Animated Description -->
-              <p 
-                :key="`desc-${activeIndex}`"
-                class="text-base sm:text-lg lg:text-xl mb-6 animate-fade-in-up animation-delay-200"
-              >
-                {{ item.description }}
-              </p>
-              
-              <!-- Call to Action Button (optional) -->
-              <div 
-                :key="`cta-${activeIndex}`"
-                class="animate-fade-in-up animation-delay-400"
-              >
-                <UButton 
-                  v-if="item.buttonText"
-                  :to="item.buttonLink"
-                  size="xl"
-                  color="primary"
-                  variant="solid"
-                  class="shadow-2xl"
-                >
-                  {{ item.buttonText }}
-                </UButton>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </UCarousel>
-  </div>
-</template>
-
 <script setup lang="ts">
-const carousel = useTemplateRef('carousel')
-const activeIndex = ref(0)
+const { data: settings } = await useSiteSettings()
 
-// Define your slides with images, titles, and descriptions
-const slides = [
-  {
-    image: '/imagePoster/12.png',
-    title: 'Explore the Mountains',
-    description: 'Discover breathtaking views and unforgettable adventures in nature\'s paradise',
-    buttonText: 'Start Exploring',
-    buttonLink: '/explore'
-  },
-  {
-    image: '/imagePoster/13.png',
-    title: 'Find Your Peace',
-    description: 'Experience tranquility and serenity in the most beautiful landscapes',
-    buttonText: 'Learn More',
-    buttonLink: '/about'
-  },
-  {
-    image: '/imagePoster/14.png',
-    title: 'Adventure Awaits',
-    description: 'Embark on a journey that will change your perspective forever',
-    buttonText: 'Get Started',
-    buttonLink: '/start'
-  },
-  {
-    image: '/imagePoster/15.png',
-    title: 'Capture the Moment',
-    description: 'Every sunset brings the promise of a new dawn and endless possibilities',
-    buttonText: 'View Gallery',
-    buttonLink: '/gallery'
-  }
-]
+const hero = computed(() => settings.value?.hero_video || {})
+const overlay = computed(() => {
+  const o = Number(hero.value.overlay_opacity)
+  return Number.isFinite(o) ? Math.max(0, Math.min(1, o)) : 0.45
+})
 
-function onSlideChange(index: number) {
-  activeIndex.value = index
+const videoEl = ref<HTMLVideoElement | null>(null)
+const isMuted = ref(true)
+
+function toggleMute() {
+  if (!videoEl.value) return
+  videoEl.value.muted = !videoEl.value.muted
+  isMuted.value = videoEl.value.muted
 }
 </script>
 
+<template>
+  <section class="relative h-[70vh] min-h-[420px] sm:h-[80vh] lg:h-[90vh] w-full overflow-hidden bg-black">
+    <!-- Video background -->
+    <video
+      v-if="hero.video_url"
+      ref="videoEl"
+      class="absolute inset-0 h-full w-full object-cover"
+      :poster="hero.poster_url || undefined"
+      :src="hero.video_url"
+      autoplay
+      loop
+      muted
+      playsinline
+      preload="metadata"
+    />
+    <!-- Fallback poster image when no video set -->
+    <img
+      v-else-if="hero.poster_url"
+      :src="hero.poster_url"
+      alt=""
+      class="absolute inset-0 h-full w-full object-cover"
+    >
+    <div
+      v-else
+      class="absolute inset-0 bg-gradient-to-br from-primary/30 via-black to-black"
+    />
+
+    <!-- Dark overlay -->
+    <div
+      class="absolute inset-0 bg-black"
+      :style="{ opacity: overlay }"
+    />
+
+    <!-- Mute toggle (only if there is a video) -->
+    <button
+      v-if="hero.video_url"
+      type="button"
+      class="absolute right-3 top-3 sm:right-6 sm:top-6 z-20 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm transition hover:bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+      :aria-label="isMuted ? 'Unmute video' : 'Mute video'"
+      @click="toggleMute"
+    >
+      <UIcon :name="isMuted ? 'i-lucide-volume-x' : 'i-lucide-volume-2'" class="h-4 w-4 sm:h-5 sm:w-5" />
+    </button>
+
+    <!-- Content -->
+    <div class="relative z-10 flex h-full items-end sm:items-center">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-0">
+        <div class="max-w-3xl text-white">
+          <p
+            v-if="hero.headline"
+            class="mb-2 sm:mb-3 text-xs sm:text-sm font-semibold uppercase tracking-widest text-primary"
+          >
+            {{ hero.headline }}
+          </p>
+          <h1
+            v-if="hero.title"
+            class="text-3xl sm:text-5xl lg:text-7xl font-bold leading-tight mb-3 sm:mb-5 animate-fade-in-up"
+          >
+            {{ hero.title }}
+          </h1>
+          <p
+            v-if="hero.description"
+            class="text-sm sm:text-lg lg:text-xl mb-5 sm:mb-7 max-w-xl text-white/85 animate-fade-in-up animation-delay-200"
+          >
+            {{ hero.description }}
+          </p>
+          <div
+            v-if="hero.button_text"
+            class="animate-fade-in-up animation-delay-400"
+          >
+            <UButton
+              :to="hero.button_link || '/contact'"
+              size="lg"
+              color="primary"
+              class="shadow-2xl sm:!text-base"
+              trailing-icon="i-lucide-arrow-right"
+            >
+              {{ hero.button_text }}
+            </UButton>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
+
 <style scoped>
-/* Fade in up animation */
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.8s ease-out forwards;
-}
-
-.animation-delay-200 {
-  animation-delay: 0.2s;
-  opacity: 0;
-}
-
-.animation-delay-400 {
-  animation-delay: 0.4s;
-  opacity: 0;
-}
+.animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
+.animation-delay-200 { animation-delay: 0.2s; opacity: 0; }
+.animation-delay-400 { animation-delay: 0.4s; opacity: 0; }
 </style>

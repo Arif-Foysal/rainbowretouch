@@ -6,17 +6,45 @@ const supabase = useSupabaseClient();
 const user = useSupabaseUser();
 const router = useRouter();
 const toast = useToast();
-const { isAdmin, fetchProfile } = useUserProfile();
+const { fetchProfile } = useUserProfile();
 
-// Ensure profile is loaded when user is available or changes
+// Local, reactive admin flag — fetched directly so it can't be stale.
+const isAdmin = useState<boolean>("header:isAdmin", () => false);
+
+const refreshAdminFlag = async (uid?: string) => {
+  if (!uid) { isAdmin.value = false; return; }
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", uid)
+    .maybeSingle();
+  if (error) {
+    console.error("[AppHeader] profile fetch failed", error);
+    isAdmin.value = false;
+    return;
+  }
+  isAdmin.value = (data as { role?: string } | null)?.role === "admin";
+};
+
 watch(
   user,
   async (val) => {
     if (val?.id) {
       await fetchProfile();
+      await refreshAdminFlag(val.id);
+    } else {
+      isAdmin.value = false;
     }
   },
   { immediate: true }
+);
+
+// Also re-check on every navigation (covers post-login redirects)
+watch(
+  () => route.fullPath,
+  async () => {
+    if (user.value?.id) await refreshAdminFlag(user.value.id);
+  }
 );
 
 type ServiceItem = {
@@ -550,51 +578,65 @@ const handleLogout = async () => {
             v-if="!isAuthenticated"
           />
 
+          <!-- Mobile: admin shield icon -->
           <UButton
+            v-if="isAuthenticated && isAdmin"
+            icon="i-lucide-shield-check"
+            color="primary"
+            variant="solid"
+            to="/admin"
+            class="lg:hidden"
+            aria-label="Admin dashboard"
+          />
+
+          <!-- Mobile: log out icon -->
+          <UButton
+            v-if="isAuthenticated"
             icon="i-lucide-log-out"
             color="neutral"
             variant="ghost"
             class="lg:hidden"
-            v-else
+            aria-label="Log out"
             @click="handleLogout"
           />
 
           <UButton
+            v-if="!isAuthenticated"
             label="Sign in"
             color="neutral"
             variant="outline"
             to="/login"
             class="hidden lg:inline-flex"
-            v-if="!isAuthenticated"
           />
 
           <UButton
+            v-if="!isAuthenticated"
             label="Sign up"
             color="neutral"
             trailing-icon="i-lucide-arrow-right"
             class="hidden lg:inline-flex"
             to="/signup"
-            v-if="!isAuthenticated"
+          />
+
+          <!-- Desktop: admin button BEFORE log out, solid primary -->
+          <UButton
+            v-if="isAuthenticated && isAdmin"
+            label="Admin"
+            color="primary"
+            variant="solid"
+            icon="i-lucide-shield-check"
+            to="/admin"
+            class="hidden lg:inline-flex"
           />
 
           <UButton
+            v-if="isAuthenticated"
             label="Log out"
             color="neutral"
             variant="outline"
             icon="i-lucide-log-out"
             class="hidden lg:inline-flex"
-            v-else
             @click="handleLogout"
-          />
-
-          <UButton
-            v-if="isAuthenticated && isAdmin"
-            label="Admin"
-            color="primary"
-            variant="outline"
-            trailing-icon="i-lucide-arrow-right"
-            to="/admin"
-            class="hidden lg:inline-flex"
           />
         </div>
       </ClientOnly>
@@ -618,21 +660,23 @@ const handleLogout = async () => {
       </template>
       <template v-else>
         <UButton
+          v-if="isAdmin"
+          label="Admin Dashboard"
+          color="primary"
+          icon="i-lucide-shield-check"
+          to="/admin"
+          block
+          class="mb-3"
+        />
+        <UButton label="Dashboard" color="neutral" variant="subtle" to="/dashboard" block class="mb-3" />
+        <UButton
           label="Log out"
           color="neutral"
-          variant="subtle"
+          variant="ghost"
+          icon="i-lucide-log-out"
           block
           @click="handleLogout"
         />
-        <UButton
-          v-if="isAdmin"
-          label="Admin"
-          color="primary"
-          to="/admin"
-          block
-          class="mb-2"
-        />
-        <UButton label="Dashboard" color="neutral" to="/dashboard" block />
       </template>
     </template>
   </UHeader>

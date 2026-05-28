@@ -1,50 +1,39 @@
 <script setup lang="ts">
-const columns = [{
-  label: 'Services',
-  children: [{
-    label: 'Brand Identity',
-    to: '/services#branding'
-  }, {
-    label: 'UI/UX Design',
-    to: '/services#ui-ux'
-  }, {
-    label: 'Illustration',
-    to: '/services#illustration'
-  }, {
-    label: 'Motion Graphics',
-    to: '/services#motion'
-  }]
-}, {
-  label: 'Company',
-  children: [{
-    label: 'About Us',
-    to: '/about'
-  }, {
-    label: 'Portfolio',
-    to: '/portfolio'
-  }, {
-    label: 'Pricing',
-    to: '/pricing'
-  }, {
-    label: 'Contact',
-    to: '/contact'
-  }]
-}, {
-  label: 'Resources',
-  children: [{
-    label: 'Blog',
-    to: '/blog'
-  }, {
-    label: 'Case Studies',
-    to: '/blog'
-  }, {
-    label: 'Design Tips',
-    to: '/blog'
-  }, {
-    label: 'FAQs',
-    to: '/contact'
-  }]
-}]
+const { data: settings } = await useSiteSettings()
+
+const site = computed(() => settings.value?.site || {})
+const social = computed(() => settings.value?.social || {})
+const contactInfo = computed(() => settings.value?.contact || {})
+
+const columns = computed(() => [
+  {
+    label: 'Services',
+    children: [
+      { label: 'Background Removal', to: '/services#background-removal' },
+      { label: 'Photo Retouching', to: '/services#retouching' },
+      { label: 'Image Enhancement', to: '/services#enhancement' },
+      { label: 'Image Masking', to: '/services#masking' }
+    ]
+  },
+  {
+    label: 'Company',
+    children: [
+      { label: 'About Us', to: '/about' },
+      { label: 'Portfolio', to: '/portfolio' },
+      { label: 'Pricing', to: '/pricing' },
+      { label: 'Contact', to: '/contact' }
+    ]
+  },
+  {
+    label: 'Resources',
+    children: [
+      { label: 'Blog', to: '/blog' },
+      { label: 'FAQs', to: '/pricing#faq' },
+      ...(contactInfo.value.email ? [{ label: contactInfo.value.email, to: `mailto:${contactInfo.value.email}` }] : []),
+      ...(contactInfo.value.phone ? [{ label: contactInfo.value.phone, to: `tel:${contactInfo.value.phone_link || contactInfo.value.phone}` }] : [])
+    ]
+  }
+])
 
 const paymentIcons = [
   { name: 'Stripe', icon: 'i-simple-icons-stripe' },
@@ -54,26 +43,29 @@ const paymentIcons = [
   { name: 'Apple Pay', icon: 'i-simple-icons-applepay' }
 ]
 
-const toast = useToast()
+const socials = computed(() =>
+  [
+    { icon: 'i-simple-icons-instagram', url: social.value.instagram, name: 'Instagram' },
+    { icon: 'i-simple-icons-facebook', url: social.value.facebook, name: 'Facebook' },
+    { icon: 'i-simple-icons-linkedin', url: social.value.linkedin, name: 'LinkedIn' },
+    { icon: 'i-simple-icons-behance', url: social.value.behance, name: 'Behance' },
+    { icon: 'i-simple-icons-dribbble', url: social.value.dribbble, name: 'Dribbble' },
+    { icon: 'i-simple-icons-x', url: social.value.twitter, name: 'Twitter' }
+  ].filter(s => !!s.url)
+)
 
+const toast = useToast()
 const email = ref('')
-const loading = ref(false)
 
 function onSubmit() {
-  loading.value = true
-
-  toast.add({
-    title: 'Subscribed!',
-    description: 'You\'ve been subscribed to our newsletter.'
-  })
+  if (!email.value) return
+  toast.add({ title: 'Subscribed!', description: 'Thanks for subscribing.' })
+  email.value = ''
 }
 </script>
 
 <template>
-  <USeparator
-    icon="i-simple-icons-nuxtdotjs"
-    class="h-px"
-  />
+  <USeparator class="h-px" />
 
   <UFooter :ui="{ top: 'border-b border-default' }">
     <template #top>
@@ -82,38 +74,23 @@ function onSubmit() {
           <template #right>
             <div class="space-y-4">
               <form @submit.prevent="onSubmit">
-                <UFormField
-                  name="email"
-                  label="Subscribe to our newsletter"
-                  size="lg"
-                >
-                  <UInput
-                    v-model="email"
-                    type="email"
-                    class="w-full"
-                    placeholder="Enter your email"
-                  >
+                <UFormField name="email" label="Subscribe to our newsletter" size="lg">
+                  <UInput v-model="email" type="email" class="w-full" placeholder="Enter your email">
                     <template #trailing>
-                      <UButton
-                        type="submit"
-                        size="xs"
-                        color="neutral"
-                        label="Subscribe"
-                      />
+                      <UButton type="submit" size="xs" color="neutral" label="Subscribe" />
                     </template>
                   </UInput>
                 </UFormField>
               </form>
-              
               <div class="flex items-center gap-3 flex-wrap">
                 <span class="text-xs text-muted">We accept:</span>
                 <div class="flex items-center gap-2">
                   <UIcon
-                    v-for="payment in paymentIcons"
-                    :key="payment.name"
-                    :name="payment.icon"
-                    class="w-6 h-6 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
-                    :title="payment.name"
+                    v-for="p in paymentIcons"
+                    :key="p.name"
+                    :name="p.icon"
+                    class="w-6 h-6 text-gray-400"
+                    :title="p.name"
                   />
                 </div>
               </div>
@@ -125,40 +102,18 @@ function onSubmit() {
 
     <template #left>
       <p class="text-muted text-sm">
-        Rainbow Retouch © {{ new Date().getFullYear() }} • All rights reserved
+        {{ site.name || 'Rainbow Retouch' }} © {{ new Date().getFullYear() }} • All rights reserved
       </p>
     </template>
 
     <template #right>
       <UButton
-        to="https://instagram.com"
+        v-for="s in socials"
+        :key="s.name"
+        :to="s.url"
         target="_blank"
-        icon="i-simple-icons-instagram"
-        aria-label="Rainbow Retouch on Instagram"
-        color="neutral"
-        variant="ghost"
-      />
-      <UButton
-        to="https://dribbble.com"
-        target="_blank"
-        icon="i-simple-icons-dribbble"
-        aria-label="Rainbow Retouch on Dribbble"
-        color="neutral"
-        variant="ghost"
-      />
-      <UButton
-        to="https://behance.net"
-        target="_blank"
-        icon="i-simple-icons-behance"
-        aria-label="Rainbow Retouch on Behance"
-        color="neutral"
-        variant="ghost"
-      />
-      <UButton
-        to="https://linkedin.com"
-        target="_blank"
-        icon="i-simple-icons-linkedin"
-        aria-label="Rainbow Retouch on LinkedIn"
+        :icon="s.icon"
+        :aria-label="s.name"
         color="neutral"
         variant="ghost"
       />

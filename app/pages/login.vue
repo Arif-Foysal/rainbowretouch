@@ -12,7 +12,7 @@ useSeoMeta({
 })
 
 const supabase = useSupabaseClient()
-const router = useRouter()
+const user = useSupabaseUser()
 const toast = useToast()
 
 type Profile = { role: string | null }
@@ -75,41 +75,37 @@ const loading = ref(false)
 
 async function onSubmit(payload: FormSubmitEvent<Schema>) {
   loading.value = true
-  
+
   const { data, error } = await supabase.auth.signInWithPassword({
     email: payload.data.email,
     password: payload.data.password
   })
 
   if (error) {
-    toast.add({
-      title: 'Login Failed',
-      description: error.message,
-      color: 'error'
-    })
+    toast.add({ title: 'Login Failed', description: error.message, color: 'error' })
     loading.value = false
     return
   }
 
-  // Fetch user profile to check role
+  // Hydrate the reactive user immediately so route middleware sees it.
+  user.value = data.user as any
+
+  // Fetch role and prime the profile cache so admin middleware passes.
   const { data: profile } = await supabase
     .from('profiles')
     .select('role')
     .eq('id', data.user.id)
     .single()
 
-  toast.add({
-    title: 'Success',
-    description: 'Welcome back!',
-    color: 'success'
-  })
-
-  // Redirect based on role
   const role = (profile as Profile | null)?.role
+  const { fetchProfile } = useUserProfile()
+  await fetchProfile(data.user.id)
+
+  toast.add({ title: 'Success', description: 'Welcome back!', color: 'success' })
+
   const target = role === 'admin' ? '/admin' : '/dashboard'
-  router.push(target)
-  
   loading.value = false
+  await navigateTo(target, { replace: true })
 }
 </script>
 
