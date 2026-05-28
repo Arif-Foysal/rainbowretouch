@@ -1,9 +1,6 @@
 <script setup lang="ts">
-const route = useRoute()
-
 const { data: dbPosts } = await useBlogPosts()
 const { data: page } = await useAsyncData('blog', () => queryCollection('blog').first())
-const { data: mdPosts } = await useAsyncData(route.path, () => queryCollection('posts').all())
 
 const title = page.value?.seo?.title || page.value?.title || 'Blog'
 const description = page.value?.seo?.description || page.value?.description || 'News, tips, and case studies.'
@@ -11,28 +8,17 @@ const description = page.value?.seo?.description || page.value?.description || '
 useSeoMeta({ title, ogTitle: title, description, ogDescription: description })
 defineOgImageComponent('Saas')
 
-const posts = computed<any[]>(() => {
-  if (dbPosts.value?.length) {
-    return dbPosts.value.map((p: any) => ({
-      path: `/blog/${p.slug}`,
-      title: p.title,
-      description: p.excerpt,
-      image: p.cover_image_url,
-      date: p.published_at || p.created_at,
-      authors: p.author_name ? [{ name: p.author_name }] : [],
-      badge: undefined
-    }))
-  }
-  return (mdPosts.value || []).map((p: any) => ({
-    path: p.path,
+const posts = computed<any[]>(() =>
+  (dbPosts.value || []).map((p: any) => ({
+    path: `/blog/${p.slug}`,
     title: p.title,
-    description: p.description,
-    image: p.image,
-    date: p.date,
-    authors: p.authors,
-    badge: p.badge
+    description: p.excerpt,
+    image: p.cover_image_url,
+    date: p.published_at || p.created_at,
+    authors: p.author_name ? [{ name: p.author_name }] : [],
+    badge: undefined
   }))
-})
+)
 </script>
 
 <template>

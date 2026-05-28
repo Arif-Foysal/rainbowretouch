@@ -36,10 +36,14 @@ const selectSession = async (s: ChatSession) => {
   await markRead(s.id, 'admin')
 }
 
+const backToInbox = () => {
+  activeId.value = null
+  unsubscribe()
+}
+
 onMounted(async () => {
   await loadSessions()
   subscribeInbox()
-  if (sessions.value[0]) await selectSession(sessions.value[0]!)
 })
 
 onBeforeUnmount(() => {
@@ -56,13 +60,16 @@ watch(messages, async () => {
   <div class="h-dvh flex flex-col">
     <header class="border-b border-default bg-background px-4 sm:px-6 py-3 flex items-center gap-3">
       <NuxtLink to="/admin" class="text-sm text-muted hover:text-highlighted flex items-center gap-1">
-        <UIcon name="i-lucide-arrow-left" class="w-4 h-4" /> Back to admin
+        <UIcon name="i-lucide-arrow-left" class="w-4 h-4" /> <span class="hidden sm:inline">Back to admin</span>
       </NuxtLink>
       <h1 class="text-base font-semibold ml-2">Live Chat</h1>
     </header>
 
     <div class="flex-1 flex min-h-0">
-      <aside class="w-72 border-r border-default bg-muted/10 overflow-y-auto">
+      <aside
+        class="border-r border-default bg-muted/10 overflow-y-auto w-full md:w-72 md:block"
+        :class="{ 'hidden md:block': active }"
+      >
         <div v-if="!sessions.length" class="p-6 text-sm text-muted text-center">
           No conversations yet.
         </div>
@@ -94,16 +101,29 @@ watch(messages, async () => {
         </ul>
       </aside>
 
-      <section class="flex-1 flex flex-col bg-background min-w-0">
+      <section
+        class="flex-1 flex flex-col bg-background min-w-0"
+        :class="{ 'hidden md:flex': !active }"
+      >
         <template v-if="active">
-          <div class="border-b border-default px-4 py-3">
-            <p class="text-sm font-semibold">{{ active.visitor_name || 'Anonymous visitor' }}</p>
-            <p v-if="active.visitor_email" class="text-xs text-muted">{{ active.visitor_email }}</p>
+          <div class="border-b border-default px-3 sm:px-4 py-3 flex items-center gap-2">
+            <button
+              type="button"
+              class="md:hidden p-1 -ml-1 rounded hover:bg-muted/40"
+              aria-label="Back to inbox"
+              @click="backToInbox"
+            >
+              <UIcon name="i-lucide-arrow-left" class="w-5 h-5" />
+            </button>
+            <div class="min-w-0">
+              <p class="text-sm font-semibold truncate">{{ active.visitor_name || 'Anonymous visitor' }}</p>
+              <p v-if="active.visitor_email" class="text-xs text-muted truncate">{{ active.visitor_email }}</p>
+            </div>
           </div>
           <ChatMessageList :messages="messages" self-role="admin" />
           <ChatComposer :session-id="active.id" />
         </template>
-        <div v-else class="flex-1 flex items-center justify-center text-sm text-muted">
+        <div v-else class="flex-1 flex items-center justify-center text-sm text-muted p-6 text-center">
           Select a conversation to start replying.
         </div>
       </section>

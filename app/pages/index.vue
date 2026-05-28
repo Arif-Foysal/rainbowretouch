@@ -61,6 +61,8 @@ const serviceCards = computed(() =>
 )
 
 const stats = computed(() => about.value?.stats || [])
+const clientsBlock = computed(() => settings.value?.clients || { items: [] })
+const clientItems = computed<any[]>(() => clientsBlock.value?.items || [])
 
 const processSteps = [
   { icon: 'i-lucide-upload-cloud', title: 'Upload', description: 'Send us your images via the form or your preferred cloud link.' },
@@ -100,6 +102,12 @@ const planProps = (plan: any) => ({
       <UContainer>
         <div class="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6 text-center">
           <div v-for="(stat, i) in stats" :key="i" class="flex flex-col items-center">
+            <div
+              v-if="stat.icon"
+              class="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary"
+            >
+              <UIcon :name="stat.icon" class="h-6 w-6" />
+            </div>
             <div class="text-2xl sm:text-4xl font-bold text-primary">
               {{ stat.value }}
             </div>
@@ -107,6 +115,37 @@ const planProps = (plan: any) => ({
               {{ stat.label }}
             </p>
           </div>
+        </div>
+      </UContainer>
+    </section>
+
+    <!-- RENOWNED CLIENTS -->
+    <section v-if="clientItems.length" class="py-10 sm:py-14 bg-background">
+      <UContainer>
+        <div class="text-center mb-6 sm:mb-8">
+          <p v-if="clientsBlock.headline" class="text-xs sm:text-sm uppercase tracking-wider text-primary font-semibold">
+            {{ clientsBlock.headline }}
+          </p>
+          <h2 v-if="clientsBlock.title" class="mt-2 text-2xl sm:text-3xl font-bold">
+            {{ clientsBlock.title }}
+          </h2>
+        </div>
+        <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-6 sm:gap-x-12">
+          <component
+            :is="c.link ? 'a' : 'div'"
+            v-for="(c, i) in clientItems"
+            :key="i"
+            :href="c.link || undefined"
+            :target="c.link ? '_blank' : undefined"
+            rel="noopener noreferrer"
+            class="grayscale opacity-70 hover:opacity-100 hover:grayscale-0 transition-all duration-300"
+          >
+            <img
+              :src="c.logo_url"
+              :alt="c.name || 'Client logo'"
+              class="h-10 sm:h-12 w-auto object-contain"
+            >
+          </component>
         </div>
       </UContainer>
     </section>

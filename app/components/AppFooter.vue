@@ -35,13 +35,19 @@ const columns = computed(() => [
   }
 ])
 
-const paymentIcons = [
-  { name: 'Stripe', icon: 'i-simple-icons-stripe' },
-  { name: 'PayPal', icon: 'i-simple-icons-paypal' },
-  { name: 'Visa', icon: 'i-simple-icons-visa' },
-  { name: 'Mastercard', icon: 'i-simple-icons-mastercard' },
-  { name: 'Apple Pay', icon: 'i-simple-icons-applepay' }
+const defaultPaymentIcons = [
+  { name: 'Stripe', icon: 'i-simple-icons-stripe', color: '#635BFF' },
+  { name: 'PayPal', icon: 'i-simple-icons-paypal', color: '#003087' },
+  { name: 'Visa', icon: 'i-simple-icons-visa', color: '#1A1F71' },
+  { name: 'Mastercard', icon: 'i-simple-icons-mastercard', color: '#EB001B' },
+  { name: 'Apple Pay', icon: 'i-simple-icons-applepay', color: '#000000' },
+  { name: 'Google Pay', icon: 'i-simple-icons-googlepay', color: '#4285F4' }
 ]
+
+const paymentIcons = computed(() => {
+  const custom = settings.value?.payments?.items as Array<{ name: string, icon: string, color?: string }> | undefined
+  return (custom && custom.length) ? custom : defaultPaymentIcons
+})
 
 const socials = computed(() =>
   [
@@ -67,6 +73,29 @@ function onSubmit() {
 <template>
   <USeparator class="h-px" />
 
+  <!-- PAYMENT STRIP — top of footer, large, colorful, centered -->
+  <section class="bg-muted/20 border-b border-default py-6 sm:py-8">
+    <UContainer>
+      <p class="text-center text-xs sm:text-sm uppercase tracking-wider text-muted mb-4">
+        We accept secure payments via
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+        <div
+          v-for="p in paymentIcons"
+          :key="p.name"
+          class="flex items-center justify-center h-12 sm:h-14 px-4 sm:px-5 rounded-xl bg-white dark:bg-gray-900 shadow-sm ring-1 ring-gray-200 dark:ring-gray-800 hover:shadow-md transition-shadow"
+          :title="p.name"
+        >
+          <UIcon
+            :name="p.icon"
+            class="w-9 h-9 sm:w-11 sm:h-11"
+            :style="{ color: p.color || undefined }"
+          />
+        </div>
+      </div>
+    </UContainer>
+  </section>
+
   <UFooter :ui="{ top: 'border-b border-default' }">
     <template #top>
       <UContainer>
@@ -82,18 +111,6 @@ function onSubmit() {
                   </UInput>
                 </UFormField>
               </form>
-              <div class="flex items-center gap-3 flex-wrap">
-                <span class="text-xs text-muted">We accept:</span>
-                <div class="flex items-center gap-2">
-                  <UIcon
-                    v-for="p in paymentIcons"
-                    :key="p.name"
-                    :name="p.icon"
-                    class="w-6 h-6 text-gray-400"
-                    :title="p.name"
-                  />
-                </div>
-              </div>
             </div>
           </template>
         </UFooterColumns>

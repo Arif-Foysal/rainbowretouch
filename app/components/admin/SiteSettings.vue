@@ -98,7 +98,7 @@ const settingDefs: SettingDef[] = [
       { path: 'title', label: 'Title', type: 'text' },
       { path: 'description', label: 'Description', type: 'textarea' },
       { path: 'hero_image_url', label: 'Hero image URL', type: 'url' },
-      { path: 'stats', label: 'Stats (JSON: [{value, label}, ...])', type: 'json', hint: 'Array of {value, label} objects' }
+      { path: 'stats', label: 'Stats (JSON: [{value, label, icon}, ...])', type: 'json', hint: 'Array of {value, label, icon} objects. icon is a Lucide name like "i-lucide-award".' }
     ]
   },
   {
@@ -108,6 +108,24 @@ const settingDefs: SettingDef[] = [
     fields: [
       { path: 'default_title', label: 'Default Title', type: 'text' },
       { path: 'default_description', label: 'Default Description', type: 'textarea' }
+    ]
+  },
+  {
+    key: 'payments',
+    title: 'Footer — Payment Methods',
+    description: 'Logos shown at the top of the footer',
+    fields: [
+      { path: 'items', label: 'Payment methods (JSON: [{name, icon, color}])', type: 'json', hint: 'Each item: { "name": "Visa", "icon": "i-simple-icons-visa", "color": "#1A1F71" }. Leave empty to use defaults.' }
+    ]
+  },
+  {
+    key: 'clients',
+    title: 'Home — Renowned Clients',
+    description: 'Logo strip of clients shown on the home page',
+    fields: [
+      { path: 'headline', label: 'Headline', type: 'text' },
+      { path: 'title', label: 'Title', type: 'text' },
+      { path: 'items', label: 'Logos (JSON: [{name, logo_url, link}])', type: 'json', hint: 'Each item: { "name": "Acme", "logo_url": "https://...", "link": "https://acme.com" }' }
     ]
   },
   {
