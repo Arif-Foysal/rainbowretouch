@@ -323,7 +323,7 @@ const displaySecondary = (row: any) => {
             <div v-else-if="f.type === 'image'" class="space-y-2">
               <UInput v-model="form[f.key]" placeholder="https://…" class="w-full" />
               <UFileUpload
-                v-model="(uploadFiles as any)"
+                v-model="uploadFiles"
                 color="neutral"
                 highlight
                 label="Or upload an image"

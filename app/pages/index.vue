@@ -307,7 +307,7 @@ const planProps = (plan: any) => ({
         <UPricingPlan
           v-for="plan in topPlans"
           :key="plan.id"
-          v-bind="(planProps(plan) as any)"
+          v-bind="planProps(plan)"
         />
       </UPricingPlans>
 

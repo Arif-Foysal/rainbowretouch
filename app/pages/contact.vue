@@ -169,7 +169,7 @@ useHead({
               </UFormField>
 
               <UFormField label="Project Type" name="subject" required>
-                <USelectMenu v-model="(state.subject as any)" :items="(subjects as any)" placeholder="Select a project type" icon="i-heroicons-briefcase" class="w-full" />
+                <USelectMenu v-model="state.subject" :items="subjects" placeholder="Select a project type" icon="i-heroicons-briefcase" class="w-full" />
               </UFormField>
 
               <div class="grid sm:grid-cols-2 gap-4">
