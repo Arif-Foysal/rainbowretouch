@@ -1,6 +1,11 @@
 <script setup lang="ts">
 const { data: settings } = await useSiteSettings()
 const contactInfo = computed(() => settings.value?.contact || {})
+const promo = computed(() => settings.value?.topbar_promo || {})
+const promoEnabled = computed(() => {
+  const v = promo.value?.enabled
+  return v !== false && v !== 'false'
+})
 
 const whatsappUrl = computed(() => {
   const num = (contactInfo.value.whatsapp || '').toString().replace(/\D/g, '')
@@ -23,7 +28,7 @@ function dismissBanner() {
 
 <template>
   <div
-    v-if="!isDismissed"
+    v-if="!isDismissed && promoEnabled"
     class="bg-muted/30 border-b border-default"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,10 +44,15 @@ function dismissBanner() {
         </a>
 
         <div class="hidden md:flex flex-1 gap-2 items-center justify-center">
-          <p class="text-sm text-default text-center">
-            Get a <span class="font-semibold">free photo retouch</span> — just upload your image!
-          </p>
-          <UButton label="Upload Now" color="neutral" variant="solid" size="sm" to="/contact" />
+          <p v-if="promo.text_html" class="text-sm text-default text-center" v-html="promo.text_html" />
+          <UButton
+            v-if="promo.button_label"
+            :label="promo.button_label"
+            color="neutral"
+            variant="solid"
+            size="sm"
+            :to="promo.button_link || '/contact'"
+          />
         </div>
 
         <div class="flex items-center gap-3 ml-auto">

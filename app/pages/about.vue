@@ -46,15 +46,12 @@ useSeoMeta({
     </div>
 
     <UPageSection
-      headline="Our Values"
-      title="Design That Speaks"
-      description="We believe in creating designs that not only look beautiful but tell a compelling story."
+      v-if="about.values?.length"
+      :headline="about.values_headline"
+      :title="about.values_title"
+      :description="about.values_description"
       orientation="vertical"
-      :features="[
-        { title: 'Creative Excellence', description: 'Pushing boundaries and exploring new design horizons with every project.', icon: 'i-lucide-sparkles' },
-        { title: 'Client-Focused', description: 'Your vision is our mission. We listen, collaborate, and deliver beyond expectations.', icon: 'i-lucide-heart' },
-        { title: 'Innovation First', description: 'Staying ahead of trends while creating timeless designs that stand the test of time.', icon: 'i-lucide-rocket' }
-      ]"
+      :features="about.values"
     />
 
     <UPageSection

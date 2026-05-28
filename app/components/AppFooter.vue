@@ -5,35 +5,24 @@ const site = computed(() => settings.value?.site || {})
 const social = computed(() => settings.value?.social || {})
 const contactInfo = computed(() => settings.value?.contact || {})
 
-const columns = computed(() => [
-  {
-    label: 'Services',
-    children: [
-      { label: 'Background Removal', to: '/services#background-removal' },
-      { label: 'Photo Retouching', to: '/services#retouching' },
-      { label: 'Image Enhancement', to: '/services#enhancement' },
-      { label: 'Image Masking', to: '/services#masking' }
-    ]
-  },
-  {
-    label: 'Company',
-    children: [
-      { label: 'About Us', to: '/about' },
-      { label: 'Portfolio', to: '/portfolio' },
-      { label: 'Pricing', to: '/pricing' },
-      { label: 'Contact', to: '/contact' }
-    ]
-  },
-  {
-    label: 'Resources',
-    children: [
-      { label: 'Blog', to: '/blog' },
-      { label: 'FAQs', to: '/pricing#faq' },
-      ...(contactInfo.value.email ? [{ label: contactInfo.value.email, to: `mailto:${contactInfo.value.email}` }] : []),
-      ...(contactInfo.value.phone ? [{ label: contactInfo.value.phone, to: `tel:${contactInfo.value.phone_link || contactInfo.value.phone}` }] : [])
-    ]
+const navSetting = computed<any>(() => settings.value?.footer_navigation || {})
+
+const columns = computed(() => {
+  const cols = (navSetting.value?.columns || []).map((c: any) => ({
+    label: c.label,
+    children: [...(c.children || [])]
+  }))
+  if (cols.length) {
+    const last = cols[cols.length - 1]
+    if (contactInfo.value.email) {
+      last.children.push({ label: contactInfo.value.email, to: `mailto:${contactInfo.value.email}` })
+    }
+    if (contactInfo.value.phone) {
+      last.children.push({ label: contactInfo.value.phone, to: `tel:${contactInfo.value.phone_link || contactInfo.value.phone}` })
+    }
   }
-])
+  return cols
+})
 
 const defaultPaymentIcons = [
   { name: 'Stripe', icon: 'i-simple-icons-stripe', color: '#635BFF' },

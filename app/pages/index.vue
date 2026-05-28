@@ -64,12 +64,8 @@ const stats = computed(() => about.value?.stats || [])
 const clientsBlock = computed(() => settings.value?.clients || { items: [] })
 const clientItems = computed<any[]>(() => clientsBlock.value?.items || [])
 
-const processSteps = [
-  { icon: 'i-lucide-upload-cloud', title: 'Upload', description: 'Send us your images via the form or your preferred cloud link.' },
-  { icon: 'i-lucide-message-square', title: 'Brief', description: 'Tell us the look — references welcome. We confirm scope in 1 hour.' },
-  { icon: 'i-lucide-sparkles', title: 'We Retouch', description: 'A dedicated editor delivers pixel-perfect results within 24 hours.' },
-  { icon: 'i-lucide-check-circle-2', title: 'Approve & Deliver', description: 'Free unlimited revisions until you love it. Source files included.' }
-]
+const processBlock = computed(() => settings.value?.process_steps || {})
+const processSteps = computed<any[]>(() => processBlock.value?.items || [])
 
 const featuredPortfolio = computed(() => (portfolio.value || []).slice(0, 6))
 const topTestimonials = computed(() => (testimonials.value || []).slice(0, 3))
@@ -240,9 +236,10 @@ const planProps = (plan: any) => ({
 
     <!-- PROCESS -->
     <UPageSection
-      headline="How it works"
-      title="From upload to flawless — in 4 simple steps"
-      description="No back-and-forth, no surprise fees. Just clear delivery."
+      v-if="processSteps.length"
+      :headline="processBlock.headline"
+      :title="processBlock.title"
+      :description="processBlock.description"
     >
       <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <div

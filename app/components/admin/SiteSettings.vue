@@ -98,7 +98,55 @@ const settingDefs: SettingDef[] = [
       { path: 'title', label: 'Title', type: 'text' },
       { path: 'description', label: 'Description', type: 'textarea' },
       { path: 'hero_image_url', label: 'Hero image URL', type: 'url' },
-      { path: 'stats', label: 'Stats (JSON: [{value, label, icon}, ...])', type: 'json', hint: 'Array of {value, label, icon} objects. icon is a Lucide name like "i-lucide-award".' }
+      { path: 'stats', label: 'Stats (JSON: [{value, label, icon}, ...])', type: 'json', hint: 'Array of {value, label, icon} objects. icon is a Lucide name like "i-lucide-award".' },
+      { path: 'values_headline', label: 'Values section — Headline', type: 'text' },
+      { path: 'values_title', label: 'Values section — Title', type: 'text' },
+      { path: 'values_description', label: 'Values section — Description', type: 'textarea' },
+      { path: 'values', label: 'Values (JSON: [{icon, title, description}])', type: 'json', hint: 'Shown as the "Our Values" cards on /about' }
+    ]
+  },
+  {
+    key: 'topbar_promo',
+    title: 'Top Promo Banner',
+    description: 'Dismissible banner shown above the header',
+    fields: [
+      { path: 'enabled', label: 'Enabled (true / false)', type: 'text', hint: 'Set to "false" to hide the banner everywhere' },
+      { path: 'text_html', label: 'Banner text (HTML allowed)', type: 'textarea', hint: 'Inline HTML like <span class="font-semibold">free</span> is supported' },
+      { path: 'button_label', label: 'Button label', type: 'text' },
+      { path: 'button_link', label: 'Button link', type: 'text' }
+    ]
+  },
+  {
+    key: 'process_steps',
+    title: 'Home — Process Steps',
+    description: 'The "How it works" steps below the value props',
+    fields: [
+      { path: 'headline', label: 'Headline (small)', type: 'text' },
+      { path: 'title', label: 'Title', type: 'text' },
+      { path: 'description', label: 'Description', type: 'textarea' },
+      { path: 'items', label: 'Steps (JSON: [{icon, title, description}])', type: 'json' }
+    ]
+  },
+  {
+    key: 'service_highlights',
+    title: 'Home — Service Highlights',
+    description: 'Hero image + 10-card grid below the process steps',
+    fields: [
+      { path: 'title', label: 'Section title', type: 'text' },
+      { path: 'description', label: 'Section description', type: 'textarea' },
+      { path: 'hero_image_url', label: 'Hero image URL', type: 'url' },
+      { path: 'hero_image_badge', label: 'Hero image — badge text', type: 'text' },
+      { path: 'hero_image_title', label: 'Hero image — overlay title', type: 'text' },
+      { path: 'hero_image_subtitle', label: 'Hero image — overlay subtitle', type: 'text' },
+      { path: 'items', label: 'Cards (JSON: [{icon, title, description, color}])', type: 'json', hint: 'color: blue|purple|green|red|orange|indigo|emerald|pink|cyan|violet' }
+    ]
+  },
+  {
+    key: 'footer_navigation',
+    title: 'Footer — Navigation Columns',
+    description: 'Link columns shown in the footer',
+    fields: [
+      { path: 'columns', label: 'Columns (JSON: [{label, children:[{label,to}]}])', type: 'json', hint: 'Contact email/phone are appended automatically to the last column.' }
     ]
   },
   {

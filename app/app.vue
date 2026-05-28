@@ -113,19 +113,31 @@ useHead({
   htmlAttrs: { lang: 'en' }
 })
 
-useSeoMeta({
-  titleTemplate: () => seo.value?.meta?.title_template || '%s',
-  title: () => seo.value?.meta?.default_title,
-  description: () => seo.value?.meta?.default_description,
-  ogSiteName: () => seo.value?.og?.site_name,
-  ogType: () => (seo.value?.og?.type as any) || 'website',
-  ogLocale: () => seo.value?.og?.locale,
-  ogImage: () => seo.value?.og?.default_image,
-  twitterCard: () => (seo.value?.twitter?.card as any) || 'summary_large_image',
-  twitterSite: () => seo.value?.twitter?.site,
-  twitterCreator: () => seo.value?.twitter?.creator,
-  twitterImage: () => seo.value?.twitter?.default_image || seo.value?.og?.default_image
+const seoMeta = computed(() => {
+  const m = seo.value?.meta || {}
+  const og = seo.value?.og || {}
+  const tw = seo.value?.twitter || {}
+  const o: Record<string, any> = {
+    titleTemplate: m.title_template || '%s',
+    ogType: og.type || 'website',
+    twitterCard: tw.card || 'summary_large_image'
+  }
+  if (m.default_title) o.title = m.default_title
+  if (m.default_description) {
+    o.description = m.default_description
+    o.ogDescription = m.default_description
+  }
+  if (og.site_name) o.ogSiteName = og.site_name
+  if (og.locale) o.ogLocale = og.locale
+  if (og.default_image) o.ogImage = og.default_image
+  if (tw.site) o.twitterSite = tw.site
+  if (tw.creator) o.twitterCreator = tw.creator
+  const twImg = tw.default_image || og.default_image
+  if (twImg) o.twitterImage = twImg
+  return o
 })
+
+watchEffect(() => useSeoMeta(seoMeta.value))
 
 const { data: navigation } = await useAsyncData('navigation', () => queryCollectionNavigation('docs'), {
   transform: data => data.find(item => item.path === '/docs')?.children || []
