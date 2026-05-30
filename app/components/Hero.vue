@@ -33,12 +33,16 @@ function toggleMute() {
       preload="metadata"
     />
     <!-- Fallback poster image when no video set -->
-    <img
+    <NuxtImg
       v-else-if="hero.poster_url"
       :src="hero.poster_url"
       alt=""
+      format="webp"
+      loading="eager"
+      fetchpriority="high"
+      sizes="100vw"
       class="absolute inset-0 h-full w-full object-cover"
-    >
+    />
     <div
       v-else
       class="absolute inset-0 bg-gradient-to-br from-primary/30 via-black to-black"

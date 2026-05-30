@@ -1,6 +1,8 @@
 <script setup lang="ts">
-const { data: settings } = await useSiteSettings()
-const { data: team } = await useTeamMembers()
+const [{ data: settings }, { data: team }] = await Promise.all([
+  useSiteSettings(),
+  useTeamMembers()
+])
 
 const about = computed(() => settings.value?.about || {})
 const cta = computed(() => settings.value?.cta || {})

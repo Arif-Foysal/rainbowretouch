@@ -45,11 +45,13 @@
           class="relative overflow-hidden rounded-3xl shadow-xl ring-1 ring-default/40"
         >
           <div class="aspect-4/3 w-full">
-            <img
+            <NuxtImg
               :src="section.image || '/imagePoster/1.png'"
               :alt="section.title"
-              class="h-full w-full object-cover"
+              format="webp"
               loading="lazy"
+              sizes="100vw md:600px"
+              class="h-full w-full object-cover"
             />
           </div>
         </div>

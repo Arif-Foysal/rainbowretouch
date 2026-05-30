@@ -1,19 +1,28 @@
 <script setup lang="ts">
 const supabase = useSupabaseClient()
-const { data: settings } = await useSiteSettings()
-const { data: testimonials } = await useTestimonials()
-const { data: pricingPlans } = await usePricingPlans()
-const { data: faqs } = await useFaqs()
-const { data: portfolio } = await usePortfolioItems()
 
-const { data: serviceCategories } = await useAsyncData('home:service_categories', async () => {
-  const { data } = await supabase
-    .from('service_categories')
-    .select('id, label, description, icon, order_index, service_items(id, label, icon, href, order_index, service_item_images(image_url, order_index))')
-    .order('order_index', { ascending: true })
-    .order('order_index', { foreignTable: 'service_items', ascending: true })
-  return (data as any[]) ?? []
-}, { default: () => [] as any[] })
+const [
+  { data: settings },
+  { data: testimonials },
+  { data: pricingPlans },
+  { data: faqs },
+  { data: portfolio },
+  { data: serviceCategories }
+] = await Promise.all([
+  useSiteSettings(),
+  useTestimonials(),
+  usePricingPlans(),
+  useFaqs(),
+  usePortfolioItems(),
+  useAsyncData('home:service_categories', async () => {
+    const { data } = await supabase
+      .from('service_categories')
+      .select('id, label, description, icon, order_index, service_items(id, label, icon, href, order_index, service_item_images(image_url, order_index))')
+      .order('order_index', { ascending: true })
+      .order('order_index', { foreignTable: 'service_items', ascending: true })
+    return (data as any[]) ?? []
+  }, { default: () => [] as any[] })
+])
 
 const seo = computed(() => settings.value?.seo || {})
 const homeHero = computed(() => settings.value?.home_hero || {})
@@ -136,11 +145,14 @@ const planProps = (plan: any) => ({
             rel="noopener noreferrer"
             class="grayscale opacity-70 hover:opacity-100 hover:grayscale-0 transition-all duration-300"
           >
-            <img
+            <NuxtImg
               :src="c.logo_url"
               :alt="c.name || 'Client logo'"
+              height="48"
+              format="webp"
+              loading="lazy"
               class="h-10 sm:h-12 w-auto object-contain"
-            >
+            />
           </component>
         </div>
       </UContainer>

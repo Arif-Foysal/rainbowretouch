@@ -24,6 +24,6 @@ const items = [
     :items="items"
     :ui="{ item: 'basis-1/2 md:basis-1/3' }"
   >
-    <img :src="item" width="600" height="600" class="rounded-lg">
+    <NuxtImg :src="item" width="600" height="600" format="webp" loading="lazy" sizes="50vw md:33vw" class="rounded-lg" />
   </UCarousel>
 </template>

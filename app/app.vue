@@ -139,12 +139,25 @@ const seoMeta = computed(() => {
 
 watchEffect(() => useSeoMeta(seoMeta.value))
 
-const { data: navigation } = await useAsyncData('navigation', () => queryCollectionNavigation('docs'), {
-  transform: data => data.find(item => item.path === '/docs')?.children || []
-})
-const { data: files } = useLazyAsyncData('search', () => queryCollectionSearchSections('docs'), {
-  server: false
-})
+// Only load the @nuxt/content collection (and its client SQLite worker) on
+// the routes that actually need it. Marketing pages no longer pay the ~1MB
+// WASM cost just to render a header.
+const needsContent = computed(() =>
+  route.path === '/docs'
+  || route.path.startsWith('/docs/')
+  || route.path === '/changelog'
+  || route.path.startsWith('/changelog/')
+)
+
+const { data: navigation } = needsContent.value
+  ? await useAsyncData('navigation', () => queryCollectionNavigation('docs'), {
+      transform: data => data.find(item => item.path === '/docs')?.children || []
+    })
+  : { data: ref<any[]>([]) }
+
+const { data: files } = needsContent.value
+  ? useLazyAsyncData('search', () => queryCollectionSearchSections('docs'), { server: false })
+  : { data: ref<any[]>([]) }
 
 const links = [{
   label: 'Docs',
@@ -175,7 +188,7 @@ provide('navigation', navigation)
       <NuxtPage />
     </NuxtLayout>
 
-    <ClientOnly>
+    <ClientOnly v-if="needsContent">
       <LazyUContentSearch
         :files="files"
         shortcut="meta_k"

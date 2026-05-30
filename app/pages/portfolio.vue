@@ -1,6 +1,8 @@
 <script setup lang="ts">
-const { data: settings } = await useSiteSettings()
-const { data: items } = await usePortfolioItems()
+const [{ data: settings }, { data: items }] = await Promise.all([
+  useSiteSettings(),
+  usePortfolioItems()
+])
 
 const cta = computed(() => settings.value?.cta || {})
 const ctaLinks = computed(() => {
@@ -61,12 +63,14 @@ useHead({
           @click="openLightbox(item)"
         >
           <div class="overflow-hidden relative aspect-square sm:aspect-auto">
-            <img
+            <NuxtImg
               :src="item.image_url"
               :alt="item.title || `Portfolio image ${item.id}`"
+              format="webp"
               loading="lazy"
+              sizes="50vw md:33vw lg:25vw"
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-            >
+            />
           </div>
           <div v-if="item.title" class="p-3 text-sm font-medium text-highlighted">
             {{ item.title }}
@@ -87,11 +91,13 @@ useHead({
     <UModal v-model:open="isLightboxOpen" :close="true" :ui="{ content: 'max-w-7xl' }">
       <template #content>
         <div v-if="selectedImage" class="p-3 sm:p-4">
-          <img
+          <NuxtImg
             :src="selectedImage.image_url"
             :alt="selectedImage.title || ''"
+            format="webp"
+            sizes="100vw md:1400px"
             class="w-full h-auto rounded-lg"
-          >
+          />
           <p v-if="selectedImage.title" class="mt-3 text-center font-medium">
             {{ selectedImage.title }}
           </p>

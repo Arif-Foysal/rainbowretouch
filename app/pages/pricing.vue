@@ -1,7 +1,9 @@
 <script setup lang="ts">
-const { data: plans } = await usePricingPlans()
-const { data: faqs } = await useFaqs()
-const { data: settings } = await useSiteSettings()
+const [{ data: plans }, { data: faqs }, { data: settings }] = await Promise.all([
+  usePricingPlans(),
+  useFaqs(),
+  useSiteSettings()
+])
 
 const seo = computed(() => settings.value?.seo || {})
 const title = computed(() => 'Pricing — ' + (seo.value.default_title || 'Rainbow Retouch'))

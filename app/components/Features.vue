@@ -31,11 +31,14 @@ const getColorClasses = (color?: string) => colorMap[color || 'blue'] || colorMa
         <div class="absolute inset-0 bg-gradient-to-r from-primary/20 to-purple-500/20 rounded-3xl blur-3xl group-hover:blur-2xl transition-all duration-500 opacity-50" />
         <UCard variant="outline" class="relative overflow-hidden">
           <div class="aspect-[21/9] relative">
-            <img
+            <NuxtImg
               :src="block.hero_image_url"
               :alt="block.hero_image_title || 'Service highlight'"
+              format="webp"
+              loading="lazy"
+              sizes="100vw md:1200px"
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 rounded-md"
-            >
+            />
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-end transform transition-transform duration-700 group-hover:scale-110">
               <div class="p-8 lg:p-12 text-white max-w-2xl">
                 <div
