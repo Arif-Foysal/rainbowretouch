@@ -265,6 +265,55 @@ const servicesTab = ref<ServicesTab>("services");
 const mobileNavOpen = ref(false);
 const userSearch = ref("");
 const resettingUserId = ref<string | null>(null);
+const rolingUserId = ref<string | null>(null);
+const promoteEmail = ref("");
+const promoting = ref(false);
+
+async function promoteUser(target: { id: string, email: string | null }) {
+  if (!target.email) {
+    toast.add({ title: 'No email on file', description: 'Cannot promote a profile without an email.', color: 'error' });
+    return;
+  }
+  if (!confirm(`Make ${target.email} an admin? They will have full access to this dashboard.`)) return;
+  rolingUserId.value = target.id;
+  const { error } = await (supabase as any).rpc('promote_to_admin', { user_email: target.email });
+  rolingUserId.value = null;
+  if (error) {
+    toast.add({ title: 'Promote failed', description: error.message, color: 'error' });
+    return;
+  }
+  toast.add({ title: 'Promoted to admin', description: target.email, color: 'success' });
+  await fetchUsers();
+}
+
+async function demoteUser(target: { id: string, email: string | null }) {
+  if (!target.email) return;
+  if (!confirm(`Remove admin role from ${target.email}? They'll lose access to /admin.`)) return;
+  rolingUserId.value = target.id;
+  const { error } = await (supabase as any).rpc('demote_admin', { user_email: target.email });
+  rolingUserId.value = null;
+  if (error) {
+    toast.add({ title: 'Demote failed', description: error.message, color: 'error' });
+    return;
+  }
+  toast.add({ title: 'Removed admin role', description: target.email, color: 'success' });
+  await fetchUsers();
+}
+
+async function promoteByEmail() {
+  const email = promoteEmail.value.trim();
+  if (!email) return;
+  promoting.value = true;
+  const { error } = await (supabase as any).rpc('promote_to_admin', { user_email: email });
+  promoting.value = false;
+  if (error) {
+    toast.add({ title: 'Promote failed', description: error.message, color: 'error' });
+    return;
+  }
+  toast.add({ title: 'Promoted to admin', description: email, color: 'success' });
+  promoteEmail.value = '';
+  await fetchUsers();
+}
 
 async function sendPasswordReset(target: { id: string, email: string | null }) {
   if (!target.email) {
@@ -1630,6 +1679,19 @@ const fetchContactRequests = async () => {
             class="space-y-4"
           >
             <h2 id="users-heading" class="sr-only">Users</h2>
+
+            <!-- Promote any user to admin by email -->
+            <UCard>
+              <template #header>
+                <h3 class="text-base font-semibold text-highlighted">Add admin</h3>
+                <p class="text-xs text-muted mt-0.5">The user must already have a Rainbow Retouch account. Type their email to grant admin access.</p>
+              </template>
+              <form class="flex flex-col sm:flex-row gap-2" @submit.prevent="promoteByEmail">
+                <UInput v-model="promoteEmail" type="email" placeholder="user@example.com" icon="i-lucide-mail" class="flex-1" required />
+                <UButton type="submit" :loading="promoting" :disabled="!promoteEmail" icon="i-lucide-shield-plus" label="Make admin" />
+              </form>
+            </UCard>
+
             <UCard>
               <template #header>
                 <div class="flex flex-wrap items-center justify-between gap-3">
@@ -1708,6 +1770,27 @@ const fetchContactRequests = async () => {
                       }}</time>
                       <span v-else>N/A</span>
                     </p>
+                    <UButton
+                      v-if="userItem.role !== 'admin'"
+                      :loading="rolingUserId === userItem.id"
+                      :disabled="!userItem.email"
+                      size="xs"
+                      color="primary"
+                      variant="outline"
+                      icon="i-lucide-shield-plus"
+                      label="Make admin"
+                      @click="promoteUser(userItem)"
+                    />
+                    <UButton
+                      v-else-if="userItem.id !== profile?.id"
+                      :loading="rolingUserId === userItem.id"
+                      size="xs"
+                      color="error"
+                      variant="ghost"
+                      icon="i-lucide-shield-off"
+                      label="Remove admin"
+                      @click="demoteUser(userItem)"
+                    />
                     <UButton
                       :loading="resettingUserId === userItem.id"
                       :disabled="!userItem.email"
