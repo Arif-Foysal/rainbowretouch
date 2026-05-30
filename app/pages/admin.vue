@@ -264,6 +264,23 @@ const activeSection = ref<SectionKey>("overview");
 const servicesTab = ref<ServicesTab>("services");
 const mobileNavOpen = ref(false);
 const userSearch = ref("");
+const resettingUserId = ref<string | null>(null);
+
+async function sendPasswordReset(target: { id: string, email: string | null }) {
+  if (!target.email) {
+    toast.add({ title: 'No email on file', description: 'This account has no email — cannot send a reset link.', color: 'error' });
+    return;
+  }
+  resettingUserId.value = target.id;
+  const redirectTo = `${window.location.origin}/reset-password`;
+  const { error } = await (supabase as any).auth.resetPasswordForEmail(target.email, { redirectTo });
+  resettingUserId.value = null;
+  if (error) {
+    toast.add({ title: 'Could not send', description: error.message, color: 'error' });
+  } else {
+    toast.add({ title: 'Reset link sent', description: `Sent to ${target.email}`, color: 'success' });
+  }
+}
 const categorySearch = ref("");
 const serviceSearch = ref("");
 const serviceCategoryFilter = ref<string>("");
@@ -1691,6 +1708,16 @@ const fetchContactRequests = async () => {
                       }}</time>
                       <span v-else>N/A</span>
                     </p>
+                    <UButton
+                      :loading="resettingUserId === userItem.id"
+                      :disabled="!userItem.email"
+                      size="xs"
+                      color="neutral"
+                      variant="outline"
+                      icon="i-lucide-key-round"
+                      label="Send reset link"
+                      @click="sendPasswordReset(userItem)"
+                    />
                   </div>
                 </li>
               </ul>
