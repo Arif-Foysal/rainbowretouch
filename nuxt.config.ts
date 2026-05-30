@@ -31,17 +31,24 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   routeRules: {
-    '/docs': { redirect: '/docs/getting-started', prerender: false }
+    '/docs': { redirect: '/docs/getting-started', prerender: false },
+    // CMS-driven pages: render on demand so admin edits go live without a redeploy
+    '/': { prerender: false },
+    '/about': { prerender: false },
+    '/services': { prerender: false },
+    '/services/**': { prerender: false },
+    '/portfolio': { prerender: false },
+    '/pricing': { prerender: false },
+    '/contact': { prerender: false },
+    '/blog': { prerender: false },
+    '/blog/**': { prerender: false }
   },
 
   compatibilityDate: '2024-07-11',
 
   nitro: {
     prerender: {
-      routes: [
-        '/'
-      ],
-      crawlLinks: true
+      crawlLinks: false
     }
   },
 
