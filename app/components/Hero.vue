@@ -18,58 +18,64 @@ function toggleMute() {
 </script>
 
 <template>
-  <section class="relative w-full overflow-hidden bg-black h-[min(78svh,640px)] min-h-[460px] sm:h-[78vh] sm:min-h-0 sm:max-h-none lg:h-[88vh]">
-    <!-- Video background -->
-    <video
-      v-if="hero.video_url"
-      ref="videoEl"
-      class="absolute inset-0 h-full w-full object-cover object-center"
-      :poster="hero.poster_url || undefined"
-      :src="hero.video_url"
-      autoplay
-      loop
-      muted
-      playsinline
-      preload="metadata"
-    />
-    <!-- Fallback poster image when no video set -->
-    <NuxtImg
-      v-else-if="hero.poster_url"
-      :src="hero.poster_url"
-      alt=""
-      format="webp"
-      loading="eager"
-      fetchpriority="high"
-      sizes="100vw"
-      class="absolute inset-0 h-full w-full object-cover object-center"
-    />
-    <div
-      v-else
-      class="absolute inset-0 bg-gradient-to-br from-primary/30 via-black to-black"
-    />
+  <!--
+    MOBILE (<sm): stacked layout — video shown in its native 16:9 ratio at the top
+    (no cropping), text content lives in a black band below. No awkward side-crop.
+    DESKTOP (sm+): immersive full-bleed hero with text overlaid on the video.
+  -->
+  <section class="relative w-full overflow-hidden bg-black sm:h-[78vh] lg:h-[88vh]">
+    <!-- Media -->
+    <div class="relative w-full aspect-video sm:absolute sm:inset-0 sm:aspect-auto sm:h-full">
+      <video
+        v-if="hero.video_url"
+        ref="videoEl"
+        class="absolute inset-0 h-full w-full object-contain sm:object-cover object-center"
+        :poster="hero.poster_url || undefined"
+        :src="hero.video_url"
+        autoplay
+        loop
+        muted
+        playsinline
+        preload="metadata"
+      />
+      <NuxtImg
+        v-else-if="hero.poster_url"
+        :src="hero.poster_url"
+        alt=""
+        format="webp"
+        loading="eager"
+        fetchpriority="high"
+        sizes="100vw"
+        class="absolute inset-0 h-full w-full object-contain sm:object-cover object-center"
+      />
+      <div
+        v-else
+        class="absolute inset-0 bg-gradient-to-br from-primary/30 via-black to-black"
+      />
 
-    <!-- Flat dark overlay (user-configurable). Subtler on mobile so the video reads. -->
-    <div
-      class="absolute inset-0 bg-black"
-      :style="{ opacity: overlay }"
-    />
-    <!-- Bottom-darkening gradient: text always legible without washing out the whole frame -->
-    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 sm:h-1/2 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
+      <!-- Flat dark overlay (desktop only — would hide a contained mobile video) -->
+      <div
+        class="absolute inset-0 bg-black hidden sm:block"
+        :style="{ opacity: overlay }"
+      />
+      <!-- Bottom-darkening gradient on desktop only -->
+      <div class="pointer-events-none hidden sm:block absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
 
-    <!-- Mute toggle (only if there is a video) -->
-    <button
-      v-if="hero.video_url"
-      type="button"
-      class="absolute right-3 top-3 sm:right-6 sm:top-6 z-20 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm transition hover:bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-      :aria-label="isMuted ? 'Unmute video' : 'Mute video'"
-      @click="toggleMute"
-    >
-      <UIcon :name="isMuted ? 'i-lucide-volume-x' : 'i-lucide-volume-2'" class="h-4 w-4 sm:h-5 sm:w-5" />
-    </button>
+      <!-- Mute toggle (only if there is a video) -->
+      <button
+        v-if="hero.video_url"
+        type="button"
+        class="absolute right-3 top-3 sm:right-6 sm:top-6 z-20 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm transition hover:bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        :aria-label="isMuted ? 'Unmute video' : 'Mute video'"
+        @click="toggleMute"
+      >
+        <UIcon :name="isMuted ? 'i-lucide-volume-x' : 'i-lucide-volume-2'" class="h-4 w-4 sm:h-5 sm:w-5" />
+      </button>
+    </div>
 
-    <!-- Content -->
-    <div class="relative z-10 flex h-full items-end sm:items-center">
-      <div class="container mx-auto px-5 sm:px-6 lg:px-8 pb-10 sm:pb-0">
+    <!-- Content: stacks below video on mobile, overlays on desktop -->
+    <div class="relative z-10 sm:absolute sm:inset-0 flex sm:items-center bg-black sm:bg-transparent">
+      <div class="container mx-auto px-5 sm:px-6 lg:px-8 py-8 sm:py-0">
         <div class="max-w-3xl text-white">
           <p
             v-if="hero.headline"
