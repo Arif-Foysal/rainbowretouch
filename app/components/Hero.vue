@@ -18,12 +18,12 @@ function toggleMute() {
 </script>
 
 <template>
-  <section class="relative h-[70vh] min-h-[420px] sm:h-[80vh] lg:h-[90vh] w-full overflow-hidden bg-black">
+  <section class="relative w-full overflow-hidden bg-black h-[min(78svh,640px)] min-h-[460px] sm:h-[78vh] sm:min-h-0 sm:max-h-none lg:h-[88vh]">
     <!-- Video background -->
     <video
       v-if="hero.video_url"
       ref="videoEl"
-      class="absolute inset-0 h-full w-full object-cover"
+      class="absolute inset-0 h-full w-full object-cover object-center"
       :poster="hero.poster_url || undefined"
       :src="hero.video_url"
       autoplay
@@ -41,18 +41,20 @@ function toggleMute() {
       loading="eager"
       fetchpriority="high"
       sizes="100vw"
-      class="absolute inset-0 h-full w-full object-cover"
+      class="absolute inset-0 h-full w-full object-cover object-center"
     />
     <div
       v-else
       class="absolute inset-0 bg-gradient-to-br from-primary/30 via-black to-black"
     />
 
-    <!-- Dark overlay -->
+    <!-- Flat dark overlay (user-configurable). Subtler on mobile so the video reads. -->
     <div
       class="absolute inset-0 bg-black"
       :style="{ opacity: overlay }"
     />
+    <!-- Bottom-darkening gradient: text always legible without washing out the whole frame -->
+    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 sm:h-1/2 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
 
     <!-- Mute toggle (only if there is a video) -->
     <button
@@ -67,23 +69,23 @@ function toggleMute() {
 
     <!-- Content -->
     <div class="relative z-10 flex h-full items-end sm:items-center">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-0">
+      <div class="container mx-auto px-5 sm:px-6 lg:px-8 pb-10 sm:pb-0">
         <div class="max-w-3xl text-white">
           <p
             v-if="hero.headline"
-            class="mb-2 sm:mb-3 text-xs sm:text-sm font-semibold uppercase tracking-widest text-primary"
+            class="mb-2 sm:mb-3 text-[11px] sm:text-sm font-semibold uppercase tracking-widest text-primary"
           >
             {{ hero.headline }}
           </p>
           <h1
             v-if="hero.title"
-            class="text-3xl sm:text-5xl lg:text-7xl font-bold leading-tight mb-3 sm:mb-5 animate-fade-in-up"
+            class="text-[clamp(1.75rem,7vw,2.5rem)] sm:text-5xl lg:text-7xl font-bold leading-[1.1] mb-3 sm:mb-5 animate-fade-in-up text-balance"
           >
             {{ hero.title }}
           </h1>
           <p
             v-if="hero.description"
-            class="text-sm sm:text-lg lg:text-xl mb-5 sm:mb-7 max-w-xl text-white/85 animate-fade-in-up animation-delay-200"
+            class="text-sm sm:text-lg lg:text-xl mb-5 sm:mb-7 max-w-xl text-white/85 line-clamp-3 sm:line-clamp-none animate-fade-in-up animation-delay-200"
           >
             {{ hero.description }}
           </p>
@@ -95,7 +97,7 @@ function toggleMute() {
               :to="hero.button_link || '/contact'"
               size="lg"
               color="primary"
-              class="shadow-2xl sm:!text-base"
+              class="w-full justify-center sm:w-auto shadow-2xl sm:!text-base"
               trailing-icon="i-lucide-arrow-right"
             >
               {{ hero.button_text }}
