@@ -177,6 +177,16 @@ const settingDefs: SettingDef[] = [
       { path: 'description', label: 'Description', type: 'textarea' },
       { path: 'items', label: 'Items (JSON: [{title, description, icon}])', type: 'json' }
     ]
+  },
+  {
+    key: 'home_services',
+    title: 'Home — Services Section',
+    description: 'The heading above the service category cards. The cards themselves come from the Services section (categories).',
+    fields: [
+      { path: 'headline', label: 'Headline (small)', type: 'text' },
+      { path: 'title', label: 'Title', type: 'text' },
+      { path: 'description', label: 'Description', type: 'textarea' }
+    ]
   }
 ]
 

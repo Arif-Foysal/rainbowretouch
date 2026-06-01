@@ -27,6 +27,7 @@ const [
 const seo = computed(() => settings.value?.seo || {})
 const homeHero = computed(() => settings.value?.home_hero || {})
 const homeFeatures = computed(() => settings.value?.home_features || { items: [] })
+const homeServices = computed(() => settings.value?.home_services || {})
 const cta = computed(() => settings.value?.cta || {})
 const about = computed(() => settings.value?.about || {})
 
@@ -186,9 +187,9 @@ const planProps = (plan: any) => ({
 
     <!-- SERVICES GRID -->
     <UPageSection
-      title="Our Services"
-      description="From clipping paths to high-end retouching — built for e-commerce, agencies, and photographers."
-      headline="Services"
+      :title="homeServices.title || 'Our Services'"
+      :description="homeServices.description || 'From clipping paths to high-end retouching — built for e-commerce, agencies, and photographers.'"
+      :headline="homeServices.headline || 'Services'"
     >
       <UEmpty
         v-if="!serviceCards.length"
