@@ -67,7 +67,7 @@ export default defineNuxtConfig({
 
   image: {
     provider: 'netlify',
-    domains: ['jxrnbucgmfmgovgkjkoo.supabase.co', 'picsum.photos', supabaseDomain].filter((d): d is string => !!d)
+    domains: ['jxrnbucgmfmgovgkjkoo.supabase.co', 'picsum.photos', 'cdn.phototourl.com', supabaseDomain].filter((d): d is string => !!d)
   },
 
   eslint: {
