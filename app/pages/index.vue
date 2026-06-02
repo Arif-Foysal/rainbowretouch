@@ -65,7 +65,7 @@ const serviceCards = computed(() =>
       icon: cat.icon || 'i-lucide-sparkles',
       image: firstImg,
       itemCount,
-      to: `/services#${cat.id}`
+      to: `/services#cat-${cat.id}`
     }
   })
 )

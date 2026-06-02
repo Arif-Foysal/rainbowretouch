@@ -19,8 +19,9 @@
 
     <div
       v-for="group in groupedSections"
+      :id="`cat-${group.id}`"
       :key="group.id"
-      class="space-y-6 pb-12"
+      class="space-y-6 pb-12 scroll-mt-24"
     >
       <div class="space-y-2 flex flex-col items-center text-center mx-auto">
         <h2 class="text-5xl font-bold tracking-tight text-foreground">
